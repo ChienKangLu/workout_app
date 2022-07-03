@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workout_app/themes/workout_app_theme_data.dart';
 
 void main() {
   runApp(const WorkoutApp());
@@ -11,9 +12,8 @@ class WorkoutApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Workout',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: WorkoutAppThemeData.lightThemeData,
+      darkTheme: WorkoutAppThemeData.darkThemeData,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Workout'),
