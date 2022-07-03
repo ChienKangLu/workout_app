@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:workout_app/routes.dart';
 import 'package:workout_app/themes/workout_app_theme_data.dart';
 
@@ -12,7 +13,11 @@ class WorkoutApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Workout',
+      onGenerateTitle: (context) {
+        return AppLocalizations.of(context)!.appTitle;
+      },
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       theme: WorkoutAppThemeData.lightThemeData,
       darkTheme: WorkoutAppThemeData.darkThemeData,
       initialRoute: RouteConfiguration.initialRoute,
