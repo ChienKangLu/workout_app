@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workout_app/routes.dart';
 import 'package:workout_app/themes/workout_app_theme_data.dart';
 
 void main() {
@@ -14,14 +15,8 @@ class WorkoutApp extends StatelessWidget {
       title: 'Workout',
       theme: WorkoutAppThemeData.lightThemeData,
       darkTheme: WorkoutAppThemeData.darkThemeData,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Workout'),
-        ),
-        body: const Center(
-          child: Text('Let\'s workout'),
-        ),
-      ),
+      initialRoute: RouteConfiguration.initialRoute,
+      onGenerateRoute: RouteConfiguration.onGenerateRoute,
     );
   }
 }
