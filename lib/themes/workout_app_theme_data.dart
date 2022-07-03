@@ -86,4 +86,15 @@ class WorkoutAppThemeData {
         fontWeight: _bold,
       )
   );
+
+  static EdgeInsets get listItemMargin => const EdgeInsets.fromLTRB(0, 10, 0, 0);
+  static EdgeInsets get listItemPadding => const EdgeInsets.all(16);
+  static double? get bottomBarHeight => 56.0;
+  static double? get bottomBarIconSize => 40;
+}
+
+extension CustomColorScheme on ColorScheme {
+  Color get listBackgroundColor => brightness == Brightness.light ?
+  const Color(0xFFEEEEEE) :
+  const Color(0xFF000000);
 }
