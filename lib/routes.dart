@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:workout_app/pages/home.dart';
+import 'package:workout_app/pages/workout_list_page.dart';
 
 typedef PathWidgetBuilder = Widget Function(BuildContext, Object?);
 
@@ -11,12 +11,12 @@ class Path {
 }
 
 class RouteConfiguration {
-  static String initialRoute = HomePage.routeName;
+  static String initialRoute = WorkoutListPage.routeName;
 
   static List<Path> paths = [
     Path(
-        name: HomePage.routeName,
-        builder: (context, arguments) => const HomePage(),
+        name: WorkoutListPage.routeName,
+        builder: (context, arguments) => const WorkoutListPage(),
     ),
   ];
 
