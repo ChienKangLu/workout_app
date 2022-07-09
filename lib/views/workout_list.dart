@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:workout_app/themes/workout_app_theme_data.dart';
 
+import 'exercise_list.dart';
 import 'workout_item.dart';
 
 class WorkoutList extends StatelessWidget {
@@ -56,14 +57,30 @@ class WorkoutListItem extends StatelessWidget {
   Widget _listItem(BuildContext context, WorkoutItem workoutItem) {
     return Column(
       children: [
-        Align(
-          alignment: Alignment.topLeft,
-          child: Text(
-            workoutItem.name,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-        ),
+        WorkoutListItemTitle(workoutItem: workoutItem),
+        Container(
+          margin: WorkoutAppThemeData.exerciseListMargin,
+          height: WorkoutAppThemeData.exerciseItemWidth,
+          child: ExerciseList(exerciseItems: workoutItem.exerciseItems),
+        )
       ],
+    );
+  }
+}
+
+class WorkoutListItemTitle extends StatelessWidget {
+  const WorkoutListItemTitle({Key? key, required this.workoutItem}) : super(key: key);
+
+  final WorkoutItem workoutItem;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Text(
+        workoutItem.name,
+        style: Theme.of(context).textTheme.titleLarge,
+      ),
     );
   }
 }

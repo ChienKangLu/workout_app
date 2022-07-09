@@ -89,8 +89,15 @@ class WorkoutAppThemeData {
 
   static EdgeInsets get listItemMargin => const EdgeInsets.fromLTRB(0, 10, 0, 0);
   static EdgeInsets get listItemPadding => const EdgeInsets.all(16);
-  static double? get bottomBarHeight => 56.0;
-  static double? get bottomBarIconSize => 40;
+
+  static double get bottomBarHeight => 56.0;
+  static double get bottomBarIconSize => 40.0;
+
+  static EdgeInsets get exerciseListMargin => const EdgeInsets.fromLTRB(0, 10, 0, 0);
+  static double get exerciseItemWidth => 50.0;
+  static EdgeInsets get exerciseItemMargin => const EdgeInsets.fromLTRB(0, 0, 10, 0);
+  static EdgeInsets get exerciseItemPadding => const EdgeInsets.all(5.0);
+  static BorderRadius get exerciseItemBorderRadius => BorderRadius.circular(12.0);
 }
 
 extension CustomColorScheme on ColorScheme {
