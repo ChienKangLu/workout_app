@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'package:workout_app/model/workout.dart';
 import 'package:workout_app/themes/workout_app_theme_data.dart';
 
-class WorkoutList extends StatelessWidget {
-  const WorkoutList({Key? key, required this.workoutList}) : super(key: key);
+import 'workout_item.dart';
 
-  final List<Workout> workoutList;
+class WorkoutList extends StatelessWidget {
+  const WorkoutList({Key? key, required this.workoutItems}) : super(key: key);
+
+  final List<WorkoutItem> workoutItems;
 
   @override
   Widget build(BuildContext context) {
@@ -25,30 +26,40 @@ class WorkoutList extends StatelessWidget {
 
   Widget _listView(BuildContext context) {
     return ListView.builder(
-      itemCount: workoutList.length,
+      itemCount: workoutItems.length,
       itemBuilder: (content, index) {
-        return _listItemContainer(context, workoutList[index]);
+        return WorkoutListItem(workoutItem: workoutItems[index]);
       },
     );
   }
+}
 
-  Widget _listItemContainer(BuildContext context, Workout workout) {
+class WorkoutListItem extends StatelessWidget {
+  const WorkoutListItem({Key? key, required this.workoutItem}) : super(key: key);
+
+  final WorkoutItem workoutItem;
+
+  @override
+  Widget build(BuildContext context) {
+    return _listItemContainer(context, workoutItem);
+  }
+
+  Widget _listItemContainer(BuildContext context, WorkoutItem workoutItem) {
     return Container(
       margin: WorkoutAppThemeData.listItemMargin,
       padding: WorkoutAppThemeData.listItemPadding,
-      width: double.infinity,
       color: Theme.of(context).colorScheme.surface,
-      child: _listItem(context, workout),
+      child: _listItem(context, workoutItem),
     );
   }
 
-  Widget _listItem(BuildContext context, Workout workout) {
+  Widget _listItem(BuildContext context, WorkoutItem workoutItem) {
     return Column(
       children: [
         Align(
           alignment: Alignment.topLeft,
           child: Text(
-            workout.name,
+            workoutItem.name,
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
@@ -56,5 +67,3 @@ class WorkoutList extends StatelessWidget {
     );
   }
 }
-
-

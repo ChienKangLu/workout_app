@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:workout_app/model/Exercise.dart';
 import 'package:workout_app/model/workout.dart';
 
+import '../views/workout_item.dart';
 import '../views/workout_list.dart';
 import '../views/workout_list_page_bottom_bar.dart';
 
@@ -34,9 +35,15 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
         title: Text(localizations.appTitle),
       ),
       body: WorkoutList(
-        workoutList: _workoutList,
+        workoutItems: _workoutList.map((workout) => workout.toWorkoutItem()).toList(),
       ),
       bottomNavigationBar: const WorkoutListPageBottomBar()
     );
+  }
+}
+
+extension WorkoutExtension on Workout {
+  WorkoutItem toWorkoutItem() {
+    return WorkoutItem(name: name);
   }
 }
