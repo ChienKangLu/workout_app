@@ -81,23 +81,23 @@ class WorkoutAppThemeData {
   static const _bold = FontWeight.w700;
 
   static const _textTheme = TextTheme(
-      titleLarge: TextStyle(
-        fontSize: 20.0,
-        fontWeight: _bold,
-      )
+    titleLarge: TextStyle(
+      fontSize: 20.0,
+      fontWeight: _bold,
+    ),
   );
 
-  static EdgeInsets get listItemMargin => const EdgeInsets.fromLTRB(0, 10, 0, 0);
-  static EdgeInsets get listItemPadding => const EdgeInsets.all(16);
+  static EdgeInsets get workoutMargin => const EdgeInsets.fromLTRB(0, 10, 0, 0);
+  static EdgeInsets get workoutPadding => const EdgeInsets.all(16);
 
   static double get bottomBarHeight => 56.0;
   static double get bottomBarIconSize => 40.0;
 
-  static EdgeInsets get exerciseListMargin => const EdgeInsets.fromLTRB(0, 10, 0, 0);
-  static double get exerciseItemWidth => 50.0;
-  static EdgeInsets get exerciseItemMargin => const EdgeInsets.fromLTRB(0, 0, 10, 0);
-  static EdgeInsets get exerciseItemPadding => const EdgeInsets.all(5.0);
-  static BorderRadius get exerciseItemBorderRadius => BorderRadius.circular(12.0);
+  static EdgeInsets get exerciseThumbnailListMargin => const EdgeInsets.fromLTRB(0, 10, 0, 0);
+  static double get exerciseThumbnailWidth => 50.0;
+  static EdgeInsets get exerciseThumbnailMargin => const EdgeInsets.fromLTRB(0, 0, 10, 0);
+  static EdgeInsets get exerciseThumbnailPadding => const EdgeInsets.all(5.0);
+  static BorderRadius get exerciseThumbnailBorderRadius => BorderRadius.circular(12.0);
 }
 
 extension CustomColorScheme on ColorScheme {

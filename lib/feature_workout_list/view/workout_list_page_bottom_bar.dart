@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:workout_app/themes/workout_app_theme_data.dart';
+
+import '../../themes/workout_app_theme_data.dart';
 
 class WorkoutListPageBottomBar extends StatelessWidget {
-  const WorkoutListPageBottomBar({Key? key}) : super(key: key);
+  const WorkoutListPageBottomBar({Key? key, required this.onAddItemClicked}) : super(key: key);
+
+  final void Function() onAddItemClicked;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: WorkoutAppThemeData.bottomBarHeight,
-      child: Center(
+      child: GestureDetector(
+        onTap: onAddItemClicked,
         child: Icon(
           Icons.add,
           size: WorkoutAppThemeData.bottomBarIconSize,

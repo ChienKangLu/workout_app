@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:workout_app/pages/workout_list_page.dart';
+
+import 'feature_workout_list/workout_list_page.dart';
 
 typedef PathWidgetBuilder = Widget Function(BuildContext, Object?);
 
@@ -15,8 +16,8 @@ class RouteConfiguration {
 
   static List<Path> paths = [
     Path(
-        name: WorkoutListPage.routeName,
-        builder: (context, arguments) => const WorkoutListPage(),
+      name: WorkoutListPage.routeName,
+      builder: (context, arguments) => const WorkoutListPage(),
     ),
   ];
 
@@ -24,8 +25,8 @@ class RouteConfiguration {
     for (final path in paths) {
       if (settings.name == path.name) {
         return MaterialPageRoute(
-            builder: (context) => path.builder(context, settings.arguments),
-            settings: settings
+          builder: (context) => path.builder(context, settings.arguments),
+          settings: settings,
         );
       }
     }

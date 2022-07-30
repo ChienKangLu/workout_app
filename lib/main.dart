@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:workout_app/routes.dart';
-import 'package:workout_app/themes/workout_app_theme_data.dart';
+
+import 'routes.dart';
+import 'themes/workout_app_theme_data.dart';
 
 void main() {
   runApp(const WorkoutApp());
