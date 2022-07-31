@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'routes.dart';
 import 'themes/workout_app_theme_data.dart';
+import 'util/localization_util.dart';
 
 void main() {
   runApp(const WorkoutApp());
@@ -15,7 +16,7 @@ class WorkoutApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       onGenerateTitle: (context) {
-        return AppLocalizations.of(context)!.appTitle;
+        return LocalizationUtil.localize(context).appTitle;
       },
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,

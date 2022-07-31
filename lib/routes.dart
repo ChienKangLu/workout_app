@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'feature_weight_training/weight_training_page.dart';
 import 'feature_workout_list/workout_list_page.dart';
+import 'model/workout.dart';
 
 typedef PathWidgetBuilder = Widget Function(BuildContext, Object?);
 
@@ -18,6 +20,12 @@ class RouteConfiguration {
     Path(
       name: WorkoutListPage.routeName,
       builder: (context, arguments) => const WorkoutListPage(),
+    ),
+    Path(
+      name: WeightTrainingPage.routeName,
+      builder: (context, arguments) => WeightTrainingPage(
+        weightTraining: arguments as WeightTraining,
+      ),
     ),
   ];
 

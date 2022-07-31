@@ -59,10 +59,8 @@ class WorkoutListViewModel {
   WorkoutUiState _toWorkoutUiState(Workout workout) {
     return WorkoutUiState(
       name: workout.name,
-      exerciseThumbnailList: _toExerciseThumbnailListUiState( workout.exercises),
-      onTap: () {
-        // TODO: launch exercise page
-      },
+      exerciseThumbnailList: _toExerciseThumbnailListUiState(workout.exercises),
+      workout: workout,
     );
   }
 
@@ -95,12 +93,12 @@ class WorkoutUiState {
   WorkoutUiState({
     required this.name,
     required this.exerciseThumbnailList,
-    required this.onTap,
+    required this.workout,  // TODO: use id once data layer is done
   });
 
   final String name;
   final ExerciseThumbnailListUiState exerciseThumbnailList;
-  final void Function() onTap;
+  final Workout workout;
 }
 
 class WorkoutListUiState {

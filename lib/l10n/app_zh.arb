@@ -1,3 +1,9 @@
 {
-  "appTitle": "運動"
+  "appTitle": "運動",
+
+  "hourUnitText": "小時",
+  "minuteUnitText": "分",
+  "secondUnitText": "秒",
+  "millisecondUnitText": "毫秒",
+  "repetitionText": "{rep} 次"
 }

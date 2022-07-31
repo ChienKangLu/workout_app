@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../util/localization_util.dart';
 import 'view/workout_list.dart';
 import 'view/workout_list_page_bottom_bar.dart';
 import 'workout_list_view_model.dart';
@@ -26,10 +26,9 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text(localizations.appTitle),
+        title: Text(LocalizationUtil.localize(context).appTitle),
       ),
       body: WorkoutList(
         workoutListState: _model.workoutListState,

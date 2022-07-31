@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
+import '../../feature_weight_training/weight_training_page.dart';
+import '../../model/workout.dart';
 import '../../themes/workout_app_theme_data.dart';
 import '../workout_list_view_model.dart';
 import 'exercise_thumbnail_list.dart';
@@ -53,7 +57,12 @@ class Workout extends StatelessWidget {
         child: _content(context),
       ),
       onTap: () {
-        workoutState.onTap();
+        if (workoutState.workout is WeightTraining) {
+          Navigator.pushNamed(context, WeightTrainingPage.routeName,
+              arguments: workoutState.workout);
+        } else if (workoutState.workout is Running) {
+          // TODO: page for running
+        }
       },
     );
   }

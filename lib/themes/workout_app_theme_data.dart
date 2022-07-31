@@ -85,6 +85,9 @@ class WorkoutAppThemeData {
       fontSize: 20.0,
       fontWeight: _bold,
     ),
+    labelLarge: TextStyle(
+      fontSize: 20.0,
+    ),
   );
 
   static EdgeInsets get workoutMargin => const EdgeInsets.fromLTRB(0, 10, 0, 0);
@@ -98,6 +101,10 @@ class WorkoutAppThemeData {
   static EdgeInsets get exerciseThumbnailMargin => const EdgeInsets.fromLTRB(0, 0, 10, 0);
   static EdgeInsets get exerciseThumbnailPadding => const EdgeInsets.all(5.0);
   static BorderRadius get exerciseThumbnailBorderRadius => BorderRadius.circular(12.0);
+
+  static EdgeInsets get exerciseListContainerMargin => const EdgeInsets.all(16);
+  static EdgeInsets get exerciseContainerMargin => const EdgeInsets.fromLTRB(0, 20, 0, 0);
+  static double get exerciseSetDataMargin => 20.0;
 }
 
 extension CustomColorScheme on ColorScheme {

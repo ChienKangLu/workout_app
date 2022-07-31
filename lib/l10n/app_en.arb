@@ -2,5 +2,33 @@
   "appTitle": "Workout",
   "@appTitle": {
     "description": "The title of the app"
+  },
+
+  "hourUnitText": "hour",
+  "@hourUnitText": {
+    "description": "Text for hour unit"
+  },
+  "minuteUnitText": "min",
+  "@hourUnitText": {
+    "description": "Text for minute unit"
+  },
+  "secondUnitText": "sec",
+  "@hourUnitText": {
+    "description": "Text for second unit"
+  },
+  "millisecondUnitText": "sec",
+  "@hourUnitText": {
+    "description": "Text for millisecond unit"
+  },
+  "repetitionText": "{rep} rep",
+  "@repetitionText": {
+    "description": "Text for repetition",
+    "placeholders": {
+      "rep": {
+        "type": "int",
+        "example": "1"
+      }
+    }
   }
+
 }
