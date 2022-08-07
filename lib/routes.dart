@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workout_app/feature_splash/splash_page.dart';
 
 import 'feature_weight_training/weight_training_page.dart';
 import 'feature_workout_list/workout_list_page.dart';
@@ -14,9 +15,13 @@ class Path {
 }
 
 class RouteConfiguration {
-  static String initialRoute = WorkoutListPage.routeName;
+  static String initialRoute = SplashPage.routeName;
 
   static List<Path> paths = [
+    Path(
+      name: SplashPage.routeName,
+      builder: (context, arguments) => const SplashPage(),
+    ),
     Path(
       name: WorkoutListPage.routeName,
       builder: (context, arguments) => const WorkoutListPage(),

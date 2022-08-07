@@ -7,7 +7,7 @@ import 'view/weight_training_exercise_list.dart';
 import 'weight_training_view_model.dart';
 
 class WeightTrainingPage extends StatelessWidget {
-  static const routeName = "/workout_page";
+  static const routeName = "/weight_training";
 
   WeightTrainingPage({
     Key? key,
