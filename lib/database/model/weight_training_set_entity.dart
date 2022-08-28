@@ -1,5 +1,5 @@
-class WeightTrainingSetDao {
-  WeightTrainingSetDao(
+class WeightTrainingSetEntity {
+  WeightTrainingSetEntity(
     this.recordId,
     this.exerciseId,
     this.set,

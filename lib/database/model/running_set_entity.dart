@@ -1,5 +1,5 @@
-class RunningSetDao {
-  RunningSetDao(
+class RunningSetEntity {
+  RunningSetEntity(
       this.recordId,
       this.exerciseId,
       this.duration,

@@ -1,21 +1,47 @@
+import 'package:sqflite/sqflite.dart';
+
+import '../../util/log_util.dart';
+import '../model/workout_entity.dart';
 import '../schema.dart';
+import 'dao.dart';
 
-class WorkoutDao {
-  WorkoutDao(this.id, this.name);
+class WorkoutDao implements Dao<WorkoutEntity>{
+  static const _tag= "WorkoutDao";
 
-  final int id;
-  final String name;
+  late final Future<Database> _database;
 
-  Map<String, dynamic> toMap() {
-    var map = <String, dynamic>{};
-    if (id != ignoredId) {
-      map[WorkoutTable.columnId] = id;
+  @override
+  Future<void> init(Future<Database> database, bool firstCreation) async {
+    _database = database;
+    if (!firstCreation) {
+      return;
     }
-    map[WorkoutTable.columnName] = name;
-    return map;
+
+    await insert(WorkoutEntity(ignoredId, "weight training"));
+    await insert(WorkoutEntity(ignoredId, "running"));
+
+    final result = await getAll();
+    Log.d(_tag, "init ${result.toString()}");
   }
 
-  WorkoutDao.fromMap(Map<String, dynamic> map)
-      : id = map[WorkoutTable.columnId],
-        name = map[WorkoutTable.columnName];
+  @override
+  Future<List<WorkoutEntity>> getAll() async {
+    final database = await _database;
+    final maps = await database.query(WorkoutTable.name);
+    final results = <WorkoutEntity>[];
+    for (final map in maps) {
+      results.add(WorkoutEntity.fromMap(map));
+    }
+    return results;
+  }
+
+  @override
+  Future<void> insert(WorkoutEntity entity) async {
+    final database = await _database;
+    database.insert(
+      WorkoutTable.name,
+      entity.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.ignore,
+    );
+  }
 }

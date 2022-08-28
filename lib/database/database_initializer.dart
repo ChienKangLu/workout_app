@@ -5,16 +5,12 @@ import 'package:sqflite/sqflite.dart';
 import '../util/log_util.dart';
 import 'schema.dart';
 
-typedef OnInitData = Future<void> Function(Database database);
-
 class DatabaseInitializer {
   static const _tag = "DatabaseInitializer";
   static const _version = 1;
   static const _workoutDatabasePath = "workout_database.db";
 
-  DatabaseInitializer({required this.onInitData});
-
-  final OnInitData onInitData;
+  bool firstCreation = false;
 
   Future<Database> open() async {
     Log.d(_tag, "open");
@@ -37,7 +33,7 @@ class DatabaseInitializer {
   Future<void> _onCreate(Database database, int version) async {
     Log.d(_tag, "_onCreate");
     await _createTables(database);
-    await onInitData(database);
+    firstCreation = true;
   }
 
   Future<void> _onOpen(Database database) async {
@@ -45,9 +41,6 @@ class DatabaseInitializer {
 
     final tables = await database.rawQuery("SELECT * FROM sqlite_master where type='table'");
     Log.d(_tag, tables.toString());
-
-    final workouts = await database.query(WorkoutTable.name);
-    Log.d(_tag, workouts.toString());
   }
 
   Future<void> _createTables(Database database) async {
