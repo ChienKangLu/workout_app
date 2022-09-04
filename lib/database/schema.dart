@@ -2,6 +2,8 @@ const integer = "INTEGER";
 const real = "REAL";
 const text = "TEXT";
 
+const dateTimeType = integer;
+
 const createTable = "CREATE TABLE IF NOT EXISTS";
 const primaryKey = "PRIMARY KEY";
 const primaryKeyInteger = "$integer PRIMARY KEY";
@@ -34,7 +36,7 @@ class ExerciseTable {
     $columnId $primaryKeyInteger,
     $columnWorkoutId $integer,
     $columnName $text $notNull $unique,
-    $foreignKey($columnWorkoutId) $references $name(${WorkoutTable.columnId})
+    $foreignKey($columnWorkoutId) $references ${WorkoutTable.name}(${WorkoutTable.columnId})
   )
   ''';
 }
@@ -49,9 +51,9 @@ class RecordTable {
   static const create = '''$createTable $name(
     $columnId $primaryKeyInteger,
     $columnWorkoutId $integer,
-    $columnStartDateTime $integer $notNull,
-    $columnEndDateTime $integer $notNull,
-    $foreignKey($columnId) $references ${WorkoutTable.name}(${WorkoutTable.columnId})
+    $columnStartDateTime $dateTimeType,
+    $columnEndDateTime $dateTimeType,
+    $foreignKey($columnWorkoutId) $references ${WorkoutTable.name}(${WorkoutTable.columnId})
   )''';
 }
 
@@ -70,7 +72,7 @@ class WeightTrainingSetTable {
     $columnBaseWeight $real $notNull,
     $columnSideWeight $real $notNull,
     $columnRepetition $integer $notNull,
-    $columnDateTime $integer $notNull,
+    $columnDateTime $dateTimeType,
     $foreignKey($columnRecordId) $references ${RecordTable.name}(${RecordTable.columnId}),
     $foreignKey($columnExerciseId) $references ${ExerciseTable.name}(${ExerciseTable.columnId}),
     $primaryKey($columnRecordId, $columnExerciseId)
@@ -90,7 +92,7 @@ class RunningSetTable {
     $columnExerciseId $integer,
     $columnDuration $real $notNull,
     $columnDistance $real $notNull,
-    $columnDateTime $integer $notNull,
+    $columnDateTime $dateTimeType,
     $foreignKey($columnRecordId) $references ${RecordTable.name}(${RecordTable.columnId}),
     $foreignKey($columnExerciseId) $references ${ExerciseTable.name}(${ExerciseTable.columnId}),
     $primaryKey($columnRecordId, $columnExerciseId)

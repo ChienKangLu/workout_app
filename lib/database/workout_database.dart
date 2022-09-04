@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 
+import 'dao/record_dao.dart';
 import 'dao/workout_dao.dart';
 import 'database_initializer.dart';
 
@@ -8,6 +9,7 @@ class WorkoutDatabase {
   static final WorkoutDatabase instance = WorkoutDatabase._();
 
   final WorkoutDao workoutDao = WorkoutDao();
+  final RecordDao recordDao = RecordDao();
 
   late final _initializer = DatabaseInitializer();
 
@@ -20,6 +22,7 @@ class WorkoutDatabase {
   Future<void> init() async {
     await _database;
 
-    workoutDao.init(_database, _initializer.firstCreation);
+    await workoutDao.init(_database, _initializer.firstCreation);
+    await recordDao.init(_database, _initializer.firstCreation);
   }
 }

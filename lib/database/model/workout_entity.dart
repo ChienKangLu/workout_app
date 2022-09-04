@@ -3,6 +3,8 @@ import '../schema.dart';
 class WorkoutEntity {
   WorkoutEntity(this.id, this.name);
 
+  WorkoutEntity.create(this.name) : id = ignoredId;
+
   final int id;
   final String name;
 

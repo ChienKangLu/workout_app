@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:workout_app/feature_splash/splash_page.dart';
 
+import 'feature_splash/splash_page.dart';
 import 'feature_weight_training/weight_training_page.dart';
+import 'feature_workout_add/workout_add_page.dart';
 import 'feature_workout_list/workout_list_page.dart';
 import 'model/workout.dart';
 
@@ -31,6 +32,10 @@ class RouteConfiguration {
       builder: (context, arguments) => WeightTrainingPage(
         weightTraining: arguments as WeightTraining,
       ),
+    ),
+    Path(
+      name: WorkoutAddPage.routeName,
+      builder: (context, arguments) => WorkoutAddPage(),
     ),
   ];
 

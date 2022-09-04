@@ -3,22 +3,20 @@ import 'package:sqflite/sqflite.dart';
 import '../../util/log_util.dart';
 import '../model/workout_entity.dart';
 import '../schema.dart';
-import 'dao.dart';
+import 'base_dao.dart';
 
-class WorkoutDao implements Dao<WorkoutEntity>{
-  static const _tag= "WorkoutDao";
-
-  late final Future<Database> _database;
+class WorkoutDao extends BaseDao<WorkoutEntity> {
+  static const _tag = "WorkoutDao";
 
   @override
   Future<void> init(Future<Database> database, bool firstCreation) async {
-    _database = database;
+    await super.init(database, firstCreation);
     if (!firstCreation) {
       return;
     }
 
-    await insert(WorkoutEntity(ignoredId, "weight training"));
-    await insert(WorkoutEntity(ignoredId, "running"));
+    await insert(WorkoutEntity.create("weight training"));
+    await insert(WorkoutEntity.create("running"));
 
     final result = await getAll();
     Log.d(_tag, "init ${result.toString()}");
@@ -26,7 +24,6 @@ class WorkoutDao implements Dao<WorkoutEntity>{
 
   @override
   Future<List<WorkoutEntity>> getAll() async {
-    final database = await _database;
     final maps = await database.query(WorkoutTable.name);
     final results = <WorkoutEntity>[];
     for (final map in maps) {
@@ -36,9 +33,8 @@ class WorkoutDao implements Dao<WorkoutEntity>{
   }
 
   @override
-  Future<void> insert(WorkoutEntity entity) async {
-    final database = await _database;
-    database.insert(
+  Future<int> insert(WorkoutEntity entity) async {
+    return await database.insert(
       WorkoutTable.name,
       entity.toMap(),
       conflictAlgorithm: ConflictAlgorithm.ignore,

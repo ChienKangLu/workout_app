@@ -105,6 +105,9 @@ class WorkoutAppThemeData {
   static EdgeInsets get exerciseListContainerMargin => const EdgeInsets.all(16);
   static EdgeInsets get exerciseContainerMargin => const EdgeInsets.fromLTRB(0, 20, 0, 0);
   static double get exerciseSetDataMargin => 20.0;
+
+  static EdgeInsets get workoutPickerTitleMargin => const EdgeInsets.fromLTRB(0, 80, 0, 0);
+  static EdgeInsets get workoutPickerMargin => const EdgeInsets.symmetric(vertical: 10);
 }
 
 extension CustomColorScheme on ColorScheme {

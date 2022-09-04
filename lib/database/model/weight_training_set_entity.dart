@@ -15,5 +15,5 @@ class WeightTrainingSetEntity {
   final double baseWeight;
   final double sideWeight;
   final int repetition;
-  final String endTime;
+  final int endTime;
 }

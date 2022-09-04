@@ -2,7 +2,22 @@ import 'exercise.dart';
 import 'interval_event.dart';
 
 enum WorkoutType {
-  weightTraining, running
+  weightTraining(_weightTrainingId),
+  running(_runningId);
+
+  static const int _weightTrainingId = 1;
+  static const int _runningId = 2;
+
+  const WorkoutType(this.id);
+
+  final int id;
+
+  static WorkoutType fromId(int id) {
+    return values.firstWhere(
+      (type) => type.id == id,
+      orElse: () => throw Exception("id is not supported"),
+    );
+  }
 }
 
 abstract class Workout<T extends Exercise> extends IntervalEvent {

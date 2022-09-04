@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../feature_workout_add/workout_add_page.dart';
 import '../util/localization_util.dart';
 import 'view/workout_list.dart';
 import 'view/workout_list_page_bottom_bar.dart';
@@ -35,7 +36,7 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
       ),
       bottomNavigationBar: WorkoutListPageBottomBar(
         onAddItemClicked: () {
-          // TODO: choose type of workout then create a new workout
+          Navigator.pushNamed(context, WorkoutAddPage.routeName);
         },
       ),
     );

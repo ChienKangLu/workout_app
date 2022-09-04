@@ -1,6 +1,10 @@
 {
   "appTitle": "運動",
 
+  "workoutAddPageTitle": "運動類型",
+  "workoutCategoryWeightTrainingTitle": "重量訓練",
+  "workoutCategoryRunningTitle": "跑步",
+
   "hourUnitText": "小時",
   "minuteUnitText": "分",
   "secondUnitText": "秒",
