@@ -1,13 +1,13 @@
 class RunningSetEntity {
   RunningSetEntity(
       this.recordId,
-      this.exerciseId,
+      this.exerciseTypeId,
       this.duration,
       this.distance
   );
 
   final int recordId;
-  final int exerciseId;
+  final int exerciseTypeId;
   final double duration;
   final double distance;
 }

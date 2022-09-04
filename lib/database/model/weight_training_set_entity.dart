@@ -1,7 +1,7 @@
 class WeightTrainingSetEntity {
   WeightTrainingSetEntity(
     this.recordId,
-    this.exerciseId,
+    this.exerciseTypeId,
     this.set,
     this.baseWeight,
     this.sideWeight,
@@ -10,7 +10,7 @@ class WeightTrainingSetEntity {
   );
 
   final int recordId;
-  final int exerciseId;
+  final int exerciseTypeId;
   final int set;
   final double baseWeight;
   final double sideWeight;

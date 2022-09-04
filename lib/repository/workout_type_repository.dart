@@ -3,7 +3,7 @@ import '../model/workout.dart';
 
 class WorkoutTypeRepository {
   Future<List<WorkoutType>> get workoutTypes async {
-    final entities = await WorkoutDatabase.instance.workoutDao.getAll();
+    final entities = await WorkoutDatabase.instance.workoutTypeDao.getAll();
     return entities.map((entity) => WorkoutType.fromId(entity.id)).toList();
   }
 }

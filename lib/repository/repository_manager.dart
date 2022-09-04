@@ -4,7 +4,7 @@ import 'workout_type_repository.dart';
 class RepositoryManager {
   static RepositoryManager? _instance;
   static WorkoutTypeRepository? _workoutTypeRepository;
-  static RecordRepository? _recordRepository;
+  static WorkoutRecordRepository? _workoutRecordRepository;
 
   RepositoryManager._();
 
@@ -13,6 +13,6 @@ class RepositoryManager {
   WorkoutTypeRepository get workoutRepository =>
       _workoutTypeRepository ?? WorkoutTypeRepository();
 
-  RecordRepository get recordRepository =>
-      _recordRepository ?? RecordRepository();
+  WorkoutRecordRepository get workoutRecordRepository =>
+      _workoutRecordRepository ?? WorkoutRecordRepository();
 }

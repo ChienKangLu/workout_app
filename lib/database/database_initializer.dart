@@ -44,9 +44,9 @@ class DatabaseInitializer {
   }
 
   Future<void> _createTables(Database database) async {
-    await database.execute(WorkoutTable.create);
-    await database.execute(ExerciseTable.create);
-    await database.execute(RecordTable.create);
+    await database.execute(WorkoutTypeTable.create);
+    await database.execute(ExerciseTypeTable.create);
+    await database.execute(WorkoutRecordTable.create);
     await database.execute(WeightTrainingSetTable.create);
     await database.execute(RunningSetTable.create);
   }

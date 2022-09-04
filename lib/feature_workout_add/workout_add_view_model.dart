@@ -6,8 +6,8 @@ import '../repository/workout_type_repository.dart';
 class WorkoutAddViewModel {
   final WorkoutTypeRepository _workoutTypeRepository =
       RepositoryManager.instance.workoutRepository;
-  final RecordRepository _recordRepository =
-      RepositoryManager.instance.recordRepository;
+  final WorkoutRecordRepository _workoutRecordRepository =
+      RepositoryManager.instance.workoutRecordRepository;
 
   Future<List<WorkoutType>> _getWorkoutTypes() => _workoutTypeRepository.workoutTypes;
 
@@ -19,8 +19,8 @@ class WorkoutAddViewModel {
     );
   }
 
-  Future<int> createRecord(WorkoutCategory category) async {
-    return await _recordRepository.addRecord(category.type);
+  Future<int> createWorkoutRecord(WorkoutCategory category) async {
+    return await _workoutRecordRepository.addWorkoutRecord(category.type);
   }
 }
 
