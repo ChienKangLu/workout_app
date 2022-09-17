@@ -1,28 +1,18 @@
-import '../schema.dart';
+enum WorkoutTypeEntity {
+  weightTraining(_weightTrainingId),
+  running(_runningId);
 
-class WorkoutTypeEntity {
-  WorkoutTypeEntity(this.id, this.name);
+  static const int _weightTrainingId = 0;
+  static const int _runningId = 1;
 
-  WorkoutTypeEntity.create(this.name) : id = ignoredId;
+  const WorkoutTypeEntity(this.id);
 
   final int id;
-  final String name;
 
-  Map<String, dynamic> toMap() {
-    var map = <String, dynamic>{};
-    if (id != ignoredId) {
-      map[WorkoutTypeTable.columnId] = id;
-    }
-    map[WorkoutTypeTable.columnName] = name;
-    return map;
-  }
-
-  WorkoutTypeEntity.fromMap(Map<String, dynamic> map)
-      : id = map[WorkoutTypeTable.columnId],
-        name = map[WorkoutTypeTable.columnName];
-
-  @override
-  String toString() {
-    return "WorkoutTypeEntity{id: $id, name: $name}";
+  static WorkoutTypeEntity fromId(int id) {
+    return values.firstWhere(
+          (type) => type.id == id,
+      orElse: () => throw Exception("id is not supported"),
+    );
   }
 }

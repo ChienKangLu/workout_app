@@ -1,13 +1,13 @@
 import 'package:sqflite/sqflite.dart';
 
 import '../../util/log_util.dart';
-import '../model/workout_record_entity.dart';
+import '../model/exercise_entity.dart';
 import '../model/workout_type_entity.dart';
 import '../schema.dart';
 import 'base_dao.dart';
 
-class WorkoutRecordDao extends BaseDao<WorkoutRecordEntity> {
-  static const _tag = "WorkoutRecordDao";
+class ExerciseDao extends BaseDao<ExerciseEntity> {
+  static const _tag = "ExerciseDao";
 
   @override
   Future<void> init(Future<Database> database, bool firstCreation) async {
@@ -20,27 +20,28 @@ class WorkoutRecordDao extends BaseDao<WorkoutRecordEntity> {
   }
 
   Future<void> initTestData() async {
-    await insert(WorkoutRecordEntity.create(WorkoutTypeEntity.weightTraining.id));
-    await insert(WorkoutRecordEntity.create(WorkoutTypeEntity.running.id));
+    await insert(ExerciseEntity.create("Squat", WorkoutTypeEntity.weightTraining.id));
+    await insert(ExerciseEntity.create("Bench Press", WorkoutTypeEntity.weightTraining.id));
+    await insert(ExerciseEntity.create("Jogging", WorkoutTypeEntity.running.id));
 
     final result = await getAll();
     Log.d(_tag, "initTestData ${result.toString()}");
   }
 
   @override
-  Future<List<WorkoutRecordEntity>> getAll() async {
-    final maps = await database.query(WorkoutRecordTable.name);
-    final results = <WorkoutRecordEntity>[];
+  Future<List<ExerciseEntity>> getAll() async {
+    final maps = await database.query(ExerciseTable.name);
+    final results = <ExerciseEntity>[];
     for (final map in maps) {
-      results.add(WorkoutRecordEntity.fromMap(map));
+      results.add(ExerciseEntity.fromMap(map));
     }
     return results;
   }
 
   @override
-  Future<int> insert(WorkoutRecordEntity entity) async {
+  Future<int> insert(ExerciseEntity entity) async {
     return await database.insert(
-      WorkoutRecordTable.name,
+      ExerciseTable.name,
       entity.toMap(),
       conflictAlgorithm: ConflictAlgorithm.ignore,
     );

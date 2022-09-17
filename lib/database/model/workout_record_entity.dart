@@ -1,41 +1,43 @@
 import '../schema.dart';
+import 'base_entity.dart';
 
-class WorkoutRecordEntity {
-  WorkoutRecordEntity(this.id, this.workoutId, this.startTime, this.endTime);
+class WorkoutRecordEntity extends BaseEntity{
+  WorkoutRecordEntity(
+    this.id,
+    this.workoutTypeId,
+    this.startDateTime,
+    this.endDateTime,
+  );
 
-  WorkoutRecordEntity.create(this.workoutId)
+  WorkoutRecordEntity.create(this.workoutTypeId)
       : id = ignoredId,
-        startTime = null,
-        endTime = null;
+        startDateTime = null,
+        endDateTime = null;
+
+  WorkoutRecordEntity.fromMap(Map<String, dynamic> map)
+      : id = map[WorkoutRecordTable.columnWorkoutRecordId],
+        workoutTypeId = map[WorkoutRecordTable.columnWorkoutTypeId],
+        startDateTime = map[WorkoutRecordTable.columnStartDateTime],
+        endDateTime = map[WorkoutRecordTable.columnEndDateTime];
 
   final int id;
-  final int workoutId;
-  final int? startTime;
-  final int? endTime;
+  final int workoutTypeId;
+  final int? startDateTime;
+  final int? endDateTime;
 
+  @override
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{};
     if (id != ignoredId) {
-      map[WorkoutRecordTable.columnId] = id;
+      map[WorkoutRecordTable.columnWorkoutRecordId] = id;
     }
-    map[WorkoutRecordTable.columnWorkoutTypeId] = workoutId;
-    if (startTime != null) {
-      map[WorkoutRecordTable.columnStartDateTime] = startTime;
+    map[WorkoutRecordTable.columnWorkoutTypeId] = workoutTypeId;
+    if (startDateTime != null) {
+      map[WorkoutRecordTable.columnStartDateTime] = startDateTime;
     }
-    if (endTime != null) {
-      map[WorkoutRecordTable.columnEndDateTime] = endTime;
+    if (endDateTime != null) {
+      map[WorkoutRecordTable.columnEndDateTime] = endDateTime;
     }
     return map;
-  }
-
-  WorkoutRecordEntity.fromMap(Map<String, dynamic> map)
-      : id = map[WorkoutRecordTable.columnId],
-        workoutId = map[WorkoutRecordTable.columnWorkoutTypeId],
-        startTime = map[WorkoutRecordTable.columnStartDateTime],
-        endTime = map[WorkoutRecordTable.columnEndDateTime];
-
-  @override
-  String toString() {
-    return "WorkoutRecordEntity{id: $id, workoutId: $workoutId, startTime: $startTime, endTime: $endTime}";
   }
 }

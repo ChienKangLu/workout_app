@@ -14,5 +14,5 @@ class RepositoryManager {
       _workoutTypeRepository ?? WorkoutTypeRepository();
 
   WorkoutRecordRepository get workoutRecordRepository =>
-      _workoutRecordRepository ?? WorkoutRecordRepository();
+      _workoutRecordRepository ?? WorkoutRecordRepository(workoutRepository);
 }
