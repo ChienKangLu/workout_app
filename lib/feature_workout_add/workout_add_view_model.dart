@@ -1,15 +1,12 @@
 import '../model/workout.dart';
-import '../repository/record_repository.dart';
+import '../repository/workout_repository.dart';
 import '../repository/repository_manager.dart';
-import '../repository/workout_type_repository.dart';
 
 class WorkoutAddViewModel {
-  final WorkoutTypeRepository _workoutTypeRepository =
+  final WorkoutRepository _workoutRepository =
       RepositoryManager.instance.workoutRepository;
-  final WorkoutRecordRepository _workoutRecordRepository =
-      RepositoryManager.instance.workoutRecordRepository;
 
-  Future<List<WorkoutType>> _getWorkoutTypes() => _workoutTypeRepository.workoutTypes;
+  Future<List<WorkoutType>> _getWorkoutTypes() => _workoutRepository.workoutTypes;
 
   Future<WorkoutAddUiState> get workoutAddUiState async {
     final workoutTypes = await _getWorkoutTypes();
@@ -19,8 +16,8 @@ class WorkoutAddViewModel {
     );
   }
 
-  Future<int> createWorkoutRecord(WorkoutCategory category) async {
-    return await _workoutRecordRepository.addWorkoutRecord(category.type);
+  Future<int> createWorkout(WorkoutCategory category) async {
+    return await _workoutRepository.createWorkout(category.type);
   }
 }
 

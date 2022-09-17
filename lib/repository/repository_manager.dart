@@ -1,18 +1,13 @@
-import 'record_repository.dart';
-import 'workout_type_repository.dart';
+import 'workout_repository.dart';
 
 class RepositoryManager {
   static RepositoryManager? _instance;
-  static WorkoutTypeRepository? _workoutTypeRepository;
-  static WorkoutRecordRepository? _workoutRecordRepository;
+  static WorkoutRepository? _workoutRepository;
 
   RepositoryManager._();
 
   static RepositoryManager get instance => _instance ??= RepositoryManager._();
 
-  WorkoutTypeRepository get workoutRepository =>
-      _workoutTypeRepository ?? WorkoutTypeRepository();
-
-  WorkoutRecordRepository get workoutRecordRepository =>
-      _workoutRecordRepository ?? WorkoutRecordRepository(workoutRepository);
+  WorkoutRepository get workoutRepository =>
+      _workoutRepository ?? WorkoutRepository();
 }

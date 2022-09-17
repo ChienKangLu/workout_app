@@ -1,7 +1,9 @@
+import '../database/model/workout_record_entity.dart';
 import '../database/model/workout_type_entity.dart';
+import '../database/workout_database.dart';
 import '../model/workout.dart';
 
-class WorkoutTypeRepository {
+class WorkoutRepository {
   Future<List<WorkoutType>> get workoutTypes async =>
       WorkoutTypeEntity.values.map((entity) {
         switch (entity) {
@@ -12,7 +14,14 @@ class WorkoutTypeRepository {
         }
       }).toList(growable: false);
 
-  WorkoutTypeEntity getWorkoutTypeEntity(WorkoutType type) {
+  Future<int> createWorkout(WorkoutType type) async {
+    final workoutTypeId = _getWorkoutTypeEntity(type).id;
+    return await WorkoutDatabase.instance.workoutRecordDao.insert(
+      WorkoutRecordEntity.create(workoutTypeId),
+    );
+  }
+
+  WorkoutTypeEntity _getWorkoutTypeEntity(WorkoutType type) {
     switch (type) {
       case WorkoutType.weightTraining:
         return WorkoutTypeEntity.weightTraining;

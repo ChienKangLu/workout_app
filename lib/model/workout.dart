@@ -26,12 +26,18 @@ class WeightTraining extends Workout<WeightTrainingExercise> {
   WeightTraining({
     required super.name,
     List<WeightTrainingExercise>? exercises,
-  }) : super(type: WorkoutType.weightTraining, exercises: exercises);
+  }) : super(
+          type: WorkoutType.weightTraining,
+          exercises: exercises,
+        );
 }
 
 class Running extends Workout<RunningExercise> {
   Running({
     required super.name,
     List<RunningExercise>? exercises,
-  }) : super(type: WorkoutType.running, exercises: exercises);
+  }) : super(
+          type: WorkoutType.running,
+          exercises: exercises,
+        );
 }

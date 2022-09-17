@@ -32,7 +32,7 @@ class WorkoutAddPage extends StatelessWidget {
                       workoutCategories: snapshot.data!.workoutCategories,
                       onCategoryClicked: (category) async {
                         final navigator = Navigator.of(context);
-                        await _model.createWorkoutRecord(category);
+                        await _model.createWorkout(category);
                         navigator.pop();
                       },
                     );
