@@ -24,7 +24,10 @@ class WorkoutRepository {
   Future<int> createWorkout(WorkoutType type) async {
     final workoutTypeId = WorkoutTypeEntityFactory.fromType(type).id;
     return await workoutRecordDao.insertWorkoutRecord(
-      WorkoutRecordEntity.create(workoutTypeId: workoutTypeId),
+      WorkoutRecordEntity.create(
+        workoutTypeId: workoutTypeId,
+        createDateTime: DateTime.now().microsecondsSinceEpoch,
+      ),
     );
   }
 

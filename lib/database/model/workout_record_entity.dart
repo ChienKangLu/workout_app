@@ -6,12 +6,14 @@ class WorkoutRecordEntity extends BaseEntity {
     required this.workoutRecordId,
     required this.workoutTypeId,
     required this.workoutTypeIndex,
+    required this.createDateTime,
     required this.startDateTime,
     required this.endDateTime,
   });
 
   WorkoutRecordEntity.create({
     required this.workoutTypeId,
+    required this.createDateTime,
     this.startDateTime,
     this.endDateTime,
   })  : workoutRecordId = ignored,
@@ -21,12 +23,14 @@ class WorkoutRecordEntity extends BaseEntity {
       : workoutRecordId = map[WorkoutRecordTable.columnWorkoutRecordId],
         workoutTypeId = map[WorkoutRecordTable.columnWorkoutTypeId],
         workoutTypeIndex = map[WorkoutRecordTable.columnWorkoutTypeIndex],
+        createDateTime = map[WorkoutRecordTable.columnCreateDateTime],
         startDateTime = map[WorkoutRecordTable.columnStartDateTime],
         endDateTime = map[WorkoutRecordTable.columnEndDateTime];
 
   final int workoutRecordId;
   final int workoutTypeId;
   final int workoutTypeIndex;
+  final int createDateTime;
   final int? startDateTime;
   final int? endDateTime;
 
@@ -40,6 +44,7 @@ class WorkoutRecordEntity extends BaseEntity {
     if (workoutTypeIndex != ignored) {
       map[WorkoutRecordTable.columnWorkoutTypeIndex] = workoutTypeIndex;
     }
+    map[WorkoutRecordTable.columnCreateDateTime] = createDateTime;
     if (startDateTime != null) {
       map[WorkoutRecordTable.columnStartDateTime] = startDateTime;
     }

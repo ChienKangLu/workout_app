@@ -19,6 +19,7 @@ class WorkoutRecordTable {
   static const String columnWorkoutRecordId = "workout_record_id";
   static const String columnWorkoutTypeId = "workout_type_id";
   static const String columnWorkoutTypeIndex = "workout_type_index";
+  static const String columnCreateDateTime = "create_date_time";
   static const String columnStartDateTime = "start_date_time";
   static const String columnEndDateTime = "end_date_time";
 
@@ -26,6 +27,7 @@ class WorkoutRecordTable {
     $columnWorkoutRecordId $primaryKeyInteger,
     $columnWorkoutTypeId $integer,
     $columnWorkoutTypeIndex $integer,
+    $columnCreateDateTime $dateTime,
     $columnStartDateTime $dateTime,
     $columnEndDateTime $dateTime
   )''';

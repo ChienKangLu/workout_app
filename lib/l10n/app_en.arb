@@ -11,6 +11,14 @@
   "@emptyWorkoutText": {
     "description": "Text for no workout"
   },
+  "workoutStatusCreated": "Let's start",
+  "@workoutStatusCreated": {
+    "description": "Text for workout item which is not started"
+  },
+  "workoutStatusInProgress": "In progress",
+  "@workoutStatusInProgress": {
+    "description": "Text for workout item which is in progress"
+  },
 
   "workoutAddPageTitle": "Workout Categories",
   "@workoutAddPageTitle": {

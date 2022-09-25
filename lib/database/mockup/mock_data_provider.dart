@@ -8,7 +8,7 @@ class MockDataProvider {
   MockDataProvider._();
   static final MockDataProvider instance = MockDataProvider._();
 
-  static final _firstDay = DateTime.now();
+  static final _firstDay = DateTime.now().subtractDays(3);
   static final _secondDay = _firstDay.addDays(1);
   static final _thirdDay = _firstDay.addDays(2);
 
@@ -17,16 +17,19 @@ class MockDataProvider {
     _workoutRecordEntities ??= [
       WorkoutRecordEntity.create(
         workoutTypeId: WorkoutTypeEntity.weightTraining.id,
+        createDateTime: _firstDay.microsecondsSinceEpoch,
         startDateTime: _firstDay.microsecondsSinceEpoch,
         endDateTime: _firstDay.addHours(1).microsecondsSinceEpoch,
       ),
       WorkoutRecordEntity.create(
         workoutTypeId: WorkoutTypeEntity.running.id,
+        createDateTime: _secondDay.microsecondsSinceEpoch,
         startDateTime: _secondDay.microsecondsSinceEpoch,
         endDateTime: _secondDay.addMinutes(15).microsecondsSinceEpoch,
       ),
       WorkoutRecordEntity.create(
         workoutTypeId: WorkoutTypeEntity.weightTraining.id,
+        createDateTime: _thirdDay.microsecondsSinceEpoch,
         startDateTime: _thirdDay.microsecondsSinceEpoch,
         endDateTime: _thirdDay.addHours(1).microsecondsSinceEpoch,
       ),
@@ -173,4 +176,6 @@ extension _DateTimeExtension on DateTime {
   DateTime addDays(int days) => add(Duration(days: days));
   DateTime addHours(int hours) => add(Duration(hours: hours));
   DateTime addMinutes(int minutes) => add(Duration(minutes: minutes));
+
+  DateTime subtractDays(int days) => subtract(Duration(days: days));
 }

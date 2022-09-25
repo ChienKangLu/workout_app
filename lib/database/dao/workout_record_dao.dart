@@ -15,7 +15,7 @@ class WorkoutRecordDao extends BaseDao<WorkoutRecordEntity> {
             ? "${WorkoutRecordTable.columnWorkoutRecordId} = ?"
             : null,
         whereArgs: workoutRecordId != null ? [workoutRecordId] : null,
-        orderBy: "${WorkoutRecordTable.columnEndDateTime} DESC");
+        orderBy: "${WorkoutRecordTable.columnCreateDateTime} DESC");
     final results = <WorkoutRecordEntity>[];
     for (final map in maps) {
       results.add(WorkoutRecordEntity.fromMap(map));

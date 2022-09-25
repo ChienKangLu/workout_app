@@ -26,6 +26,7 @@ class WorkoutListViewModel {
       number: workout.index + 1,
       category: WorkoutCategory.fromType(workout.type),
       exerciseThumbnailList: _toExerciseThumbnailListUiState(workout.exercises),
+      workoutStatus: WorkoutStatus.fromDateTime(workout.startDateTime, workout.endDateTime),
     );
   }
 
@@ -57,18 +58,36 @@ class ExerciseThumbnailListUiState {
   final List<ExerciseThumbnailUiState> exerciseThumbnails;
 }
 
+enum WorkoutStatus{
+  created, inProgress, finished;
+
+  static WorkoutStatus fromDateTime(DateTime? startDateTime, DateTime? endDateTime) {
+    if (startDateTime == null && endDateTime == null) {
+      return created;
+    } else if (startDateTime != null && endDateTime == null) {
+      return inProgress;
+    } else if (startDateTime != null && endDateTime != null) {
+      return finished;
+    } else {
+      throw Exception("Error status: startDateTime must be non null if endDateTime is set");
+    }
+  }
+}
+
 class WorkoutUiState {
   WorkoutUiState({
     required this.workoutRecordId,
     required this.number,
     required this.category,
     required this.exerciseThumbnailList,
+    required this.workoutStatus,
   });
 
   final int workoutRecordId;
   final int number;
   final WorkoutCategory category;
   final ExerciseThumbnailListUiState exerciseThumbnailList;
+  final WorkoutStatus workoutStatus;
 }
 
 class WorkoutListUiState {

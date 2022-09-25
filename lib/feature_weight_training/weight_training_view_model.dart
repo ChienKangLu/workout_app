@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
 
+import '../core_view/workout_category.dart';
 import '../model/exercise.dart';
 import '../model/unit.dart';
 import '../model/workout.dart';
@@ -42,7 +43,8 @@ class WeightTrainingViewModel {
   WeightTrainingUiState _toWeightTrainingUiState(
       WeightTraining weightTraining) {
     return WeightTrainingUiState(
-      name: weightTraining.index.toString(),
+      number: weightTraining.index + 1,
+      category: WorkoutCategory.fromType(weightTraining.type),
       dateTime: dateTime(weightTraining),
       duration: duration(weightTraining),
       exerciseListUiState:
@@ -166,13 +168,15 @@ class WeightTrainingExerciseListUiState {
 
 class WeightTrainingUiState {
   WeightTrainingUiState({
-    required this.name,
+    required this.number,
+    required this.category,
     required this.dateTime,
     required this.duration,
     required this.exerciseListUiState,
   });
 
-  final String name;
+  final int number;
+  final WorkoutCategory category;
   final String dateTime;
   final Duration duration;
   final WeightTrainingExerciseListUiState exerciseListUiState;

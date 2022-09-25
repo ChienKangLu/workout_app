@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core_view/workout_category.dart';
 import '../../themes/workout_app_theme_data.dart';
+import '../../util/localization_util.dart';
 import '../workout_list_view_model.dart';
 import 'exercise_thumbnail_list.dart';
 
@@ -81,11 +82,27 @@ class Workout extends StatelessWidget {
         Container(
           margin: WorkoutAppThemeData.exerciseThumbnailListMargin,
           height: WorkoutAppThemeData.exerciseThumbnailWidth,
-          child: ExerciseThumbnailList(
-              exerciseThumbnailListState: workoutState.exerciseThumbnailList),
+          child: _exerciseThumbnailListOrStatusText(context, workoutState.workoutStatus),
         )
       ],
     );
+  }
+
+  Widget _exerciseThumbnailListOrStatusText(BuildContext context, WorkoutStatus status) {
+    switch (status) {
+      case WorkoutStatus.created:
+        return _WorkoutStatusText(
+          text: LocalizationUtil.localize(context).workoutStatusCreated,
+        );
+      case WorkoutStatus.inProgress:
+        return _WorkoutStatusText(
+          text: LocalizationUtil.localize(context).workoutStatusInProgress,
+        );
+      case WorkoutStatus.finished:
+        return ExerciseThumbnailList(
+          exerciseThumbnailListState: workoutState.exerciseThumbnailList,
+        );
+    }
   }
 }
 
@@ -102,6 +119,26 @@ class WorkoutListItemTitle extends StatelessWidget {
       child: Text(
         "${WorkoutCategory.localizedString(context, workoutState.category)} ${workoutState.number}",
         style: Theme.of(context).textTheme.titleLarge,
+      ),
+    );
+  }
+}
+
+class _WorkoutStatusText extends StatelessWidget {
+  const _WorkoutStatusText({
+    Key? key,
+    required this.text,
+  }) : super(key: key);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        text,
+        style: Theme.of(context).textTheme.bodyLarge,
+        textAlign: TextAlign.center,
       ),
     );
   }

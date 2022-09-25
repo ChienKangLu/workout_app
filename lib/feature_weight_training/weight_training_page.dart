@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../core_view/workout_category.dart';
 import '../themes/workout_app_theme_data.dart';
 import '../util/localization_util.dart';
 import '../util/snapshot_extension.dart';
@@ -37,7 +38,9 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
         title: FutureBuilder<WeightTrainingUiState>(
           future: _weightTrainingState,
           builder: (context, snapshot) => snapshot.handle(
-            onDone: (data) => Text(data.name),
+            onDone: (data) => Text(
+              "${WorkoutCategory.localizedString(context, data.category)} ${data.number}",
+            ),
           ),
         ),
       ),
