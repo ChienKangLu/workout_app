@@ -1,35 +1,21 @@
 import 'package:sqflite/sqflite.dart';
 
-import '../../util/log_util.dart';
 import '../model/workout_record_entity.dart';
-import '../model/workout_type_entity.dart';
 import '../schema.dart';
 import 'base_dao.dart';
 
 class WorkoutRecordDao extends BaseDao<WorkoutRecordEntity> {
   static const _tag = "WorkoutRecordDao";
 
-  @override
-  Future<void> init(Future<Database> database, bool firstCreation) async {
-    await super.init(database, firstCreation);
-    if (!firstCreation) {
-      return;
-    }
-
-    await initTestData();
-  }
-
-  Future<void> initTestData() async {
-    await insert(WorkoutRecordEntity.create(WorkoutTypeEntity.weightTraining.id));
-    await insert(WorkoutRecordEntity.create(WorkoutTypeEntity.running.id));
-
-    final result = await getAll();
-    Log.d(_tag, "initTestData ${result.toString()}");
-  }
-
-  @override
-  Future<List<WorkoutRecordEntity>> getAll() async {
-    final maps = await database.query(WorkoutRecordTable.name);
+  Future<List<WorkoutRecordEntity>> getWorkoutRecordEntities({
+    int? workoutRecordId,
+  }) async {
+    final maps = await database.query(WorkoutRecordTable.name,
+        where: workoutRecordId != null
+            ? "${WorkoutRecordTable.columnWorkoutRecordId} = ?"
+            : null,
+        whereArgs: workoutRecordId != null ? [workoutRecordId] : null,
+        orderBy: "${WorkoutRecordTable.columnEndDateTime} DESC");
     final results = <WorkoutRecordEntity>[];
     for (final map in maps) {
       results.add(WorkoutRecordEntity.fromMap(map));
@@ -37,12 +23,37 @@ class WorkoutRecordDao extends BaseDao<WorkoutRecordEntity> {
     return results;
   }
 
-  @override
-  Future<int> insert(WorkoutRecordEntity entity) async {
+  Future<int> insertWorkoutRecord(WorkoutRecordEntity entity) async {
+    final int lastWorkoutTypeIndex =
+        await _getLastWorkoutTypeIndex(entity.workoutTypeId);
+
+    final workoutTypeIndex = lastWorkoutTypeIndex + 1;
+
+    final entityMap = entity.toMap();
+    entityMap[WorkoutRecordTable.columnWorkoutTypeIndex] = workoutTypeIndex;
+
     return await database.insert(
       WorkoutRecordTable.name,
-      entity.toMap(),
+      entityMap,
       conflictAlgorithm: ConflictAlgorithm.ignore,
     );
+  }
+
+  Future<int> _getLastWorkoutTypeIndex(int workoutTypeId) async {
+    final lastWorkoutTypeIndexResults = await database.query(
+      WorkoutRecordTable.name,
+      columns: [WorkoutRecordTable.columnWorkoutTypeIndex],
+      where: "${WorkoutRecordTable.columnWorkoutTypeId} = ?",
+      whereArgs: [workoutTypeId],
+      orderBy: "${WorkoutRecordTable.columnWorkoutTypeIndex} DESC",
+      limit: 1,
+    );
+
+    if (lastWorkoutTypeIndexResults.isEmpty) {
+      return -1;
+    }
+
+    return lastWorkoutTypeIndexResults[0]
+        [WorkoutRecordTable.columnWorkoutTypeIndex] as int;
   }
 }

@@ -1,17 +1,19 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
-import '../../feature_weight_training/weight_training_page.dart';
-import '../../model/workout.dart';
+import '../../core_view/workout_category.dart';
 import '../../themes/workout_app_theme_data.dart';
 import '../workout_list_view_model.dart';
 import 'exercise_thumbnail_list.dart';
 
 class WorkoutList extends StatelessWidget {
-  const WorkoutList({Key? key, required this.workoutListState}) : super(key: key);
+  const WorkoutList({
+    Key? key,
+    required this.workoutListState,
+    required this.onItemClick,
+  }) : super(key: key);
 
   final WorkoutListUiState workoutListState;
+  final void Function(WorkoutCategory, int) onItemClick;
 
   @override
   Widget build(BuildContext context) {
@@ -32,16 +34,28 @@ class WorkoutList extends StatelessWidget {
     return ListView.builder(
       itemCount: workoutListState.workouts.length,
       itemBuilder: (content, index) {
-        return Workout(workoutState:  workoutListState.workouts[index]);
+        final workoutState = workoutListState.workouts[index];
+        final category = workoutState.category;
+        final workoutRecordId = workoutState.workoutRecordId;
+
+        return Workout(
+          workoutState: workoutState,
+          onItemClick: () => onItemClick(category, workoutRecordId),
+        );
       },
     );
   }
 }
 
 class Workout extends StatelessWidget {
-  const Workout({Key? key, required this.workoutState}) : super(key: key);
+  const Workout({
+    Key? key,
+    required this.workoutState,
+    required this.onItemClick,
+  }) : super(key: key);
 
   final WorkoutUiState workoutState;
+  final void Function() onItemClick;
 
   @override
   Widget build(BuildContext context) {
@@ -56,14 +70,7 @@ class Workout extends StatelessWidget {
         color: Theme.of(context).colorScheme.surface,
         child: _content(context),
       ),
-      onTap: () {
-        if (workoutState.workout is WeightTraining) {
-          Navigator.pushNamed(context, WeightTrainingPage.routeName,
-              arguments: workoutState.workout);
-        } else if (workoutState.workout is Running) {
-          // TODO: page for running
-        }
-      },
+      onTap: () => onItemClick(),
     );
   }
 
@@ -74,7 +81,8 @@ class Workout extends StatelessWidget {
         Container(
           margin: WorkoutAppThemeData.exerciseThumbnailListMargin,
           height: WorkoutAppThemeData.exerciseThumbnailWidth,
-          child: ExerciseThumbnailList(exerciseThumbnailListState: workoutState.exerciseThumbnailList),
+          child: ExerciseThumbnailList(
+              exerciseThumbnailListState: workoutState.exerciseThumbnailList),
         )
       ],
     );
@@ -82,7 +90,8 @@ class Workout extends StatelessWidget {
 }
 
 class WorkoutListItemTitle extends StatelessWidget {
-  const WorkoutListItemTitle({Key? key, required this.workoutState}) : super(key: key);
+  const WorkoutListItemTitle({Key? key, required this.workoutState})
+      : super(key: key);
 
   final WorkoutUiState workoutState;
 
@@ -91,7 +100,7 @@ class WorkoutListItemTitle extends StatelessWidget {
     return Align(
       alignment: Alignment.topLeft,
       child: Text(
-        workoutState.name,
+        "${WorkoutCategory.localizedString(context, workoutState.category)} ${workoutState.number}",
         style: Theme.of(context).textTheme.titleLarge,
       ),
     );

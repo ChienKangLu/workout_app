@@ -3,6 +3,14 @@
   "@appTitle": {
     "description": "The title of the app"
   },
+  "loadingWorkoutText": "Loading workout...",
+  "@loading": {
+    "description": "Text for loading workout"
+  },
+  "emptyWorkoutText": "No workout",
+  "@emptyWorkoutText": {
+    "description": "Text for no workout"
+  },
 
   "workoutAddPageTitle": "Workout Categories",
   "@workoutAddPageTitle": {
@@ -22,15 +30,15 @@
     "description": "Text for hour unit"
   },
   "minuteUnitText": "min",
-  "@hourUnitText": {
+  "@minuteUnitText": {
     "description": "Text for minute unit"
   },
   "secondUnitText": "sec",
-  "@hourUnitText": {
+  "@secondUnitText": {
     "description": "Text for second unit"
   },
   "millisecondUnitText": "sec",
-  "@hourUnitText": {
+  "@millisecondUnitText": {
     "description": "Text for millisecond unit"
   },
   "repetitionText": "{rep} rep",
@@ -43,5 +51,4 @@
       }
     }
   }
-
 }

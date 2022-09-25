@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 
-import '../../util/log_util.dart';
+import '../model/embedded_object/weight_training_with_exercise_entity.dart';
 import '../model/weight_training_entity.dart';
 import '../schema.dart';
 import 'base_dao.dart';
@@ -8,30 +8,7 @@ import 'base_dao.dart';
 class WeightTrainingDao extends BaseDao<WeightTrainingEntity> {
   static const _tag = "WeightTrainingDao";
 
-  @override
-  Future<void> init(Future<Database> database, bool firstCreation) async {
-    await super.init(database, firstCreation);
-    if (!firstCreation) {
-      return;
-    }
-
-    await initTestData();
-  }
-
-  Future<void> initTestData() async {
-    await insert(WeightTrainingEntity(
-        1, 1, 1, 20, 15, 5, DateTime.now().microsecondsSinceEpoch));
-    await insert(WeightTrainingEntity(
-        1, 1, 2, 20, 17.5, 5, DateTime.now().microsecondsSinceEpoch));
-    await insert(WeightTrainingEntity(
-        1, 2, 1, 20, 20, 5, DateTime.now().microsecondsSinceEpoch));
-
-    final result = await getAll();
-    Log.d(_tag, "initTestData ${result.toString()}");
-  }
-
-  @override
-  Future<List<WeightTrainingEntity>> getAll() async {
+  Future<List<WeightTrainingEntity>> getWeightTrainingEntities() async {
     final maps = await database.query(WeightTrainingTable.name);
     final results = <WeightTrainingEntity>[];
     for (final map in maps) {
@@ -40,8 +17,29 @@ class WeightTrainingDao extends BaseDao<WeightTrainingEntity> {
     return results;
   }
 
-  @override
-  Future<int> insert(WeightTrainingEntity entity) async {
+  Future<List<WeightTrainingWithExerciseEntity>>
+      getWeightTrainingWithExerciseEntities({
+    int? workoutRecordId,
+  }) async {
+    final where = workoutRecordId != null
+        ? "WHERE ${WeightTrainingTable.name}.${WeightTrainingTable.columnWorkoutRecordId} = $workoutRecordId"
+        : "";
+
+    final maps = await database.rawQuery('''        
+    SELECT * FROM ${WeightTrainingTable.name}
+    LEFT JOIN ${ExerciseTable.name} ON ${WeightTrainingTable.name}.${WeightTrainingTable.columnExerciseTypeId} = ${ExerciseTable.name}.${ExerciseTable.columnExerciseTypeId}
+    $where 
+    ORDER BY
+    ${WeightTrainingTable.name}.${WeightTrainingTable.columnEndDateTime} ASC
+    ''');
+    final results = <WeightTrainingWithExerciseEntity>[];
+    for (final map in maps) {
+      results.add(WeightTrainingWithExerciseEntity.fromMap(map));
+    }
+    return results;
+  }
+
+  Future<int> insertWeightTraining(WeightTrainingEntity entity) async {
     return await database.insert(
       WeightTrainingTable.name,
       entity.toMap(),

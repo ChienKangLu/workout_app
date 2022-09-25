@@ -4,32 +4,55 @@ import 'package:intl/intl.dart';
 import '../model/exercise.dart';
 import '../model/unit.dart';
 import '../model/workout.dart';
+import '../repository/repository_manager.dart';
+import '../repository/workout_repository.dart';
 
 class WeightTrainingViewModel {
   static final DateFormat formatter = DateFormat("MMM dd, y 'at' h:mm a");
 
   WeightTrainingViewModel({
-    required WeightTraining weightTraining,
-  }) : _weightTraining = weightTraining;
+    required this.workoutRecordId,
+  });
 
-  final WeightTraining _weightTraining;
+  final int workoutRecordId;
+  final WorkoutRepository _workoutRepository =
+      RepositoryManager.instance.workoutRepository;
 
-  WeightTrainingUiState get weightTrainingState {
-    return _toWeightTrainingUiState(_weightTraining);
+  Future<WeightTraining> get _weightTraining async {
+    final workouts = await _workoutRepository.getWorkouts(
+      workoutRecordId: workoutRecordId,
+    );
+    if (workouts.isEmpty) {
+      throw Exception("Workout with id '$workoutRecordId' doesn't exist");
+    }
+
+    final workout = workouts.first;
+    if (workout is! WeightTraining) {
+      throw Exception(
+          "Workout with id '$workoutRecordId' is not WeightTraining");
+    }
+
+    return workout;
   }
 
-  WeightTrainingUiState _toWeightTrainingUiState(WeightTraining weightTraining) {
+  Future<WeightTrainingUiState> get weightTrainingState async {
+    return _toWeightTrainingUiState(await _weightTraining);
+  }
+
+  WeightTrainingUiState _toWeightTrainingUiState(
+      WeightTraining weightTraining) {
     return WeightTrainingUiState(
-      name: weightTraining.name,
+      name: weightTraining.index.toString(),
       dateTime: dateTime(weightTraining),
       duration: duration(weightTraining),
-      exerciseListUiState: _toWeightTrainingExerciseListUiState(weightTraining.exercises),
+      exerciseListUiState:
+          _toWeightTrainingExerciseListUiState(weightTraining.exercises),
     );
   }
 
   String dateTime(WeightTraining weightTraining) {
-    final startTime = weightTraining.startTime;
-    if (startTime== null) {
+    final startTime = weightTraining.startDateTime;
+    if (startTime == null) {
       return "";
     }
 
@@ -37,8 +60,8 @@ class WeightTrainingViewModel {
   }
 
   Duration duration(WeightTraining weightTraining) {
-    final startTime = weightTraining.startTime;
-    final endTime = weightTraining.endTime;
+    final startTime = weightTraining.startDateTime;
+    final endTime = weightTraining.endDateTime;
     if (startTime == null || endTime == null) {
       return const Duration(hours: 0);
     }
@@ -50,7 +73,9 @@ class WeightTrainingViewModel {
     List<WeightTrainingExercise> exercises,
   ) {
     return WeightTrainingExerciseListUiState(
-      exercises: exercises.map((exercise) => _toWeightTrainingExerciseUiState(exercise)).toList(),
+      exercises: exercises
+          .map((exercise) => _toWeightTrainingExerciseUiState(exercise))
+          .toList(),
     );
   }
 
@@ -67,8 +92,10 @@ class WeightTrainingViewModel {
     List<WeightTrainingExerciseSet> sets,
   ) {
     return WeightTrainingExerciseSetListUiState(
-        sets: sets.mapIndexed((index, set) => _toWeightTrainingExerciseSetUiState(index + 1, set)).toList()
-    );
+        sets: sets
+            .mapIndexed((index, set) =>
+                _toWeightTrainingExerciseSetUiState(index + 1, set))
+            .toList());
   }
 
   WeightTrainingExerciseSetUiState _toWeightTrainingExerciseSetUiState(

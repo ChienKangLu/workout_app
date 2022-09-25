@@ -9,6 +9,10 @@ abstract class Exercise<T extends ExerciseSet> extends IntervalEvent {
 
   final String name;
   final List<T> sets;
+
+  void addSet(T set) {
+    sets.add(set);
+  }
 }
 
 abstract class ExerciseSet extends IntervalEvent {

@@ -12,18 +12,20 @@ const references = "REFERENCES";
 const notNull = "NOT NUll";
 const unique = "UNIQUE";
 
-const ignoredId = -1;
+const ignored = -1;
 
 class WorkoutRecordTable {
   static const String name = "workout_record";
   static const String columnWorkoutRecordId = "workout_record_id";
   static const String columnWorkoutTypeId = "workout_type_id";
+  static const String columnWorkoutTypeIndex = "workout_type_index";
   static const String columnStartDateTime = "start_date_time";
   static const String columnEndDateTime = "end_date_time";
 
   static const create = '''$createTable $name(
     $columnWorkoutRecordId $primaryKeyInteger,
     $columnWorkoutTypeId $integer,
+    $columnWorkoutTypeIndex $integer,
     $columnStartDateTime $dateTime,
     $columnEndDateTime $dateTime
   )''';
@@ -31,12 +33,12 @@ class WorkoutRecordTable {
 
 class ExerciseTable {
   static const String name = "exercise";
-  static const String columnExerciseId = "exercise_id";
+  static const String columnExerciseTypeId = "exercise_type_id";
   static const String columnWorkoutTypeId = "workout_type_id";
   static const String columnExerciseName = "exercise_name";
 
   static const create = '''$createTable $name(
-    $columnExerciseId $primaryKeyInteger,
+    $columnExerciseTypeId $primaryKeyInteger,
     $columnWorkoutTypeId $integer,
     $columnExerciseName $text $notNull $unique
   )
@@ -46,7 +48,7 @@ class ExerciseTable {
 class WeightTrainingTable {
   static const String name = "weight_training";
   static const String columnWorkoutRecordId = "workout_record_id";
-  static const String columnExerciseId = "exercise_id";
+  static const String columnExerciseTypeId = "exercise_type_id";
   static const String columnSetNum = "set_num";
   static const String columnBaseWeight = "base_weight";
   static const String columnSideWeight = "side_weight";
@@ -55,22 +57,22 @@ class WeightTrainingTable {
 
   static const create = '''$createTable $name(
     $columnWorkoutRecordId $integer,
-    $columnExerciseId $integer,
+    $columnExerciseTypeId $integer,
     $columnSetNum $integer,
     $columnBaseWeight $real $notNull,
     $columnSideWeight $real $notNull,
     $columnRepetition $integer $notNull,
     $columnEndDateTime $dateTime,
     $foreignKey($columnWorkoutRecordId) $references ${WorkoutRecordTable.name}(${WorkoutRecordTable.columnWorkoutRecordId}),
-    $foreignKey($columnExerciseId) $references ${ExerciseTable.name}(${ExerciseTable.columnExerciseId}),
-    $primaryKey($columnWorkoutRecordId, $columnExerciseId, $columnSetNum)
+    $foreignKey($columnExerciseTypeId) $references ${ExerciseTable.name}(${ExerciseTable.columnExerciseTypeId}),
+    $primaryKey($columnWorkoutRecordId, $columnExerciseTypeId, $columnSetNum)
   )''';
 }
 
 class RunningTable {
   static const String name = "running";
   static const String columnWorkoutRecordId = "workout_record_id";
-  static const String columnExerciseId = "exercise_id";
+  static const String columnExerciseTypeId = "exercise_type_id";
   static const String columnSetNum = "set_num";
   static const String columnDuration = "duration";
   static const String columnDistance = "distance";
@@ -78,13 +80,13 @@ class RunningTable {
 
   static const create = '''$createTable $name(
     $columnWorkoutRecordId $integer,
-    $columnExerciseId $integer,
+    $columnExerciseTypeId $integer,
     $columnSetNum $integer,
     $columnDuration $real $notNull,
     $columnDistance $real $notNull,
     $columnEndDateTime $dateTime,
     $foreignKey($columnWorkoutRecordId) $references ${WorkoutRecordTable.name}(${WorkoutRecordTable.columnWorkoutRecordId}),
-    $foreignKey($columnExerciseId) $references ${ExerciseTable.name}(${ExerciseTable.columnExerciseId}),
-    $primaryKey($columnWorkoutRecordId, $columnExerciseId, $columnSetNum)
+    $foreignKey($columnExerciseTypeId) $references ${ExerciseTable.name}(${ExerciseTable.columnExerciseTypeId}),
+    $primaryKey($columnWorkoutRecordId, $columnExerciseTypeId, $columnSetNum)
   )''';
 }

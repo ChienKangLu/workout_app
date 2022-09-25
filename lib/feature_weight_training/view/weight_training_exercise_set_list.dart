@@ -19,7 +19,8 @@ class WeightTrainingExerciseSetList extends StatelessWidget {
       itemCount: weightTrainingExerciseSetListState.sets.length,
       itemBuilder: (content, index) {
         return WeightTrainingExerciseSet(
-          weightTrainingExerciseSetState: weightTrainingExerciseSetListState.sets[index],
+          weightTrainingExerciseSetState:
+              weightTrainingExerciseSetListState.sets[index],
         );
       },
     );

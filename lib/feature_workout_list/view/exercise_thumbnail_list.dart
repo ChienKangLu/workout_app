@@ -4,7 +4,10 @@ import '../../themes/workout_app_theme_data.dart';
 import '../workout_list_view_model.dart';
 
 class ExerciseThumbnailList extends StatelessWidget {
-  const ExerciseThumbnailList({Key? key, required this.exerciseThumbnailListState}) : super(key: key);
+  const ExerciseThumbnailList({
+    Key? key,
+    required this.exerciseThumbnailListState,
+  }) : super(key: key);
 
   final ExerciseThumbnailListUiState exerciseThumbnailListState;
 
@@ -14,14 +17,19 @@ class ExerciseThumbnailList extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       itemCount: exerciseThumbnailListState.exerciseThumbnails.length,
       itemBuilder: (content, index) {
-        return ExerciseThumbnail(exerciseThumbnailState: exerciseThumbnailListState.exerciseThumbnails[index]);
+        return ExerciseThumbnail(
+            exerciseThumbnailState:
+                exerciseThumbnailListState.exerciseThumbnails[index]);
       },
     );
   }
 }
 
 class ExerciseThumbnail extends StatelessWidget {
-  const ExerciseThumbnail({Key? key, required this.exerciseThumbnailState}) : super(key: key);
+  const ExerciseThumbnail({
+    Key? key,
+    required this.exerciseThumbnailState,
+  }) : super(key: key);
 
   final ExerciseThumbnailUiState exerciseThumbnailState;
 

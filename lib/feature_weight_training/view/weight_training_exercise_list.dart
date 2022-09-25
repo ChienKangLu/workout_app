@@ -14,8 +14,11 @@ class WeightTrainingExerciseList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: weightTrainingExerciseListState.exercises.map((exercise) =>
-          WeightTrainingExercise(weightTrainingExerciseState: exercise,)).toList(),
+      children: weightTrainingExerciseListState.exercises
+          .map((exercise) => WeightTrainingExercise(
+                weightTrainingExerciseState: exercise,
+              ))
+          .toList(),
     );
   }
 }

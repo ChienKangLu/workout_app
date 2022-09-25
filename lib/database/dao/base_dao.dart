@@ -8,7 +8,7 @@ abstract class BaseDao<T> implements Dao<T> {
   late final Database database;
 
   @override
-  Future<void> init(Future<Database> database, bool firstCreation) async {
+  Future<void> init(Future<Database> database) async {
     this.database = await database;
   }
 }

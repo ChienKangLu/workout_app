@@ -1,11 +1,11 @@
 import 'base_entity.dart';
 
-abstract class BaseWorkoutEntity extends BaseEntity {
-  BaseWorkoutEntity(
-    this.workoutRecordId,
-    this.exerciseTypeId,
-    this.setNum,
-  );
+abstract class WorkoutEntity extends BaseEntity {
+  WorkoutEntity({
+    required this.workoutRecordId,
+    required this.exerciseTypeId,
+    required this.setNum,
+  });
 
   final int workoutRecordId;
   final int exerciseTypeId;

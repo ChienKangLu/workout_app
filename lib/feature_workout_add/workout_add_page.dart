@@ -1,22 +1,33 @@
 import 'package:flutter/material.dart';
 
+import '../util/snapshot_extension.dart';
 import 'view/workout_add_close_button.dart';
 import 'view/workout_add_title.dart';
 import 'view/workout_category_list.dart';
 import 'workout_add_view_model.dart';
 
-class WorkoutAddPage extends StatelessWidget {
+class WorkoutAddPage extends StatefulWidget {
   static const routeName = "/workout_add";
 
-  WorkoutAddPage({Key? key})
-      : _model = WorkoutAddViewModel(),
-        super(key: key);
+  const WorkoutAddPage({Key? key}) : super(key: key);
 
-  final WorkoutAddViewModel _model;
+  @override
+  State<WorkoutAddPage> createState() => _WorkoutAddPageState();
+}
+
+class _WorkoutAddPageState extends State<WorkoutAddPage> {
+  late final WorkoutAddViewModel _model;
+  late Future<WorkoutAddUiState> _workoutAddUiState;
+
+  @override
+  void initState() {
+    _model = WorkoutAddViewModel();
+    _workoutAddUiState = _model.workoutAddUiState;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final workoutAddUiState = _model.workoutAddUiState;
     return Scaffold(
       body: Stack(
         alignment: Alignment.center,
@@ -25,20 +36,19 @@ class WorkoutAddPage extends StatelessWidget {
             children: [
               const WorkoutAddTitle(),
               FutureBuilder<WorkoutAddUiState>(
-                future: workoutAddUiState,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return WorkoutCategoryList(
-                      workoutCategories: snapshot.data!.workoutCategories,
-                      onCategoryClicked: (category) async {
-                        final navigator = Navigator.of(context);
-                        await _model.createWorkout(category);
-                        navigator.pop();
-                      },
-                    );
-                  }
-                  return Container();
-                },
+                future: _workoutAddUiState,
+                builder: (context, snapshot) => snapshot.handle(
+                    onWaiting: () => const SizedBox(),
+                    onError: () => Text("${snapshot.error}"),
+                    onEmptyData: () => const SizedBox(),
+                    onDone: (data) => WorkoutCategoryList(
+                          workoutCategories: data.workoutCategories,
+                          onCategoryClicked: (category) async {
+                            final navigator = Navigator.of(context);
+                            await _model.createWorkout(category);
+                            navigator.pop();
+                          },
+                        )),
               ),
             ],
           ),

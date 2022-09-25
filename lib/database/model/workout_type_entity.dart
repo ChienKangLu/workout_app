@@ -12,7 +12,7 @@ enum WorkoutTypeEntity {
   static WorkoutTypeEntity fromId(int id) {
     return values.firstWhere(
           (type) => type.id == id,
-      orElse: () => throw Exception("id is not supported"),
+      orElse: () => throw Exception("$id is not supported"),
     );
   }
 }

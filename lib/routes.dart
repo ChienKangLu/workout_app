@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'feature_splash/splash_page.dart';
 import 'feature_weight_training/weight_training_page.dart';
 import 'feature_workout_add/workout_add_page.dart';
 import 'feature_workout_list/workout_list_page.dart';
-import 'model/workout.dart';
 
 typedef PathWidgetBuilder = Widget Function(BuildContext, Object?);
 
@@ -16,26 +14,22 @@ class Path {
 }
 
 class RouteConfiguration {
-  static String initialRoute = SplashPage.routeName;
+  static String initialRoute = WorkoutListPage.routeName;
 
   static List<Path> paths = [
     Path(
-      name: SplashPage.routeName,
-      builder: (context, arguments) => const SplashPage(),
-    ),
-    Path(
       name: WorkoutListPage.routeName,
-      builder: (context, arguments) => const WorkoutListPage(),
+      builder: (context, arguments) => WorkoutListPage(),
     ),
     Path(
       name: WeightTrainingPage.routeName,
       builder: (context, arguments) => WeightTrainingPage(
-        weightTraining: arguments as WeightTraining,
+        workoutRecordId: arguments as int,
       ),
     ),
     Path(
       name: WorkoutAddPage.routeName,
-      builder: (context, arguments) => WorkoutAddPage(),
+      builder: (context, arguments) => const WorkoutAddPage(),
     ),
   ];
 

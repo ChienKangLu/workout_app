@@ -1,13 +1,8 @@
 class IntervalEvent {
-  // TODO: remove mock time once database ready
-  DateTime? startTime = DateTime.now();
-  DateTime? endTime = DateTime.now().add(const Duration(hours: 1, minutes: 25, seconds: 30, milliseconds: 105));
+  DateTime? startDateTime;
+  DateTime? endDateTime;
 
-  void startEvent() {
-    startTime = DateTime.now();
-  }
+  void startEvent() => startDateTime = DateTime.now();
 
-  void finishEvent() {
-    endTime = DateTime.now();
-  }
+  void finishEvent() => endDateTime = DateTime.now();
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class WorkoutAppThemeData {
-
   static final ThemeData lightThemeData = themeData(_lightColorScheme);
   static final ThemeData darkThemeData = themeData(_darkColorScheme);
 
@@ -96,22 +95,28 @@ class WorkoutAppThemeData {
   static double get bottomBarHeight => 56.0;
   static double get bottomBarIconSize => 40.0;
 
-  static EdgeInsets get exerciseThumbnailListMargin => const EdgeInsets.fromLTRB(0, 10, 0, 0);
+  static EdgeInsets get exerciseThumbnailListMargin =>
+      const EdgeInsets.fromLTRB(0, 10, 0, 0);
   static double get exerciseThumbnailWidth => 50.0;
-  static EdgeInsets get exerciseThumbnailMargin => const EdgeInsets.fromLTRB(0, 0, 10, 0);
+  static EdgeInsets get exerciseThumbnailMargin =>
+      const EdgeInsets.fromLTRB(0, 0, 10, 0);
   static EdgeInsets get exerciseThumbnailPadding => const EdgeInsets.all(5.0);
-  static BorderRadius get exerciseThumbnailBorderRadius => BorderRadius.circular(12.0);
+  static BorderRadius get exerciseThumbnailBorderRadius =>
+      BorderRadius.circular(12.0);
 
   static EdgeInsets get exerciseListContainerMargin => const EdgeInsets.all(16);
-  static EdgeInsets get exerciseContainerMargin => const EdgeInsets.fromLTRB(0, 20, 0, 0);
+  static EdgeInsets get exerciseContainerMargin =>
+      const EdgeInsets.fromLTRB(0, 20, 0, 0);
   static double get exerciseSetDataMargin => 20.0;
 
-  static EdgeInsets get workoutPickerTitleMargin => const EdgeInsets.fromLTRB(0, 80, 0, 0);
-  static EdgeInsets get workoutPickerMargin => const EdgeInsets.symmetric(vertical: 10);
+  static EdgeInsets get workoutPickerTitleMargin =>
+      const EdgeInsets.fromLTRB(0, 80, 0, 0);
+  static EdgeInsets get workoutPickerMargin =>
+      const EdgeInsets.symmetric(vertical: 10);
 }
 
 extension CustomColorScheme on ColorScheme {
-  Color get listBackgroundColor => brightness == Brightness.light ?
-  const Color(0xFFEEEEEE) :
-  const Color(0xFF000000);
+  Color get listBackgroundColor => brightness == Brightness.light
+      ? const Color(0xFFEEEEEE)
+      : const Color(0xFF000000);
 }

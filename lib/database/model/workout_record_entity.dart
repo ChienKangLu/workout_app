@@ -1,37 +1,45 @@
 import '../schema.dart';
 import 'base_entity.dart';
 
-class WorkoutRecordEntity extends BaseEntity{
-  WorkoutRecordEntity(
-    this.id,
-    this.workoutTypeId,
+class WorkoutRecordEntity extends BaseEntity {
+  WorkoutRecordEntity({
+    required this.workoutRecordId,
+    required this.workoutTypeId,
+    required this.workoutTypeIndex,
+    required this.startDateTime,
+    required this.endDateTime,
+  });
+
+  WorkoutRecordEntity.create({
+    required this.workoutTypeId,
     this.startDateTime,
     this.endDateTime,
-  );
-
-  WorkoutRecordEntity.create(this.workoutTypeId)
-      : id = ignoredId,
-        startDateTime = null,
-        endDateTime = null;
+  })  : workoutRecordId = ignored,
+        workoutTypeIndex = ignored;
 
   WorkoutRecordEntity.fromMap(Map<String, dynamic> map)
-      : id = map[WorkoutRecordTable.columnWorkoutRecordId],
+      : workoutRecordId = map[WorkoutRecordTable.columnWorkoutRecordId],
         workoutTypeId = map[WorkoutRecordTable.columnWorkoutTypeId],
+        workoutTypeIndex = map[WorkoutRecordTable.columnWorkoutTypeIndex],
         startDateTime = map[WorkoutRecordTable.columnStartDateTime],
         endDateTime = map[WorkoutRecordTable.columnEndDateTime];
 
-  final int id;
+  final int workoutRecordId;
   final int workoutTypeId;
+  final int workoutTypeIndex;
   final int? startDateTime;
   final int? endDateTime;
 
   @override
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{};
-    if (id != ignoredId) {
-      map[WorkoutRecordTable.columnWorkoutRecordId] = id;
+    if (workoutRecordId != ignored) {
+      map[WorkoutRecordTable.columnWorkoutRecordId] = workoutRecordId;
     }
     map[WorkoutRecordTable.columnWorkoutTypeId] = workoutTypeId;
+    if (workoutTypeIndex != ignored) {
+      map[WorkoutRecordTable.columnWorkoutTypeIndex] = workoutTypeIndex;
+    }
     if (startDateTime != null) {
       map[WorkoutRecordTable.columnStartDateTime] = startDateTime;
     }

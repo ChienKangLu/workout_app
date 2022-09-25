@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:workout_app/themes/workout_app_theme_data.dart';
 
+import '../../themes/workout_app_theme_data.dart';
 import '../weight_training_view_model.dart';
 import 'weight_training_exercise_set_list.dart';
 
@@ -25,7 +25,8 @@ class WeightTrainingExercise extends StatelessWidget {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           WeightTrainingExerciseSetList(
-            weightTrainingExerciseSetListState: weightTrainingExerciseState.setList,
+            weightTrainingExerciseSetListState:
+                weightTrainingExerciseState.setList,
           ),
         ],
       ),

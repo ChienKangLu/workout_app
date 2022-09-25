@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../core_view/workout_category.dart';
 import '../../themes/workout_app_theme_data.dart';
-import '../../util/localization_util.dart';
-import '../workout_add_view_model.dart';
 
 class WorkoutCategoryListItem extends StatelessWidget {
   const WorkoutCategoryListItem({
@@ -23,21 +22,10 @@ class WorkoutCategoryListItem extends StatelessWidget {
       child: Container(
         margin: WorkoutAppThemeData.workoutPickerMargin,
         child: Text(
-          _workoutCategoryString(context, workoutCategory),
+          WorkoutCategory.localizedString(context, workoutCategory),
           style: Theme.of(context).textTheme.labelLarge,
         ),
       ),
     );
-  }
-
-  String _workoutCategoryString(
-      BuildContext context, WorkoutCategory category) {
-    switch (category) {
-      case WorkoutCategory.weightTraining:
-        return LocalizationUtil.localize(context)
-            .workoutCategoryWeightTrainingTitle;
-      case WorkoutCategory.running:
-        return LocalizationUtil.localize(context).workoutCategoryRunningTitle;
-    }
   }
 }

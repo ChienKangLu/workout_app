@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../workout_add_view_model.dart';
+import '../../core_view/workout_category.dart';
 import 'workout_category_list_item.dart';
 
 class WorkoutCategoryList extends StatelessWidget {

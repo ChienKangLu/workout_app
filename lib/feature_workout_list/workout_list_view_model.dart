@@ -1,53 +1,17 @@
+import '../core_view/workout_category.dart';
 import '../model/exercise.dart';
-import '../model/unit.dart';
 import '../model/workout.dart';
+import '../repository/repository_manager.dart';
+import '../repository/workout_repository.dart';
 
 class WorkoutListViewModel {
-  final List<Workout> _workouts = <Workout>[
-    WeightTraining(name: "Weight training 1", exercises: [
-      WeightTrainingExercise(
-        name: "Bench press",
-        sets: [
-          WeightTrainingExerciseSet(baseWeight: 20, sideWeight: 15, unit: WeightUnit.kilogram, repetition: 5),
-          WeightTrainingExerciseSet(baseWeight: 20, sideWeight: 15, unit: WeightUnit.kilogram, repetition: 5),
-          WeightTrainingExerciseSet(baseWeight: 20, sideWeight: 20, unit: WeightUnit.kilogram, repetition: 5),
-          WeightTrainingExerciseSet(baseWeight: 20, sideWeight: 20, unit: WeightUnit.kilogram, repetition: 2),
-          WeightTrainingExerciseSet(baseWeight: 20, sideWeight: 17.5, unit: WeightUnit.kilogram, repetition: 5),
-          WeightTrainingExerciseSet(baseWeight: 20, sideWeight: 17.5, unit: WeightUnit.kilogram, repetition: 5),
-        ],
-      ),
-      WeightTrainingExercise(
-        name: "Shoulder push",
-        sets: [
-          WeightTrainingExerciseSet(baseWeight: 0, sideWeight: 10, unit: WeightUnit.kilogram, repetition: 6),
-          WeightTrainingExerciseSet(baseWeight: 0, sideWeight: 12.5, unit: WeightUnit.kilogram, repetition: 6),
-          WeightTrainingExerciseSet(baseWeight: 0, sideWeight: 12.5, unit: WeightUnit.kilogram, repetition: 6),
-        ],
-      ),
-      WeightTrainingExercise(
-        name: "Low row",
-        sets: [
-          WeightTrainingExerciseSet(baseWeight: 25, sideWeight: 0, unit: WeightUnit.kilogram, repetition: 12),
-          WeightTrainingExerciseSet(baseWeight: 25, sideWeight: 0, unit: WeightUnit.kilogram, repetition: 12),
-          WeightTrainingExerciseSet(baseWeight: 25, sideWeight: 0, unit: WeightUnit.kilogram, repetition: 12),
-        ],
-      ),
-    ]),
-    Running(
-      name: "Running 1",
-      exercises: [
-        RunningExercise(
-          name: "Jog",
-          sets: [
-            RunningExerciseSet(distance: 2, unit: DistanceUnit.kilometer),
-          ],
-        ),
-      ],
-    ),
-  ];
+  final WorkoutRepository _workoutRepository =
+      RepositoryManager.instance.workoutRepository;
 
-  WorkoutListUiState get workoutListState {
-    return _toWorkoutListUiState(_workouts);
+  Future<List<Workout>> get _workouts => _workoutRepository.getWorkouts();
+
+  Future<WorkoutListUiState> get workoutListState async {
+    return _toWorkoutListUiState(await _workouts);
   }
 
   WorkoutListUiState _toWorkoutListUiState(List<Workout> workouts) {
@@ -58,15 +22,19 @@ class WorkoutListViewModel {
 
   WorkoutUiState _toWorkoutUiState(Workout workout) {
     return WorkoutUiState(
-      name: workout.name,
+      workoutRecordId: workout.workoutRecordId,
+      number: workout.index + 1,
+      category: WorkoutCategory.fromType(workout.type),
       exerciseThumbnailList: _toExerciseThumbnailListUiState(workout.exercises),
-      workout: workout,
     );
   }
 
-  ExerciseThumbnailListUiState _toExerciseThumbnailListUiState(List<Exercise> exercises) {
+  ExerciseThumbnailListUiState _toExerciseThumbnailListUiState(
+      List<Exercise> exercises) {
     return ExerciseThumbnailListUiState(
-      exerciseThumbnails: exercises.map((exercise) => _toExerciseThumbnailUiState(exercise)).toList(),
+      exerciseThumbnails: exercises
+          .map((exercise) => _toExerciseThumbnailUiState(exercise))
+          .toList(),
     );
   }
 
@@ -91,14 +59,16 @@ class ExerciseThumbnailListUiState {
 
 class WorkoutUiState {
   WorkoutUiState({
-    required this.name,
+    required this.workoutRecordId,
+    required this.number,
+    required this.category,
     required this.exerciseThumbnailList,
-    required this.workout,  // TODO: use id once data layer is done
   });
 
-  final String name;
+  final int workoutRecordId;
+  final int number;
+  final WorkoutCategory category;
   final ExerciseThumbnailListUiState exerciseThumbnailList;
-  final Workout workout;
 }
 
 class WorkoutListUiState {

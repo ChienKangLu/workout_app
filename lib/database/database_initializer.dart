@@ -10,7 +10,7 @@ class DatabaseInitializer {
   static const _version = 1;
   static const _workoutDatabasePath = "workout_database.db";
 
-  bool firstCreation = false;
+  bool isFirstCreation = false;
 
   Future<Database> open() async {
     Log.d(_tag, "open");
@@ -33,13 +33,14 @@ class DatabaseInitializer {
   Future<void> _onCreate(Database database, int version) async {
     Log.d(_tag, "_onCreate");
     await _createTables(database);
-    firstCreation = true;
+    isFirstCreation = true;
   }
 
   Future<void> _onOpen(Database database) async {
     Log.d(_tag, "_onOpen");
 
-    final tables = await database.rawQuery("SELECT * FROM sqlite_master where type='table'");
+    final tables = await database
+        .rawQuery("SELECT * FROM sqlite_master where type='table'");
     Log.d(_tag, tables.toString());
   }
 

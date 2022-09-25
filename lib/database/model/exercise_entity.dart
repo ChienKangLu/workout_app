@@ -2,31 +2,31 @@ import '../schema.dart';
 import 'base_entity.dart';
 
 class ExerciseEntity extends BaseEntity {
-  ExerciseEntity(
-    this.id,
-    this.workoutTypeId,
-    this.name,
-  );
+  ExerciseEntity({
+    required this.exerciseTypeId,
+    required this.workoutTypeId,
+    required this.name,
+  });
 
-  ExerciseEntity.create(
-    this.name,
-    this.workoutTypeId,
-  ) : id = ignoredId;
+  ExerciseEntity.create({
+    required this.name,
+    required this.workoutTypeId,
+  }) : exerciseTypeId = ignored;
 
   ExerciseEntity.fromMap(Map<String, dynamic> map)
-      : id = map[ExerciseTable.columnExerciseId],
+      : exerciseTypeId = map[ExerciseTable.columnExerciseTypeId],
         workoutTypeId = map[ExerciseTable.columnWorkoutTypeId],
         name = map[ExerciseTable.columnExerciseName];
 
-  final int id;
+  final int exerciseTypeId;
   final int workoutTypeId;
   final String name;
 
   @override
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{};
-    if (id != ignoredId) {
-      map[ExerciseTable.columnExerciseId] = id;
+    if (exerciseTypeId != ignored) {
+      map[ExerciseTable.columnExerciseTypeId] = exerciseTypeId;
     }
     map[ExerciseTable.columnWorkoutTypeId] = workoutTypeId;
     map[ExerciseTable.columnExerciseName] = name;

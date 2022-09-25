@@ -27,7 +27,8 @@ class WeightTrainingExerciseSet extends StatelessWidget {
         ),
         SizedBox(width: WorkoutAppThemeData.exerciseSetDataMargin),
         Text(
-          LocalizationUtil.localize(context).repetitionText(weightTrainingExerciseSetState.repetition),
+          LocalizationUtil.localize(context)
+              .repetitionText(weightTrainingExerciseSetState.repetition),
           style: Theme.of(context).textTheme.labelLarge,
         ),
       ],
