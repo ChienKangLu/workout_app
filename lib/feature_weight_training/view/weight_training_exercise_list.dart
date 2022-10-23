@@ -6,17 +6,17 @@ import 'weight_training_exercise.dart';
 class WeightTrainingExerciseList extends StatelessWidget {
   const WeightTrainingExerciseList({
     Key? key,
-    required this.weightTrainingExerciseListState,
+    required this.exerciseListUiState,
   }) : super(key: key);
 
-  final WeightTrainingExerciseListUiState weightTrainingExerciseListState;
+  final WeightTrainingExerciseListUiState exerciseListUiState;
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: weightTrainingExerciseListState.exercises
+      children: exerciseListUiState.exerciseUiStates
           .map((exercise) => WeightTrainingExercise(
-                weightTrainingExerciseState: exercise,
+                exerciseUiStates: exercise,
               ))
           .toList(),
     );

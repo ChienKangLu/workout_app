@@ -39,6 +39,16 @@ class WorkoutRecordDao extends BaseDao<WorkoutRecordEntity> {
     );
   }
 
+  Future<bool> update(WorkoutRecordEntity entity) async {
+    final count = await database.update(
+      WorkoutRecordTable.name,
+      entity.toMap(),
+      where: '${WorkoutRecordTable.columnWorkoutRecordId} = ?',
+      whereArgs: [entity.workoutRecordId],
+    );
+    return count == 1;
+  }
+
   Future<int> _getLastWorkoutTypeIndex(int workoutTypeId) async {
     final lastWorkoutTypeIndexResults = await database.query(
       WorkoutRecordTable.name,

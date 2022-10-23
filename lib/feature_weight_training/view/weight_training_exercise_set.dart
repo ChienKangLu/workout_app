@@ -7,28 +7,28 @@ import '../weight_training_view_model.dart';
 class WeightTrainingExerciseSet extends StatelessWidget {
   const WeightTrainingExerciseSet({
     Key? key,
-    required this.weightTrainingExerciseSetState,
+    required this.exerciseSetUiState,
   }) : super(key: key);
 
-  final WeightTrainingExerciseSetUiState weightTrainingExerciseSetState;
+  final WeightTrainingExerciseSetUiState exerciseSetUiState;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Text(
-          "${weightTrainingExerciseSetState.number}.",
+          "${exerciseSetUiState.number}.",
           style: Theme.of(context).textTheme.titleLarge,
         ),
         SizedBox(width: WorkoutAppThemeData.exerciseSetDataMargin),
         Text(
-          "${weightTrainingExerciseSetState.weight} ${weightTrainingExerciseSetState.weightUnit}",
+          "${exerciseSetUiState.weight} ${exerciseSetUiState.weightUnit}",
           style: Theme.of(context).textTheme.labelLarge,
         ),
         SizedBox(width: WorkoutAppThemeData.exerciseSetDataMargin),
         Text(
           LocalizationUtil.localize(context)
-              .repetitionText(weightTrainingExerciseSetState.repetition),
+              .repetitionText(exerciseSetUiState.repetition),
           style: Theme.of(context).textTheme.labelLarge,
         ),
       ],

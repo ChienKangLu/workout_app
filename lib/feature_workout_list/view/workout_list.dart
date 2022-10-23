@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core_view/workout_category.dart';
+import '../../core_view/workout_status.dart';
 import '../../themes/workout_app_theme_data.dart';
 import '../../util/localization_util.dart';
 import '../workout_list_view_model.dart';

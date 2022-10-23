@@ -5,6 +5,7 @@ import '../database/dao/workout_record_dao.dart';
 import '../database/model/workout_record_entity.dart';
 import '../database/model/workout_type_entity.dart';
 import '../database/workout_database.dart';
+import '../model/conversion.dart';
 import '../model/workout.dart';
 import 'factory/workout_factory.dart';
 import 'factory/workout_type_entity_factory.dart';
@@ -29,6 +30,10 @@ class WorkoutRepository {
         createDateTime: DateTime.now().microsecondsSinceEpoch,
       ),
     );
+  }
+
+  Future<bool> updateWorkout(Workout workout) async {
+    return await workoutRecordDao.update(workout.asEntity());
   }
 
   Future<List<Workout>> getWorkouts({

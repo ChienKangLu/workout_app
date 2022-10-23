@@ -58,5 +58,18 @@
         "example": "1"
       }
     }
+  },
+
+  "actionItemStart": "Start",
+  "@actionItemStart": {
+    "description": "Text for start action item"
+  },
+  "actionItemAddExercise": "Add Exercise",
+  "@actionItemAddExercise": {
+    "description": "Text for add exercise action item"
+  },
+  "actionItemFinish": "Finish",
+  "@actionItemFinish": {
+    "description": "Text for finish action item"
   }
 }

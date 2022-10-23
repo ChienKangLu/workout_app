@@ -7,10 +7,10 @@ import 'weight_training_exercise_set_list.dart';
 class WeightTrainingExercise extends StatelessWidget {
   const WeightTrainingExercise({
     Key? key,
-    required this.weightTrainingExerciseState,
+    required this.exerciseUiStates,
   }) : super(key: key);
 
-  final WeightTrainingExerciseUiState weightTrainingExerciseState;
+  final WeightTrainingExerciseUiState exerciseUiStates;
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +21,11 @@ class WeightTrainingExercise extends StatelessWidget {
         shrinkWrap: true,
         children: [
           Text(
-            weightTrainingExerciseState.name,
+            exerciseUiStates.name,
             style: Theme.of(context).textTheme.titleLarge,
           ),
           WeightTrainingExerciseSetList(
-            weightTrainingExerciseSetListState:
-                weightTrainingExerciseState.setList,
+            exerciseSetListUiState: exerciseUiStates.exerciseSetListUiState,
           ),
         ],
       ),

@@ -38,6 +38,7 @@ class WorkoutFactory {
     final workoutRecordId = workoutRecordEntity.workoutRecordId;
     final workoutTypeId = workoutRecordEntity.workoutTypeId;
     final workoutTypeIndex = workoutRecordEntity.workoutTypeIndex;
+    final createDateTime = workoutRecordEntity.createDateTime;
     final workoutTypeEntity = WorkoutTypeEntity.fromId(workoutTypeId);
     final workoutType = WorkoutTypeFactory.fromEntity(workoutTypeEntity);
 
@@ -47,12 +48,14 @@ class WorkoutFactory {
         workout = WeightTraining(
           workoutRecordId: workoutRecordId,
           index: workoutTypeIndex,
+          createDateTime: DateTime.fromMicrosecondsSinceEpoch(createDateTime),
         );
         break;
       case WorkoutType.running:
         workout = Running(
           workoutRecordId: workoutRecordId,
           index: workoutTypeIndex,
+          createDateTime: DateTime.fromMicrosecondsSinceEpoch(createDateTime),
         );
         break;
     }

@@ -11,12 +11,14 @@ abstract class Workout<T extends Exercise> extends IntervalEvent {
     required this.workoutRecordId,
     required this.type,
     required this.index,
+    required this.createDateTime,
     List<T>? exercises,
   }) : exercises = exercises ?? [];
 
   final int workoutRecordId;
   final WorkoutType type;
   final int index;
+  final DateTime createDateTime;
   final List<T> exercises;
 
   void addExercise(T exercise) {
@@ -28,6 +30,7 @@ class WeightTraining extends Workout<WeightTrainingExercise> {
   WeightTraining({
     required super.workoutRecordId,
     required super.index,
+    required super.createDateTime,
     List<WeightTrainingExercise>? exercises,
   }) : super(
           type: WorkoutType.weightTraining,
@@ -40,6 +43,7 @@ class Running extends Workout<RunningExercise> {
     required super.workoutRecordId,
     List<RunningExercise>? exercises,
     required super.index,
+    required super.createDateTime,
   }) : super(
           type: WorkoutType.running,
           exercises: exercises,

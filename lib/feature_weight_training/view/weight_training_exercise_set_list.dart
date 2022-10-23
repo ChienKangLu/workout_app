@@ -6,21 +6,20 @@ import 'weight_training_exercise_set.dart';
 class WeightTrainingExerciseSetList extends StatelessWidget {
   const WeightTrainingExerciseSetList({
     Key? key,
-    required this.weightTrainingExerciseSetListState,
+    required this.exerciseSetListUiState,
   }) : super(key: key);
 
-  final WeightTrainingExerciseSetListUiState weightTrainingExerciseSetListState;
+  final WeightTrainingExerciseSetListUiState exerciseSetListUiState;
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: weightTrainingExerciseSetListState.sets.length,
+      itemCount: exerciseSetListUiState.exerciseSetUiStates.length,
       itemBuilder: (content, index) {
         return WeightTrainingExerciseSet(
-          weightTrainingExerciseSetState:
-              weightTrainingExerciseSetListState.sets[index],
+          exerciseSetUiState: exerciseSetListUiState.exerciseSetUiStates[index],
         );
       },
     );

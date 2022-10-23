@@ -13,5 +13,9 @@
   "minuteUnitText": "分",
   "secondUnitText": "秒",
   "millisecondUnitText": "毫秒",
-  "repetitionText": "{rep} 次"
+  "repetitionText": "{rep} 次",
+
+  "actionItemStart": "開始運動",
+  "actionItemAddExercise": "新增項目",
+  "actionItemFinish": "運動結束"
 }
