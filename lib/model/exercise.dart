@@ -3,10 +3,12 @@ import 'unit.dart';
 
 abstract class Exercise<T extends ExerciseSet> extends IntervalEvent {
   Exercise({
+    required this.exerciseId,
     required this.name,
     List<T>? sets,
   }) : sets = sets ?? [];
 
+  final int exerciseId;
   final String name;
   final List<T> sets;
 
@@ -15,11 +17,11 @@ abstract class Exercise<T extends ExerciseSet> extends IntervalEvent {
   }
 }
 
-abstract class ExerciseSet extends IntervalEvent {
-}
+abstract class ExerciseSet extends IntervalEvent {}
 
 class WeightTrainingExercise extends Exercise<WeightTrainingExerciseSet> {
   WeightTrainingExercise({
+    required super.exerciseId,
     required super.name,
     List<WeightTrainingExerciseSet>? sets,
   }) : super(sets: sets);
@@ -41,12 +43,13 @@ class WeightTrainingExerciseSet extends ExerciseSet {
 
 class RunningExercise extends Exercise<RunningExerciseSet> {
   RunningExercise({
+    required super.exerciseId,
     required super.name,
     List<RunningExerciseSet>? sets,
   }) : super(sets: sets);
 }
 
-class RunningExerciseSet extends ExerciseSet{
+class RunningExerciseSet extends ExerciseSet {
   RunningExerciseSet({
     required this.distance,
     required this.unit,

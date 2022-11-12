@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../core_view/workout_category.dart';
 import '../feature_weight_training/weight_training_page.dart';
 import '../feature_workout_add/workout_add_page.dart';
+import '../util/log_util.dart';
 import '../util/snapshot_extension.dart';
 import '../util/localization_util.dart';
 import 'view/workout_list.dart';
@@ -10,6 +11,7 @@ import 'view/workout_list_page_bottom_bar.dart';
 import 'workout_list_view_model.dart';
 
 class WorkoutListPage extends StatefulWidget {
+  static const _tag = "WorkoutListPage";
   static const routeName = "/workout_list";
 
   WorkoutListPage({Key? key})
@@ -42,18 +44,18 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
     setState(() => _load());
   }
 
-  void _onItemClick(WorkoutCategory category, int workoutRecordId) async {
+  void _onItemClick(WorkoutCategory category, int workoutId) async {
     switch (category) {
       case WorkoutCategory.weightTraining:
         await Navigator.pushNamed(
           context,
           WeightTrainingPage.routeName,
-          arguments: workoutRecordId,
+          arguments: workoutId,
         );
         setState(() => _load());
         break;
       case WorkoutCategory.running:
-        // TODO: page for running
+        Log.d(WorkoutListPage._tag, "TODO: page for running");
         break;
     }
   }

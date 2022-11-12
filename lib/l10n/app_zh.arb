@@ -17,5 +17,13 @@
 
   "actionItemStart": "開始運動",
   "actionItemAddExercise": "新增項目",
-  "actionItemFinish": "運動結束"
+  "actionItemFinish": "運動結束",
+
+  "createExerciseDialogTitle": "新增項目",
+  "exerciseNameTextFieldHint": "項目名稱",
+  "exerciseNameTextFieldError": "請輸入文字",
+  "createExerciseDialogPositiveBtn": "確定",
+  "createExerciseDialogNegativeBtn": "取消",
+  "exerciseOptionDialogTitle": "增加項目",
+  "newExerciseOptionTitle": "新增項目"
 }

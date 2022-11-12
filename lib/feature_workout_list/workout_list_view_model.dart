@@ -23,8 +23,8 @@ class WorkoutListViewModel {
 
   WorkoutUiState _toWorkoutUiState(Workout workout) {
     return WorkoutUiState(
-      workoutRecordId: workout.workoutRecordId,
-      number: workout.index + 1,
+      workoutId: workout.workoutId,
+      number: workout.typeNum + 1,
       category: WorkoutCategory.fromType(workout.type),
       exerciseThumbnailList: _toExerciseThumbnailListUiState(workout.exercises),
       workoutStatus: WorkoutStatus.fromDateTime(workout.startDateTime, workout.endDateTime),
@@ -61,14 +61,14 @@ class ExerciseThumbnailListUiState {
 
 class WorkoutUiState {
   WorkoutUiState({
-    required this.workoutRecordId,
+    required this.workoutId,
     required this.number,
     required this.category,
     required this.exerciseThumbnailList,
     required this.workoutStatus,
   });
 
-  final int workoutRecordId;
+  final int workoutId;
   final int number;
   final WorkoutCategory category;
   final ExerciseThumbnailListUiState exerciseThumbnailList;

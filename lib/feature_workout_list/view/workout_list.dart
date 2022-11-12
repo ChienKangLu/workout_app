@@ -38,11 +38,11 @@ class WorkoutList extends StatelessWidget {
       itemBuilder: (content, index) {
         final workoutState = workoutListState.workouts[index];
         final category = workoutState.category;
-        final workoutRecordId = workoutState.workoutRecordId;
+        final workoutId = workoutState.workoutId;
 
         return Workout(
           workoutState: workoutState,
-          onItemClick: () => onItemClick(category, workoutRecordId),
+          onItemClick: () => onItemClick(category, workoutId),
         );
       },
     );

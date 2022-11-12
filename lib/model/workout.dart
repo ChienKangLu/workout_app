@@ -8,16 +8,16 @@ enum WorkoutType {
 
 abstract class Workout<T extends Exercise> extends IntervalEvent {
   Workout({
-    required this.workoutRecordId,
+    required this.workoutId,
     required this.type,
-    required this.index,
+    required this.typeNum,
     required this.createDateTime,
     List<T>? exercises,
   }) : exercises = exercises ?? [];
 
-  final int workoutRecordId;
+  final int workoutId;
   final WorkoutType type;
-  final int index;
+  final int typeNum;
   final DateTime createDateTime;
   final List<T> exercises;
 
@@ -28,8 +28,8 @@ abstract class Workout<T extends Exercise> extends IntervalEvent {
 
 class WeightTraining extends Workout<WeightTrainingExercise> {
   WeightTraining({
-    required super.workoutRecordId,
-    required super.index,
+    required super.workoutId,
+    required super.typeNum,
     required super.createDateTime,
     List<WeightTrainingExercise>? exercises,
   }) : super(
@@ -40,9 +40,9 @@ class WeightTraining extends Workout<WeightTrainingExercise> {
 
 class Running extends Workout<RunningExercise> {
   Running({
-    required super.workoutRecordId,
+    required super.workoutId,
     List<RunningExercise>? exercises,
-    required super.index,
+    required super.typeNum,
     required super.createDateTime,
   }) : super(
           type: WorkoutType.running,

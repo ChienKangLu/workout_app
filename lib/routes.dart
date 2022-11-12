@@ -24,7 +24,7 @@ class RouteConfiguration {
     Path(
       name: WeightTrainingPage.routeName,
       builder: (context, arguments) => WeightTrainingPage(
-        workoutRecordId: arguments as int,
+        workoutId: arguments as int,
       ),
     ),
     Path(

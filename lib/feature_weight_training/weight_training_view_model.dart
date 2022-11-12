@@ -1,68 +1,79 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
-import 'package:intl/intl.dart';
 
 import '../core_view/ui_state.dart';
+import '../core_view/util/date_time_display_helper.dart';
 import '../core_view/workout_category.dart';
 import '../core_view/workout_status.dart';
 import '../model/exercise.dart';
 import '../model/unit.dart';
 import '../model/workout.dart';
+import '../repository/exercise_repository.dart';
 import '../repository/repository_manager.dart';
 import '../repository/workout_repository.dart';
 
 class WeightTrainingViewModel extends ChangeNotifier {
-  static final DateFormat formatter = DateFormat("MMM dd, y 'at' h:mm a");
-
   WeightTrainingViewModel({
-    required this.workoutRecordId,
+    required this.workoutId,
   });
 
-  final int workoutRecordId;
+  final int workoutId;
   final WorkoutRepository _workoutRepository =
       RepositoryManager.instance.workoutRepository;
+  final ExerciseRepository _exerciseRepository =
+      RepositoryManager.instance.exerciseRepository;
 
   UiState _uiState = UiState.loading;
   WeightTrainingUiState? _weightTrainingUiState;
+  ExerciseOptionListUiState? _exerciseOptionListUiState;
 
   UiState get uiState => _uiState;
   WeightTrainingUiState? get weightTrainingUiState => _weightTrainingUiState;
+  ExerciseOptionListUiState? get exerciseOptionListUiState =>
+      _exerciseOptionListUiState;
 
   Future<void> initModel() async {
     final weightTraining = await _getWeightTraining();
     _updateWeightTrainingUiState(weightTraining);
+
+    final exercises = await _getExercises();
+    _updateExerciseOptionListUiState(exercises);
+
+    _uiState = UiState.success;
+    notifyListeners();
   }
 
   Future<WeightTraining> _getWeightTraining() async {
     final workouts = await _workoutRepository.getWorkouts(
-      workoutRecordId: workoutRecordId,
+      workoutId: workoutId,
     );
     if (workouts.isEmpty) {
-      throw Exception("Workout with id '$workoutRecordId' doesn't exist");
+      throw Exception("Workout with id '$workoutId' doesn't exist");
     }
 
     final workout = workouts.first;
     if (workout is! WeightTraining) {
-      throw Exception(
-          "Workout with id '$workoutRecordId' is not WeightTraining");
+      throw Exception("Workout with id '$workoutId' is not WeightTraining");
     }
 
     return workout;
   }
 
+  Future<List<Exercise>> _getExercises() async =>
+      _exerciseRepository.getExercises(WorkoutType.weightTraining);
+
   void _updateWeightTrainingUiState(WeightTraining weightTraining) {
     _weightTrainingUiState = _createWeightTrainingUiState(weightTraining);
-    _uiState = UiState.success;
-    notifyListeners();
   }
 
   WeightTrainingUiState _createWeightTrainingUiState(
     WeightTraining weightTraining,
   ) {
     return WeightTrainingUiState(
-      number: weightTraining.index + 1,
+      number: weightTraining.typeNum + 1,
       category: WorkoutCategory.fromType(weightTraining.type),
-      startDateTime: _dateTime(weightTraining),
+      startDateTime:
+          DateTimeDisplayHelper.dateTime(weightTraining.startDateTime),
       duration: _duration(weightTraining),
       exerciseListUiState: _createExerciseListUiState(weightTraining.exercises),
       workoutStatus: WorkoutStatus.fromDateTime(
@@ -71,15 +82,6 @@ class WeightTrainingViewModel extends ChangeNotifier {
       ),
       weightTraining: weightTraining,
     );
-  }
-
-  String _dateTime(WeightTraining weightTraining) {
-    final startTime = weightTraining.startDateTime;
-    if (startTime == null) {
-      return "";
-    }
-
-    return formatter.format(startTime);
   }
 
   Duration _duration(WeightTraining weightTraining) {
@@ -94,48 +96,43 @@ class WeightTrainingViewModel extends ChangeNotifier {
 
   WeightTrainingExerciseListUiState _createExerciseListUiState(
     List<WeightTrainingExercise> exercises,
-  ) {
-    return WeightTrainingExerciseListUiState(
-      exerciseUiStates: exercises
-          .map((exercise) => _createExerciseUiState(exercise))
-          .toList(),
-    );
-  }
+  ) =>
+      WeightTrainingExerciseListUiState(
+        exerciseUiStates: exercises
+            .map((exercise) => _createExerciseUiState(exercise))
+            .toList(),
+      );
 
   WeightTrainingExerciseUiState _createExerciseUiState(
     WeightTrainingExercise exercise,
-  ) {
-    return WeightTrainingExerciseUiState(
-      name: exercise.name,
-      exerciseSetListUiState: _createExerciseSetListUiState(exercise.sets),
-    );
-  }
+  ) =>
+      WeightTrainingExerciseUiState(
+        name: exercise.name,
+        exerciseSetListUiState: _createExerciseSetListUiState(exercise.sets),
+      );
 
   WeightTrainingExerciseSetListUiState _createExerciseSetListUiState(
     List<WeightTrainingExerciseSet> sets,
-  ) {
-    return WeightTrainingExerciseSetListUiState(
-        exerciseSetUiStates: sets
-            .mapIndexed(
-                (index, set) => _createExerciseSetUiState(index + 1, set))
-            .toList());
-  }
+  ) =>
+      WeightTrainingExerciseSetListUiState(
+          exerciseSetUiStates: sets
+              .mapIndexed(
+                  (index, set) => _createExerciseSetUiState(index + 1, set))
+              .toList());
 
   WeightTrainingExerciseSetUiState _createExerciseSetUiState(
     int number,
     WeightTrainingExerciseSet exerciseSet,
-  ) {
-    return WeightTrainingExerciseSetUiState(
-      number: number,
-      weight: _totalWeight(exerciseSet.baseWeight, exerciseSet.sideWeight),
-      weightUnit: _displayUnitString(exerciseSet.unit),
-      repetition: exerciseSet.repetition,
-    );
-  }
+  ) =>
+      WeightTrainingExerciseSetUiState(
+        number: number,
+        weight: _totalWeight(exerciseSet.baseWeight, exerciseSet.sideWeight),
+        weightUnit: _displayUnitString(exerciseSet.unit),
+        repetition: exerciseSet.repetition,
+      );
 
-  double _totalWeight(double baseWeight, double sideWeight) {
-    return baseWeight + sideWeight * 2;
-  }
+  double _totalWeight(double baseWeight, double sideWeight) =>
+      baseWeight + sideWeight * 2;
 
   String _displayUnitString(WeightUnit unit) {
     switch (unit) {
@@ -146,7 +143,29 @@ class WeightTrainingViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> start() async {
+  void _updateExerciseOptionListUiState(List<Exercise<ExerciseSet>> exercises) {
+    _exerciseOptionListUiState = _createExerciseOptionListUiState(exercises);
+  }
+
+  ExerciseOptionListUiState _createExerciseOptionListUiState(
+    List<Exercise<ExerciseSet>> exercises,
+  ) {
+    return ExerciseOptionListUiState(
+        exerciseOptionUiStates: exercises
+            .map((exercise) => _createExerciseOptionUiState(exercise))
+            .toList());
+  }
+
+  ExerciseOptionUiState _createExerciseOptionUiState(
+    Exercise exercise,
+  ) {
+    return ExerciseOptionUiState(
+      exerciseTypeId: exercise.exerciseId,
+      name: exercise.name,
+    );
+  }
+
+  Future<void> startWorkout() async {
     final weightTrainingUiState = _weightTrainingUiState;
     if (weightTrainingUiState == null) {
       return;
@@ -157,10 +176,11 @@ class WeightTrainingViewModel extends ChangeNotifier {
     final result = await _workoutRepository.updateWorkout(weightTraining);
     if (result) {
       _updateWeightTrainingUiState(weightTraining);
+      notifyListeners();
     }
   }
 
-  Future<void> finish() async {
+  Future<void> finishWorkout() async {
     final weightTrainingUiState = _weightTrainingUiState;
     if (weightTrainingUiState == null) {
       return;
@@ -171,7 +191,19 @@ class WeightTrainingViewModel extends ChangeNotifier {
     final result = await _workoutRepository.updateWorkout(weightTraining);
     if (result) {
       _updateWeightTrainingUiState(weightTraining);
+      notifyListeners();
     }
+  }
+
+  Future<void> createExercise(String name) async {
+    final exerciseId = await _exerciseRepository.createExercise(WorkoutType.weightTraining, name);
+    if (exerciseId == -1) {
+      return;
+    }
+
+    final exercises = await _getExercises();
+    _updateExerciseOptionListUiState(exercises);
+    notifyListeners();
   }
 }
 
@@ -233,4 +265,22 @@ class WeightTrainingUiState {
   final WeightTrainingExerciseListUiState exerciseListUiState;
   final WorkoutStatus workoutStatus;
   final WeightTraining weightTraining;
+}
+
+class ExerciseOptionUiState {
+  ExerciseOptionUiState({
+    required this.exerciseTypeId,
+    required this.name,
+  });
+
+  final int exerciseTypeId;
+  final String name;
+}
+
+class ExerciseOptionListUiState {
+  ExerciseOptionListUiState({
+    required this.exerciseOptionUiStates,
+  });
+
+  final List<ExerciseOptionUiState> exerciseOptionUiStates;
 }

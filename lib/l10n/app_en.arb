@@ -71,5 +71,35 @@
   "actionItemFinish": "Finish",
   "@actionItemFinish": {
     "description": "Text for finish action item"
+  },
+
+  "createExerciseDialogTitle": "Create Exercise",
+  "@createExerciseDialogTitle": {
+    "description": "Title for create exercise dialog"
+  },
+  "exerciseNameTextFieldHint": "Exercise Name",
+  "@exerciseNameTextFieldHint": {
+    "description": "Hint for exercise name"
+  },
+  "exerciseNameTextFieldError": "Please enter some text",
+  "@exerciseNameTextFieldError": {
+    "description": "Text for exercise name error"
+  },
+  "createExerciseDialogPositiveBtn": "Ok",
+  "@createExerciseDialogPositiveBtn": {
+    "description": "Text for positive button in create exercise dialog"
+  },
+  "createExerciseDialogNegativeBtn": "Cancel",
+  "@createExerciseDialogNegativeBtn": {
+    "description": "Text for negative button in create exercise dialog"
+  },
+
+  "exerciseOptionDialogTitle": "Add Exercise",
+  "@exerciseOptionDialogTitle": {
+    "description": "Title for exercise option dialog"
+  },
+  "newExerciseOptionTitle": "New Exercise",
+  "@newExerciseOptionTitle": {
+    "description": "Title for new exercise option"
   }
 }

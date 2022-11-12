@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
 
 import '../util/localization_util.dart';
+import 'list_item.dart';
+
+enum ActionType {
+  startWorkout,
+  finishWorkout,
+  addExercise,
+}
 
 class ActionSheet extends StatelessWidget {
   const ActionSheet({
     Key? key,
     required this.hasStartItem,
-    required this.hasAddExerciseItm,
     required this.hasFinishItemItem,
-    required this.onStartItemClicked,
-    required this.onAddExerciseItemClicked,
-    required this.onFinishItemClicked,
+    required this.hasAddExerciseItm,
   }) : super(key: key);
 
   final bool hasStartItem;
-  final bool hasAddExerciseItm;
   final bool hasFinishItemItem;
+  final bool hasAddExerciseItm;
 
-  final void Function() onStartItemClicked;
-  final void Function() onAddExerciseItemClicked;
-  final void Function() onFinishItemClicked;
+  void onItemClicked(BuildContext context, ActionType type) {
+    Navigator.pop(context, type);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,20 +33,23 @@ class ActionSheet extends StatelessWidget {
         child: Column(
           children: [
             if (hasStartItem)
-              ActionItem(
+              ListItem(
                 text: LocalizationUtil.localize(context).actionItemStart,
-                onTap: onStartItemClicked,
+                onTap: () => onItemClicked(context, ActionType.startWorkout),
               ),
             if (hasAddExerciseItm)
-              ActionItem(
+              ListItem(
                 text: LocalizationUtil.localize(context).actionItemAddExercise,
-                onTap: onAddExerciseItemClicked,
+                onTap: () => onItemClicked(context, ActionType.addExercise),
               ),
             if (hasFinishItemItem)
-              ActionItem(
+              ListItem(
                 text: LocalizationUtil.localize(context).actionItemFinish,
-                onTap: onFinishItemClicked,
+                onTap: () => onItemClicked(context, ActionType.finishWorkout),
               ),
+            const SizedBox(
+              height: 50,
+            )
           ],
         ),
       ),
@@ -50,42 +57,11 @@ class ActionSheet extends StatelessWidget {
   }
 }
 
-class ActionItem extends StatelessWidget {
-  const ActionItem({
-    Key? key,
-    required this.text,
-    required this.onTap,
-  }) : super(key: key);
-
-  final String text;
-  final void Function() onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Text(
-              text,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-void showActionSheet({
+Future<T?> showActionSheet<T>({
   required BuildContext context,
   required WidgetBuilder builder,
 }) =>
-    showModalBottomSheet(
+    showModalBottomSheet<T>(
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(

@@ -1,28 +1,28 @@
-import '../../database/model/base_workout_entity.dart';
-import '../../database/model/running_entity.dart';
-import '../../database/model/weight_training_entity.dart';
+import '../../database/model/exercise_set_entity.dart';
+import '../../database/model/running_set_entity.dart';
+import '../../database/model/weight_training_set_entity.dart';
 import '../../model/exercise.dart';
 import '../../model/unit.dart';
 
 class ExerciseSetFactory {
   static ExerciseSet createExerciseSet(
-    WorkoutEntity workoutEntity,
+    ExerciseSetEntity exerciseSetEntity,
   ) {
     final ExerciseSet exerciseSet;
-    if (workoutEntity is WeightTrainingEntity) {
+    if (exerciseSetEntity is WeightTrainingSetEntity) {
       exerciseSet = WeightTrainingExerciseSet(
-        baseWeight: workoutEntity.baseWeight,
-        sideWeight: workoutEntity.sideWeight,
+        baseWeight: exerciseSetEntity.baseWeight,
+        sideWeight: exerciseSetEntity.sideWeight,
         unit: WeightUnit.kilogram,
-        repetition: workoutEntity.repetition,
+        repetition: exerciseSetEntity.repetition,
       );
-    } else if (workoutEntity is RunningEntity) {
+    } else if (exerciseSetEntity is RunningSetEntity) {
       exerciseSet = RunningExerciseSet(
-        distance: workoutEntity.distance,
+        distance: exerciseSetEntity.distance,
         unit: DistanceUnit.meter,
       );
     } else {
-      throw Exception("$workoutEntity is not supported");
+      throw Exception("$exerciseSetEntity is not supported");
     }
     return exerciseSet;
   }

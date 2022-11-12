@@ -7,38 +7,40 @@ import '../core_view/workout_category.dart';
 import '../core_view/workout_status.dart';
 import '../themes/workout_app_theme_data.dart';
 import '../core_view/action_sheet.dart';
+import 'view/create_exercise_dialog.dart';
+import 'view/exercise_option_dialog.dart';
 import 'view/weight_training_exercise_list.dart';
 import 'weight_training_view_model.dart';
 
 class WeightTrainingPage extends StatefulWidget {
   static const routeName = "/weight_training";
 
-  WeightTrainingPage({Key? key, required int workoutRecordId})
-      : model = WeightTrainingViewModel(workoutRecordId: workoutRecordId),
-        super(key: key);
+  const WeightTrainingPage({Key? key, required this.workoutId})
+      : super(key: key);
 
-  final WeightTrainingViewModel model;
+  final int workoutId;
 
   @override
   State<WeightTrainingPage> createState() => _WeightTrainingPageState();
 }
 
 class _WeightTrainingPageState extends State<WeightTrainingPage> {
-  WeightTrainingViewModel get _model => widget.model;
+  late WeightTrainingViewModel _model;
+  int get workoutId => widget.workoutId;
 
   @override
   void initState() {
-    _model.initModel();
+    _model = WeightTrainingViewModel(workoutId: workoutId)..initModel();
     super.initState();
   }
 
-  void _onMoreItemClicked() {
-    showActionSheet(
+  void _onMoreItemClicked() async {
+    final actionType = await showActionSheet<ActionType>(
       context: context,
       builder: (context) => ChangeNotifierProvider.value(
         value: _model,
         child: Consumer<WeightTrainingViewModel>(
-          builder: (context, model, child) {
+          builder: (_, model, __) {
             final weightTrainingState = model.weightTrainingUiState;
             final isCreated =
                 weightTrainingState?.workoutStatus == WorkoutStatus.created;
@@ -49,28 +51,86 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
               hasStartItem: isCreated,
               hasAddExerciseItm: isInProgress,
               hasFinishItemItem: isInProgress,
-              onStartItemClicked: _onStartItemClicked,
-              onAddExerciseItemClicked: _onAddExerciseItemClicked,
-              onFinishItemClicked: _onFinishItemClicked,
             );
           },
         ),
       ),
     );
+
+    if (actionType == null) {
+      return;
+    }
+
+    switch (actionType) {
+      case ActionType.startWorkout:
+        _onStartItemClicked();
+        break;
+      case ActionType.addExercise:
+        _onAddExerciseItemClicked();
+        break;
+      case ActionType.finishWorkout:
+        _onFinishItemClicked();
+        break;
+    }
   }
 
   void _onStartItemClicked() {
-    _model.start();
-    Navigator.pop(context);
-  }
-
-  void _onAddExerciseItemClicked() {
-    Navigator.pop(context);
+    _model.startWorkout();
   }
 
   void _onFinishItemClicked() {
-    _model.finish();
-    Navigator.pop(context);
+    _model.finishWorkout();
+  }
+
+  void _onAddExerciseItemClicked() async {
+    final exerciseOptionAction = await showDialog<ExerciseOptionAction>(
+      context: context,
+      builder: (context) => ChangeNotifierProvider.value(
+        value: _model,
+        child: Consumer<WeightTrainingViewModel>(
+          builder: (_, model, __) {
+            final exerciseOptionListUiState = model.exerciseOptionListUiState;
+            if (exerciseOptionListUiState == null) {
+              return const SizedBox();
+            }
+
+            return ExerciseOptionDialog(
+              exerciseOptionListUiState: exerciseOptionListUiState,
+            );
+          },
+        ),
+      ),
+    );
+
+    if (exerciseOptionAction == null) {
+      return;
+    }
+
+    switch (exerciseOptionAction.type) {
+      case ExerciseOptionActionType.newExercise:
+        onNewExercise();
+        break;
+      case ExerciseOptionActionType.selectExercise:
+        onExerciseSelected(exerciseOptionAction.data);
+        break;
+    }
+  }
+
+  void onNewExercise() async {
+    final exerciseName = await showDialog<String>(
+      context: context,
+      builder: (context) => const CreateExerciseDialog(),
+    );
+
+    if (exerciseName == null) {
+      return;
+    }
+
+    await _model.createExercise(exerciseName);
+  }
+
+  void onExerciseSelected(int exerciseTypeId) {
+    // TODO: add exercise into workout detail
   }
 
   @override
@@ -129,8 +189,12 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(weightTrainingUiState.startDateTime),
-                Text(DurationUtil.displayText(
-                    context, weightTrainingUiState.duration)),
+                Text(
+                  DurationUtil.displayText(
+                    context,
+                    weightTrainingUiState.duration,
+                  ),
+                ),
                 WeightTrainingExerciseList(
                   exerciseListUiState:
                       weightTrainingUiState.exerciseListUiState,
