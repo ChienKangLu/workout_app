@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../core_view/ui_state.dart';
 import '../core_view/util/duration_util.dart';
 import '../core_view/workout_category.dart';
 import '../core_view/workout_status.dart';
@@ -170,7 +169,7 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
     return Consumer<WeightTrainingViewModel>(
       builder: (context, model, child) {
         final weightTrainingUiState = model.weightTrainingUiState;
-        if (model.uiState != UiState.success || weightTrainingUiState == null) {
+        if (weightTrainingUiState == null) {
           return const SizedBox();
         }
 
@@ -184,8 +183,7 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
   Widget _moreItem() {
     return Consumer<WeightTrainingViewModel>(builder: (context, model, child) {
       final weightTrainingUiState = model.weightTrainingUiState;
-      final enabled =
-          model.uiState == UiState.success && weightTrainingUiState != null;
+      final enabled = weightTrainingUiState != null;
 
       return IconButton(
         icon: const Icon(Icons.more_horiz),
@@ -198,7 +196,7 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
     return Consumer<WeightTrainingViewModel>(
       builder: (context, model, child) {
         final weightTrainingUiState = model.weightTrainingUiState;
-        if (model.uiState != UiState.success || weightTrainingUiState == null) {
+        if (weightTrainingUiState == null) {
           return const SizedBox();
         }
 

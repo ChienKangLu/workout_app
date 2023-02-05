@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
-import '../core_view/ui_state.dart';
 import '../core_view/util/date_time_display_helper.dart';
 import '../core_view/workout_category.dart';
 import '../core_view/workout_status.dart';
@@ -23,11 +22,9 @@ class WeightTrainingViewModel extends ChangeNotifier {
   final ExerciseRepository _exerciseRepository =
       RepositoryManager.instance.exerciseRepository;
 
-  UiState _uiState = UiState.loading;
   WeightTrainingUiState? _weightTrainingUiState;
   ExerciseOptionListUiState? _exerciseOptionListUiState;
 
-  UiState get uiState => _uiState;
   WeightTrainingUiState? get weightTrainingUiState => _weightTrainingUiState;
   ExerciseOptionListUiState? get exerciseOptionListUiState =>
       _exerciseOptionListUiState;
@@ -39,7 +36,6 @@ class WeightTrainingViewModel extends ChangeNotifier {
     final exercises = await _getExercises();
     _updateExerciseOptionListUiState(exercises);
 
-    _uiState = UiState.success;
     notifyListeners();
   }
 
