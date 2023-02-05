@@ -1,6 +1,8 @@
 import '../database/dao/dao_provider_mixin.dart';
 import '../database/dao/exercise_dao.dart';
 import '../database/model/exercise_entity.dart';
+import '../database/model/weight_training_set_entity.dart';
+import '../database/model/workout_detail_entity.dart';
 import '../model/exercise.dart';
 import '../model/workout.dart';
 import 'factory/exercise_factory.dart';
@@ -27,5 +29,30 @@ class ExerciseRepository with DaoProviderMixin {
         workoutType: workoutTypeEntity,
       ),
     );
+  }
+
+  Future<int> addExercise(int workoutId, int exerciseId) async {
+    return await workoutDetailDao.add(WorkoutDetailEntity(
+      workoutId: workoutId,
+      exerciseId: exerciseId,
+      createDateTime: DateTime.now().millisecondsSinceEpoch,
+    ));
+  }
+
+  Future<int> addWeightTrainingSet({
+    required int workoutId,
+    required int exerciseId,
+    required double baseWeight,
+    required double sideWeight,
+    required int repetition,
+  }) async {
+    return weightTrainingSetDao.add(WeightTrainingSetEntity.create(
+      workoutId: workoutId,
+      exerciseId: exerciseId,
+      baseWeight: baseWeight,
+      sideWeight: sideWeight,
+      repetition: repetition,
+      endDateTime: DateTime.now().millisecondsSinceEpoch,
+    ));
   }
 }

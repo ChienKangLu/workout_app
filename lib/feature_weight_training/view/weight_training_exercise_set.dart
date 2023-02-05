@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core_view/util/weight_unit_display_helper.dart';
 import '../../themes/workout_app_theme_data.dart';
 import '../../util/localization_util.dart';
 import '../weight_training_view_model.dart';
@@ -22,7 +23,7 @@ class WeightTrainingExerciseSet extends StatelessWidget {
         ),
         SizedBox(width: WorkoutAppThemeData.exerciseSetDataMargin),
         Text(
-          "${exerciseSetUiState.weight} ${exerciseSetUiState.weightUnit}",
+          "${exerciseSetUiState.weight} ${WeightUnitDisplayHelper.toDisplayString(context, exerciseSetUiState.weightUnit)}",
           style: Theme.of(context).textTheme.labelLarge,
         ),
         SizedBox(width: WorkoutAppThemeData.exerciseSetDataMargin),

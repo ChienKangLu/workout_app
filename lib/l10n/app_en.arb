@@ -101,5 +101,26 @@
   "newExerciseOptionTitle": "New Exercise",
   "@newExerciseOptionTitle": {
     "description": "Title for new exercise option"
+  },
+
+  "repetitionTitle": "Repetition",
+  "@repetitionTitle": {
+    "description": "Title for repetition"
+  },
+  "baseWeightTitle": "Base weight",
+  "@baseWeightTitle": {
+    "description": "Title for base weight"
+  },
+  "sideWeightTitle": "Side weight",
+  "@sideWeightTitle": {
+    "description": "Title for side weight"
+  },
+  "unitKilogram": "kg",
+  "@unitKilogram": {
+    "description": "Text for kilogram unit"
+  },
+  "unitPound": "lb",
+  "@unitPound": {
+    "description": "Text for pound unit"
   }
 }

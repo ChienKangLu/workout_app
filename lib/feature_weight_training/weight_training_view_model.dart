@@ -108,6 +108,7 @@ class WeightTrainingViewModel extends ChangeNotifier {
   ) =>
       WeightTrainingExerciseUiState(
         name: exercise.name,
+        exerciseId: exercise.exerciseId,
         exerciseSetListUiState: _createExerciseSetListUiState(exercise.sets),
       );
 
@@ -126,22 +127,13 @@ class WeightTrainingViewModel extends ChangeNotifier {
   ) =>
       WeightTrainingExerciseSetUiState(
         number: number,
-        weight: _totalWeight(exerciseSet.baseWeight, exerciseSet.sideWeight),
-        weightUnit: _displayUnitString(exerciseSet.unit),
+        weight: _totalWeight(exerciseSet.baseWeight, exerciseSet.sideWeight).toStringAsFixed(1),
+        weightUnit: exerciseSet.unit,
         repetition: exerciseSet.repetition,
       );
 
   double _totalWeight(double baseWeight, double sideWeight) =>
       baseWeight + sideWeight * 2;
-
-  String _displayUnitString(WeightUnit unit) {
-    switch (unit) {
-      case WeightUnit.kilogram:
-        return "kg";
-      case WeightUnit.pound:
-        return "lb";
-    }
-  }
 
   void _updateExerciseOptionListUiState(List<Exercise<ExerciseSet>> exercises) {
     _exerciseOptionListUiState = _createExerciseOptionListUiState(exercises);
@@ -196,13 +188,48 @@ class WeightTrainingViewModel extends ChangeNotifier {
   }
 
   Future<void> createExercise(String name) async {
-    final exerciseId = await _exerciseRepository.createExercise(WorkoutType.weightTraining, name);
+    final exerciseId = await _exerciseRepository.createExercise(
+        WorkoutType.weightTraining, name);
     if (exerciseId == -1) {
       return;
     }
 
     final exercises = await _getExercises();
     _updateExerciseOptionListUiState(exercises);
+    notifyListeners();
+  }
+
+  Future<void> addExercise(int exerciseId) async {
+    final workoutDetailId =
+        await _exerciseRepository.addExercise(workoutId, exerciseId);
+    if (workoutDetailId == -1) {
+      return;
+    }
+
+    final weightTraining = await _getWeightTraining();
+    _updateWeightTrainingUiState(weightTraining);
+    notifyListeners();
+  }
+
+  Future<void> addExerciseSet({
+    required int exerciseId,
+    required double baseWeight,
+    required double sideWeight,
+    required int repetition,
+  }) async {
+    final workoutDetailId = await _exerciseRepository.addWeightTrainingSet(
+      workoutId: workoutId,
+      exerciseId: exerciseId,
+      baseWeight: baseWeight,
+      sideWeight: sideWeight,
+      repetition: repetition,
+    );
+    if (workoutDetailId == -1) {
+      return;
+    }
+
+    final weightTraining = await _getWeightTraining();
+    _updateWeightTrainingUiState(weightTraining);
     notifyListeners();
   }
 }
@@ -216,8 +243,8 @@ class WeightTrainingExerciseSetUiState {
   });
 
   final int number;
-  final double weight;
-  final String weightUnit;
+  final String weight;
+  final WeightUnit weightUnit;
   final int repetition;
 }
 
@@ -232,10 +259,12 @@ class WeightTrainingExerciseSetListUiState {
 class WeightTrainingExerciseUiState {
   WeightTrainingExerciseUiState({
     required this.name,
+    required this.exerciseId,
     required this.exerciseSetListUiState,
   });
 
   final String name;
+  final int exerciseId;
   final WeightTrainingExerciseSetListUiState exerciseSetListUiState;
 }
 

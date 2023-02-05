@@ -157,7 +157,7 @@ class ComposedWorkoutDao extends BaseDao<WorkoutWithExercisesAndSetsEntity,
   bool _isRunning(ExerciseEntity exerciseEntity) =>
       exerciseEntity.workoutTypeEntity == WorkoutTypeEntity.running;
 
-  bool _hasSet(Map<String, dynamic> map) => map.containsKey(_columnSetNum);
+  bool _hasSet(Map<String, dynamic> map) => map[_columnSetNum] != null;
 }
 
 class WorkoutWithExercisesAndSetsEntityFilter implements DaoFilter {

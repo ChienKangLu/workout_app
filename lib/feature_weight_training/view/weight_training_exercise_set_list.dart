@@ -15,6 +15,7 @@ class WeightTrainingExerciseSetList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.all(0),
       shrinkWrap: true,
       itemCount: exerciseSetListUiState.exerciseSetUiStates.length,
       itemBuilder: (content, index) {

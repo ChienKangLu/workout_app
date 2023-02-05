@@ -12,6 +12,23 @@ class WeightTrainingSetEntity extends ExerciseSetEntity {
     required this.endDateTime,
   });
 
+  WeightTrainingSetEntity.create({
+    required int workoutId,
+    required int exerciseId,
+    required double baseWeight,
+    required double sideWeight,
+    required int repetition,
+    required int endDateTime,
+  }) : this(
+          workoutId: workoutId,
+          exerciseId: exerciseId,
+          setNum: ignored,
+          baseWeight: baseWeight,
+          sideWeight: sideWeight,
+          repetition: repetition,
+          endDateTime: endDateTime,
+        );
+
   WeightTrainingSetEntity.fromMap(Map<String, dynamic> map)
       : this(
           workoutId: map[RunningSetTable.columnWorkoutId],

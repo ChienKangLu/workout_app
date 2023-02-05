@@ -46,20 +46,23 @@ class _CreateExerciseDialogState extends State<CreateExerciseDialog> {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: TextFormField(
-                controller: _exerciseNameController,
-                decoration: InputDecoration(
-                  labelText: LocalizationUtil.localize(context)
-                      .exerciseNameTextFieldHint,
-                  border: const OutlineInputBorder(),
+              child: SizedBox(
+                height: 48,
+                child: TextFormField(
+                  controller: _exerciseNameController,
+                  decoration: InputDecoration(
+                    labelText: LocalizationUtil.localize(context)
+                        .exerciseNameTextFieldHint,
+                    border: const OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return LocalizationUtil.localize(context)
+                          .exerciseNameTextFieldError;
+                    }
+                    return null;
+                  },
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return LocalizationUtil.localize(context)
-                        .exerciseNameTextFieldError;
-                  }
-                  return null;
-                },
               ),
             ),
             const SizedBox(height: 8),

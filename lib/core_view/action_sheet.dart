@@ -62,6 +62,7 @@ Future<T?> showActionSheet<T>({
   required WidgetBuilder builder,
 }) =>
     showModalBottomSheet<T>(
+      isScrollControlled: true,
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(

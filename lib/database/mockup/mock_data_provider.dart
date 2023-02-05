@@ -108,67 +108,59 @@ class MockDataProvider {
     const deadliftId = 3;
 
     _weightTrainingSetEntities ??= [
-      WeightTrainingSetEntity(
+      WeightTrainingSetEntity.create(
         workoutId: firstWorkoutId,
         exerciseId: squatId,
-        setNum: 1,
         baseWeight: 20,
         sideWeight: 15,
         repetition: 5,
         endDateTime: _firstDay.addMinutes(2).millisecondsSinceEpoch,
       ),
-      WeightTrainingSetEntity(
+      WeightTrainingSetEntity.create(
           workoutId: firstWorkoutId,
           exerciseId: squatId,
-          setNum: 2,
           baseWeight: 20,
           sideWeight: 17.5,
           repetition: 5,
           endDateTime: _firstDay.addMinutes(4).millisecondsSinceEpoch),
-      WeightTrainingSetEntity(
+      WeightTrainingSetEntity.create(
           workoutId: firstWorkoutId,
           exerciseId: benchPressId,
-          setNum: 1,
           baseWeight: 20,
           sideWeight: 20,
           repetition: 5,
           endDateTime: _firstDay.addMinutes(6).millisecondsSinceEpoch),
-      WeightTrainingSetEntity(
+      WeightTrainingSetEntity.create(
           workoutId: thirdWorkoutId,
           exerciseId: deadliftId,
-          setNum: 1,
           baseWeight: 20,
           sideWeight: 10,
           repetition: 5,
           endDateTime: _thirdDay.addMinutes(2).millisecondsSinceEpoch),
-      WeightTrainingSetEntity(
+      WeightTrainingSetEntity.create(
           workoutId: thirdWorkoutId,
           exerciseId: deadliftId,
-          setNum: 2,
           baseWeight: 20,
           sideWeight: 15,
           repetition: 5,
           endDateTime: _thirdDay.addMinutes(4).millisecondsSinceEpoch),
-      WeightTrainingSetEntity(
+      WeightTrainingSetEntity.create(
           workoutId: thirdWorkoutId,
           exerciseId: deadliftId,
-          setNum: 3,
           baseWeight: 20,
           sideWeight: 20,
           repetition: 5,
           endDateTime: _thirdDay.addMinutes(6).millisecondsSinceEpoch),
-      WeightTrainingSetEntity(
+      WeightTrainingSetEntity.create(
           workoutId: thirdWorkoutId,
           exerciseId: deadliftId,
-          setNum: 4,
           baseWeight: 20,
           sideWeight: 25,
           repetition: 5,
           endDateTime: _thirdDay.addMinutes(10).millisecondsSinceEpoch),
-      WeightTrainingSetEntity(
+      WeightTrainingSetEntity.create(
           workoutId: thirdWorkoutId,
           exerciseId: deadliftId,
-          setNum: 5,
           baseWeight: 20,
           sideWeight: 30,
           repetition: 5,

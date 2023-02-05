@@ -92,8 +92,7 @@ class WorkoutAppThemeData {
   static EdgeInsets get workoutMargin => const EdgeInsets.fromLTRB(0, 10, 0, 0);
   static EdgeInsets get workoutPadding => const EdgeInsets.all(16);
 
-  static double get bottomBarHeight => 56.0;
-  static double get bottomBarIconSize => 40.0;
+  static double get bottomBarHeight => 80;
 
   static EdgeInsets get exerciseThumbnailListMargin =>
       const EdgeInsets.fromLTRB(0, 10, 0, 0);

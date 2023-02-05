@@ -7,17 +7,22 @@ class WeightTrainingExerciseList extends StatelessWidget {
   const WeightTrainingExerciseList({
     Key? key,
     required this.exerciseListUiState,
+    required this.onAddSet
   }) : super(key: key);
 
   final WeightTrainingExerciseListUiState exerciseListUiState;
+  final void Function(int) onAddSet;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: exerciseListUiState.exerciseUiStates
-          .map((exercise) => WeightTrainingExercise(
-                exerciseUiStates: exercise,
-              ))
+          .map(
+            (exercise) => WeightTrainingExercise(
+              exerciseUiStates: exercise,
+              onAddSet: onAddSet,
+            ),
+          )
           .toList(),
     );
   }

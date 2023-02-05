@@ -10,7 +10,7 @@ import 'database_initializer.dart';
 import 'mockup/mock_data_initializer.dart';
 
 class WorkoutDatabase {
-  static const isMockupEnabled = true;
+  static const isMockupEnabled = false;
 
   WorkoutDatabase._();
   static final WorkoutDatabase instance = WorkoutDatabase._();

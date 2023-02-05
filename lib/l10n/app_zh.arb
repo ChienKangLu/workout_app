@@ -24,6 +24,11 @@
   "exerciseNameTextFieldError": "請輸入文字",
   "createExerciseDialogPositiveBtn": "確定",
   "createExerciseDialogNegativeBtn": "取消",
+
   "exerciseOptionDialogTitle": "增加項目",
-  "newExerciseOptionTitle": "新增項目"
+  "newExerciseOptionTitle": "新增項目",
+
+  "repetitionTitle": "次數",
+  "baseWeightTitle": "基本重量",
+  "sideWeightTitle": "單邊重量"
 }

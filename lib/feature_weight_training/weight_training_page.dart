@@ -7,6 +7,8 @@ import '../core_view/workout_category.dart';
 import '../core_view/workout_status.dart';
 import '../themes/workout_app_theme_data.dart';
 import '../core_view/action_sheet.dart';
+import '../util/weight_unit_convertor.dart';
+import 'view/add_set_sheet.dart';
 import 'view/create_exercise_dialog.dart';
 import 'view/exercise_option_dialog.dart';
 import 'view/weight_training_exercise_list.dart';
@@ -129,8 +131,26 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
     await _model.createExercise(exerciseName);
   }
 
-  void onExerciseSelected(int exerciseTypeId) {
-    // TODO: add exercise into workout detail
+  void onExerciseSelected(int exerciseTypeId) async {
+    await _model.addExercise(exerciseTypeId);
+  }
+
+  void onAddSet(int exerciseId) async {
+    final addSetData = await showActionSheet<AddSetData>(
+      context: context,
+      builder: (context) => const AddSetSheet(),
+    );
+
+    if (addSetData == null) {
+      return;
+    }
+
+    _model.addExerciseSet(
+      exerciseId: exerciseId,
+      baseWeight: WeightUnitConvertor.convert(addSetData.baseWeight, addSetData.baseWeightUnit),
+      sideWeight: WeightUnitConvertor.convert(addSetData.sideWeight, addSetData.sideWeightUnit),
+      repetition: addSetData.repetition,
+    );
   }
 
   @override
@@ -198,6 +218,7 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
                 WeightTrainingExerciseList(
                   exerciseListUiState:
                       weightTrainingUiState.exerciseListUiState,
+                  onAddSet: onAddSet,
                 ),
               ],
             ),
