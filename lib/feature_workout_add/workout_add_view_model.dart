@@ -1,5 +1,6 @@
 import '../core_view/workout_category.dart';
 import '../model/workout.dart';
+import '../model/result.dart';
 import '../repository/workout_repository.dart';
 import '../repository/repository_manager.dart';
 
@@ -18,8 +19,13 @@ class WorkoutAddViewModel {
     );
   }
 
-  Future<int> createWorkout(WorkoutCategory category) async {
-    return await _workoutRepository.createWorkout(category.type);
+  Future<bool> createWorkout(WorkoutCategory category) async {
+    final result = await _workoutRepository.createWorkout(category.type);
+    if (result is Error) {
+      return false;
+    }
+
+    return true;
   }
 }
 

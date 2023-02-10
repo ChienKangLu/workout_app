@@ -5,20 +5,22 @@ import '../model/workout_entity.dart';
 import '../model/workout_type_entity.dart';
 import '../schema.dart';
 import 'base_dao.dart';
-import 'dao.dart';
 import 'dao_filter.dart';
+import 'dao_result.dart';
 
 class WorkoutDao extends BaseDao<WorkoutEntity, WorkoutEntityFilter> {
   static const _tag = "WorkoutDao";
   static const _initWorkoutTypeNum = 0;
 
   @override
-  Future<List<WorkoutEntity>> findAll() {
+  Future<DaoResult<List<WorkoutEntity>>> findAll() {
     return findByFilter(null);
   }
 
   @override
-  Future<List<WorkoutEntity>> findByFilter(WorkoutEntityFilter? filter) async {
+  Future<DaoResult<List<WorkoutEntity>>> findByFilter(
+    WorkoutEntityFilter? filter,
+  ) async {
     try {
       final maps = await database.query(
         WorkoutTable.name,
@@ -28,23 +30,18 @@ class WorkoutDao extends BaseDao<WorkoutEntity, WorkoutEntityFilter> {
       for (final map in maps) {
         results.add(WorkoutEntity.fromMap(map));
       }
-      return results;
+      return DaoSuccess(results);
     } on Exception catch (e) {
       Log.e(_tag, "Cannot findByFilter with filter '$filter'", e);
-      return [];
+      return DaoError(e);
     }
   }
 
   @override
-  Future<int> add(WorkoutEntity entity) async {
+  Future<DaoResult<int>> add(WorkoutEntity entity) async {
     try {
       final lastWorkoutTypeNum =
           await _getLastWorkoutTypeNum(entity.workoutTypeEntity);
-
-      if (lastWorkoutTypeNum == null) {
-        Log.e(_tag, "Cannot add entity because error while getLastWorkoutTypeNum");
-        return Dao.invalidId;
-      }
 
       final int workoutTypeNum;
       if (lastWorkoutTypeNum == -1) {
@@ -56,19 +53,21 @@ class WorkoutDao extends BaseDao<WorkoutEntity, WorkoutEntityFilter> {
       final entityMap = entity.toMap();
       entityMap[WorkoutTable.columnWorkoutTypeNum] = workoutTypeNum;
 
-      return await database.insert(
+      final id = await database.insert(
         WorkoutTable.name,
         entityMap,
         conflictAlgorithm: ConflictAlgorithm.ignore,
       );
+
+      return DaoSuccess(id);
     } on Exception catch (e) {
       Log.e(_tag, "Cannot add entity '$entity'", e);
-      return Dao.invalidId;
+      return DaoError(e);
     }
   }
 
   @override
-  Future<bool> update(WorkoutEntity entity) async {
+  Future<DaoResult<bool>> update(WorkoutEntity entity) async {
     try {
       final count = await database.update(
         WorkoutTable.name,
@@ -81,37 +80,33 @@ class WorkoutDao extends BaseDao<WorkoutEntity, WorkoutEntityFilter> {
         Log.w(_tag, "update more than one entry");
       }
 
-      return count == 1;
+      final result = count == 1;
+
+      return DaoSuccess(result);
     } on Exception catch (e) {
       Log.e(_tag, "Cannot update entity '$entity'", e);
-      return false;
+      return DaoError(e);
     }
   }
 
-  Future<int?> _getLastWorkoutTypeNum(
+  Future<int> _getLastWorkoutTypeNum(
     WorkoutTypeEntity workoutTypeEntity,
   ) async {
-    try {
-      final lastWorkoutTypeNumResults = await database.query(
-        WorkoutTable.name,
-        columns: [WorkoutTable.columnWorkoutTypeNum],
-        where: "${WorkoutTable.columnWorkoutTypeId} = ?",
-        whereArgs: [workoutTypeEntity.id],
-        orderBy: "${WorkoutTable.columnWorkoutTypeNum} DESC",
-        limit: 1,
-      );
+    final lastWorkoutTypeNumResults = await database.query(
+      WorkoutTable.name,
+      columns: [WorkoutTable.columnWorkoutTypeNum],
+      where: "${WorkoutTable.columnWorkoutTypeId} = ?",
+      whereArgs: [workoutTypeEntity.id],
+      orderBy: "${WorkoutTable.columnWorkoutTypeNum} DESC",
+      limit: 1,
+    );
 
-      if (lastWorkoutTypeNumResults.isEmpty) {
-        return -1;
-      }
-
-      return lastWorkoutTypeNumResults[0][WorkoutTable.columnWorkoutTypeNum]
-          as int;
-    } on Exception catch (e) {
-      Log.e(_tag,
-          "Cannot _getLastWorkoutTypeNum of entity '$workoutTypeEntity'", e);
-      return null;
+    if (lastWorkoutTypeNumResults.isEmpty) {
+      return -1;
     }
+
+    return lastWorkoutTypeNumResults[0][WorkoutTable.columnWorkoutTypeNum]
+        as int;
   }
 }
 

@@ -5,13 +5,17 @@ import '../core_view/util/date_time_display_helper.dart';
 import '../core_view/workout_category.dart';
 import '../core_view/workout_status.dart';
 import '../model/exercise.dart';
+import '../model/result.dart';
 import '../model/unit.dart';
 import '../model/workout.dart';
 import '../repository/exercise_repository.dart';
 import '../repository/repository_manager.dart';
 import '../repository/workout_repository.dart';
+import '../util/log_util.dart';
 
 class WeightTrainingViewModel extends ChangeNotifier {
+  static const _tag = "WeightTrainingViewModel";
+
   WeightTrainingViewModel({
     required this.workoutId,
   });
@@ -39,26 +43,48 @@ class WeightTrainingViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<WeightTraining> _getWeightTraining() async {
-    final workouts = await _workoutRepository.getWorkouts(
+  Future<WeightTraining?> _getWeightTraining() async {
+    final Result<List<Workout>> result = await _workoutRepository.getWorkouts(
       workoutId: workoutId,
     );
+
+    if (result is Error<List<Workout>>) {
+      Log.e(_tag, "Error happens while get weight training", result.exception);
+      return null;
+    }
+
+    final workouts = (result as Success<List<Workout>>).data;
+
     if (workouts.isEmpty) {
-      throw Exception("Workout with id '$workoutId' doesn't exist");
+      Log.e(_tag, "Workout with id '$workoutId' doesn't exist");
+      return null;
     }
 
     final workout = workouts.first;
     if (workout is! WeightTraining) {
-      throw Exception("Workout with id '$workoutId' is not WeightTraining");
+      Log.e(_tag, "Workout with id '$workoutId' is not WeightTraining");
+      return null;
     }
 
     return workout;
   }
 
-  Future<List<Exercise>> _getExercises() async =>
-      _exerciseRepository.getExercises(WorkoutType.weightTraining);
+  Future<List<Exercise>> _getExercises() async {
+    final Result<List<Exercise>> result =
+        await _exerciseRepository.getExercises(WorkoutType.weightTraining);
+    if (result is Error<List<Exercise>>) {
+      Log.e(_tag, "Error happens while get exercises", result.exception);
+      return [];
+    }
 
-  void _updateWeightTrainingUiState(WeightTraining weightTraining) {
+    return (result as Success<List<Exercise>>).data;
+  }
+
+  void _updateWeightTrainingUiState(WeightTraining? weightTraining) {
+    if (weightTraining == null) {
+      return;
+    }
+
     _weightTrainingUiState = _createWeightTrainingUiState(weightTraining);
   }
 
@@ -123,7 +149,8 @@ class WeightTrainingViewModel extends ChangeNotifier {
   ) =>
       WeightTrainingExerciseSetUiState(
         number: number,
-        weight: _totalWeight(exerciseSet.baseWeight, exerciseSet.sideWeight).toStringAsFixed(1),
+        weight: _totalWeight(exerciseSet.baseWeight, exerciseSet.sideWeight)
+            .toStringAsFixed(1),
         weightUnit: exerciseSet.unit,
         repetition: exerciseSet.repetition,
       );
@@ -162,7 +189,7 @@ class WeightTrainingViewModel extends ChangeNotifier {
     final weightTraining = weightTrainingUiState.weightTraining
       ..startDateTime = DateTime.now();
     final result = await _workoutRepository.updateWorkout(weightTraining);
-    if (result) {
+    if (result is Success) {
       _updateWeightTrainingUiState(weightTraining);
       notifyListeners();
     }
@@ -177,16 +204,16 @@ class WeightTrainingViewModel extends ChangeNotifier {
     final weightTraining = weightTrainingUiState.weightTraining
       ..endDateTime = DateTime.now();
     final result = await _workoutRepository.updateWorkout(weightTraining);
-    if (result) {
+    if (result is Success) {
       _updateWeightTrainingUiState(weightTraining);
       notifyListeners();
     }
   }
 
   Future<void> createExercise(String name) async {
-    final exerciseId = await _exerciseRepository.createExercise(
+    final result = await _exerciseRepository.createExercise(
         WorkoutType.weightTraining, name);
-    if (exerciseId == -1) {
+    if (result is Error) {
       return;
     }
 
@@ -196,9 +223,9 @@ class WeightTrainingViewModel extends ChangeNotifier {
   }
 
   Future<void> addExercise(int exerciseId) async {
-    final workoutDetailId =
+    final result =
         await _exerciseRepository.addExercise(workoutId, exerciseId);
-    if (workoutDetailId == -1) {
+    if (result is Error) {
       return;
     }
 
@@ -213,14 +240,14 @@ class WeightTrainingViewModel extends ChangeNotifier {
     required double sideWeight,
     required int repetition,
   }) async {
-    final workoutDetailId = await _exerciseRepository.addWeightTrainingSet(
+    final result = await _exerciseRepository.addWeightTrainingSet(
       workoutId: workoutId,
       exerciseId: exerciseId,
       baseWeight: baseWeight,
       sideWeight: sideWeight,
       repetition: repetition,
     );
-    if (workoutDetailId == -1) {
+    if (result is Error) {
       return;
     }
 

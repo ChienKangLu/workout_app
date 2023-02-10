@@ -1,5 +1,6 @@
 import '../../util/log_util.dart';
 import '../dao/dao_provider_mixin.dart';
+import '../dao/dao_result.dart';
 import 'mock_data_provider.dart';
 
 class MockDataInitializer with DaoProviderMixin {
@@ -13,53 +14,56 @@ class MockDataInitializer with DaoProviderMixin {
     await _initRunningSetTable();
   }
 
-  Future<bool> _initWorkoutTable() async {
+  Future<void> _initWorkoutTable() async {
     for (final workoutEntity in MockDataProvider.instance.workoutEntities) {
       await workoutDao.add(workoutEntity);
     }
 
-    final result = await workoutDao.findAll();
-    Log.d(_tag, "init workout ${result.toString()}");
-    return result.isNotEmpty;
+    final DaoResult result = await workoutDao.findAll();
+    _logResult(result, "workout");
   }
 
-  Future<bool> _initExerciseTable() async {
+  Future<void> _initExerciseTable() async {
     for (final exerciseEntity in MockDataProvider.instance.exerciseEntities) {
       await exerciseDao.add(exerciseEntity);
     }
 
     final result = await exerciseDao.findAll();
-    Log.d(_tag, "init exercise ${result.toString()}");
-    return result.isNotEmpty;
+    _logResult(result, "exercise");
   }
 
-  Future<bool> _initWorkoutDetailTable() async {
+  Future<void> _initWorkoutDetailTable() async {
     for (final workoutDetailEntity in MockDataProvider.instance.workoutDetailEntities) {
       await workoutDetailDao.add(workoutDetailEntity);
     }
 
     final result = await workoutDetailDao.findAll();
-    Log.d(_tag, "init workout_detail ${result.toString()}");
-    return result.isNotEmpty;
+    _logResult(result, "workout_detail");
   }
 
-  Future<bool> _initWeightTrainingSetTable() async {
+  Future<void> _initWeightTrainingSetTable() async {
     for (final weightTrainingSetEntity in MockDataProvider.instance.weightTrainingSetEntities) {
       await weightTrainingSetDao.add(weightTrainingSetEntity);
     }
 
     final result = await weightTrainingSetDao.findAll();
-    Log.d(_tag, "init weight_training_set ${result.toString()}");
-    return result.isNotEmpty;
+    _logResult(result, "weight_training_set");
   }
 
-  Future<bool> _initRunningSetTable() async {
+  Future<void> _initRunningSetTable() async {
     for (final runningSetEntity in MockDataProvider.instance.runningSetEntities) {
       await runningSetDao.add(runningSetEntity);
     }
 
     final result = await runningSetDao.findAll();
-    Log.d(_tag, "init running_set ${result.toString()}");
-    return result.isNotEmpty;
+    _logResult(result, "running_set");
+  }
+
+  _logResult(DaoResult result, String tableName) {
+    if (result is DaoSuccess) {
+      Log.d(_tag, "init $tableName ${result.data.toString()}");
+    } else if (result is DaoError) {
+      Log.e(_tag, "fail to init $tableName, e = ${result.exception}");
+    }
   }
 }

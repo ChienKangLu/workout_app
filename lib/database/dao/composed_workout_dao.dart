@@ -11,6 +11,7 @@ import '../model/workout_type_entity.dart';
 import '../schema.dart';
 import 'base_dao.dart';
 import 'dao_filter.dart';
+import 'dao_result.dart';
 
 class ComposedWorkoutDao extends BaseDao<WorkoutWithExercisesAndSetsEntity,
     WorkoutWithExercisesAndSetsEntityFilter> {
@@ -19,12 +20,12 @@ class ComposedWorkoutDao extends BaseDao<WorkoutWithExercisesAndSetsEntity,
   static const String _columnSetEndDateTime = "set_end_date_time";
 
   @override
-  Future<List<WorkoutWithExercisesAndSetsEntity>> findAll() {
+  Future<DaoResult<List<WorkoutWithExercisesAndSetsEntity>>> findAll() {
     throw findByFilter(null);
   }
 
   @override
-  Future<List<WorkoutWithExercisesAndSetsEntity>> findByFilter(
+  Future<DaoResult<List<WorkoutWithExercisesAndSetsEntity>>> findByFilter(
     WorkoutWithExercisesAndSetsEntityFilter? filter,
   ) async {
     try {
@@ -131,20 +132,21 @@ class ComposedWorkoutDao extends BaseDao<WorkoutWithExercisesAndSetsEntity,
         exerciseWithSetsEntity.exerciseSetEntities.add(exerciseSetEntity);
       }
 
-      return workoutWithExercisesAndSetsEntityMap.values.toList(growable: false);
+      final results = workoutWithExercisesAndSetsEntityMap.values.toList(growable: false);
+      return DaoSuccess(results);
     } on Exception catch (e) {
       Log.e(_tag, "Cannot findByFilter with filter '$filter'", e);
-      return [];
+      return DaoError(e);
     }
   }
 
   @override
-  Future<int> add(WorkoutWithExercisesAndSetsEntity entity) {
+  Future<DaoResult<int>> add(WorkoutWithExercisesAndSetsEntity entity) {
     throw UnimplementedError();
   }
 
   @override
-  Future<bool> update(WorkoutWithExercisesAndSetsEntity entity) {
+  Future<DaoResult<bool>> update(WorkoutWithExercisesAndSetsEntity entity) {
     throw UnimplementedError();
   }
 

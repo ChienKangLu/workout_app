@@ -5,19 +5,19 @@ import '../model/exercise_entity.dart';
 import '../model/workout_type_entity.dart';
 import '../schema.dart';
 import 'base_dao.dart';
-import 'dao.dart';
 import 'dao_filter.dart';
+import 'dao_result.dart';
 
 class ExerciseDao extends BaseDao<ExerciseEntity, ExerciseEntityFilter> {
   static const _tag = "ExerciseDao";
 
   @override
-  Future<List<ExerciseEntity>> findAll() async {
+  Future<DaoResult<List<ExerciseEntity>>> findAll() async {
     return findByFilter(null);
   }
 
   @override
-  Future<List<ExerciseEntity>> findByFilter(
+  Future<DaoResult<List<ExerciseEntity>>> findByFilter(
     ExerciseEntityFilter? filter,
   ) async {
     try {
@@ -29,29 +29,32 @@ class ExerciseDao extends BaseDao<ExerciseEntity, ExerciseEntityFilter> {
       for (final map in maps) {
         results.add(ExerciseEntity.fromMap(map));
       }
-      return results;
+
+      return DaoSuccess(results);
     } on Exception catch (e) {
       Log.e(_tag, "Cannot findByFilter with filter '$filter'", e);
-      return [];
+      return DaoError(e);
     }
   }
 
   @override
-  Future<int> add(ExerciseEntity entity) async {
+  Future<DaoResult<int>> add(ExerciseEntity entity) async {
     try {
-      return await database.insert(
+      final id = await database.insert(
         ExerciseTable.name,
         entity.toMap(),
         conflictAlgorithm: ConflictAlgorithm.ignore,
       );
+
+      return DaoSuccess(id);
     } on Exception catch (e) {
       Log.e(_tag, "Cannot add entity '$entity'", e);
-      return Dao.invalidId;
+      return DaoError(e);
     }
   }
 
   @override
-  Future<bool> update(ExerciseEntity entity) {
+  Future<DaoResult<bool>> update(ExerciseEntity entity) {
     throw UnimplementedError();
   }
 }

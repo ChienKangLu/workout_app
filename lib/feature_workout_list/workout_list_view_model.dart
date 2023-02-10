@@ -1,23 +1,35 @@
+import 'package:flutter/foundation.dart';
+
 import '../core_view/workout_category.dart';
 import '../core_view/workout_status.dart';
 import '../model/exercise.dart';
+import '../model/result.dart';
 import '../model/workout.dart';
 import '../repository/repository_manager.dart';
 import '../repository/workout_repository.dart';
 
-class WorkoutListViewModel {
+class WorkoutListViewModel extends ChangeNotifier {
   final WorkoutRepository _workoutRepository =
       RepositoryManager.instance.workoutRepository;
 
-  Future<List<Workout>> get _workouts => _workoutRepository.getWorkouts();
+  Future<Result<List<Workout>>> get _workouts =>
+      _workoutRepository.getWorkouts();
 
   Future<WorkoutListUiState> get workoutListState async {
-    return _toWorkoutListUiState(await _workouts);
+    final result = await _workouts;
+    return _toWorkoutListUiState(result);
   }
 
-  WorkoutListUiState _toWorkoutListUiState(List<Workout> workouts) {
+  WorkoutListUiState _toWorkoutListUiState(Result<List<Workout>> result) {
+    if (result is Error) {
+      return WorkoutListUiState(workouts: []);
+    }
+
     return WorkoutListUiState(
-      workouts: workouts.map((workout) => _toWorkoutUiState(workout)).toList(),
+      workouts: (result as Success<List<Workout>>)
+          .data
+          .map((workout) => _toWorkoutUiState(workout))
+          .toList(),
     );
   }
 
@@ -27,12 +39,14 @@ class WorkoutListViewModel {
       number: workout.typeNum + 1,
       category: WorkoutCategory.fromType(workout.type),
       exerciseThumbnailList: _toExerciseThumbnailListUiState(workout.exercises),
-      workoutStatus: WorkoutStatus.fromDateTime(workout.startDateTime, workout.endDateTime),
+      workoutStatus: WorkoutStatus.fromDateTime(
+          workout.startDateTime, workout.endDateTime),
     );
   }
 
   ExerciseThumbnailListUiState _toExerciseThumbnailListUiState(
-      List<Exercise> exercises) {
+    List<Exercise> exercises,
+  ) {
     return ExerciseThumbnailListUiState(
       exerciseThumbnails: exercises
           .map((exercise) => _toExerciseThumbnailUiState(exercise))
