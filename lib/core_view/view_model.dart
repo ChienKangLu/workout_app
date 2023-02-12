@@ -5,8 +5,8 @@ abstract class ViewModel extends ChangeNotifier {
   /// Lifecycle method to init [ViewMode].
   Future<void> init();
 
-  /// Lifecycle method to update [ViewMode] after [init] is called.
-  Future<void> update();
+  /// Lifecycle method to reload [ViewMode].
+  Future<void> reload() async {}
 
   /// Lifecycle method to release resources.
   void release() {

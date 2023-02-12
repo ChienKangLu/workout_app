@@ -108,6 +108,11 @@ class WorkoutDao extends BaseDao<WorkoutEntity, WorkoutEntityFilter> {
     return lastWorkoutTypeNumResults[0][WorkoutTable.columnWorkoutTypeNum]
         as int;
   }
+
+  @override
+  Future<DaoResult<bool>> delete(List<int> ids) {
+    throw UnimplementedError();
+  }
 }
 
 class WorkoutEntityFilter implements DaoFilter {

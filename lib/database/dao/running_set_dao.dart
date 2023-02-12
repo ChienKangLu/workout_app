@@ -51,4 +51,9 @@ class RunningSetDao extends BaseDao<RunningSetEntity, DaoFilter> {
   Future<DaoResult<bool>> update(RunningSetEntity entity) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<DaoResult<bool>> delete(List<int> ids) {
+    throw UnimplementedError();
+  }
 }

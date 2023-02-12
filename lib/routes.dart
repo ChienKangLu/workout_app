@@ -19,7 +19,7 @@ class RouteConfiguration {
   static List<Path> paths = [
     Path(
       name: WorkoutListPage.routeName,
-      builder: (context, arguments) => WorkoutListPage(),
+      builder: (context, arguments) => const WorkoutListPage(),
     ),
     Path(
       name: WeightTrainingPage.routeName,

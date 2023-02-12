@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../core_view/ui_mode.dart';
+import '../core_view/ui_mode_view_model.dart';
 import '../core_view/workout_category.dart';
 import '../feature_weight_training/weight_training_page.dart';
 import '../feature_workout_add/workout_add_page.dart';
 import '../util/log_util.dart';
 import '../util/localization_util.dart';
 import 'view/workout_list.dart';
+import 'view/workout_list_page_app_bar.dart';
 import 'view/workout_list_page_bottom_bar.dart';
 import 'workout_list_view_model.dart';
 
@@ -14,27 +18,39 @@ class WorkoutListPage extends StatefulWidget {
   static const _tag = "WorkoutListPage";
   static const routeName = "/workout_list";
 
-  WorkoutListPage({Key? key})
-      : model = WorkoutListViewModel(),
-        super(key: key);
-
-  final WorkoutListViewModel model;
+  const WorkoutListPage({Key? key}) : super(key: key);
 
   @override
   State<WorkoutListPage> createState() => _WorkoutListPageState();
 }
 
 class _WorkoutListPageState extends State<WorkoutListPage> {
-  WorkoutListViewModel get _model => widget.model;
+  late final WorkoutListViewModel _model;
+  late final UiModeViewModel _uiModeViewModel;
 
   @override
   void initState() {
-    _model.init();
+    _model = WorkoutListViewModel();
+    _uiModeViewModel = UiModeViewModel();
+
+    initViewModels();
+
     super.initState();
   }
 
+  Future<void> initViewModels() async {
+    await _model.init();
+    await _uiModeViewModel.init();
+  }
+
+  @override
+  void dispose() {
+    _model.release();
+    super.dispose();
+  }
+
   Future<void> _reload() async {
-    await _model.update();
+    await _model.reload();
   }
 
   void _onAddItemClicked() async {
@@ -42,7 +58,28 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
     await _reload();
   }
 
-  void _onItemClick(WorkoutCategory category, int workoutId) async {
+  void _onItemClick(WorkoutUiState workoutUiState) async {
+    final uiMode = _uiModeViewModel.uiMode;
+    final category = workoutUiState.category;
+    final workoutId = workoutUiState.workoutId;
+
+    switch (uiMode) {
+      case UiMode.normal:
+        _openPage(category, workoutId);
+        break;
+      case UiMode.edit:
+        _model.selectWorkout(workoutUiState);
+        HapticFeedback.selectionClick();
+
+        final selectedWorkoutCount = _model.selectedWorkoutCount;
+        if (selectedWorkoutCount == 0) {
+          _uiModeViewModel.switchTo(UiMode.normal);
+        }
+        break;
+    }
+  }
+
+  void _openPage(WorkoutCategory category, int workoutId) async {
     switch (category) {
       case WorkoutCategory.weightTraining:
         await Navigator.pushNamed(
@@ -58,36 +95,62 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
     }
   }
 
+  void _onItemLongClick(WorkoutUiState workoutUiState) {
+    final uiMode = _uiModeViewModel.uiMode;
+    if (uiMode == UiMode.edit) {
+      return;
+    }
+
+    _model.selectWorkout(workoutUiState);
+    _uiModeViewModel.switchTo(UiMode.edit);
+    HapticFeedback.selectionClick();
+  }
+
+  void _onAppBarCloseButtonClicked() {
+    _model.unselectWorkouts();
+    _uiModeViewModel.switchTo(UiMode.normal);
+  }
+
+  void _onAppBarDeleteButtonClicked() async {
+    await _model.deleteSelectedWorkouts();
+    _uiModeViewModel.switchTo(UiMode.normal);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(LocalizationUtil.localize(context).appTitle),
-      ),
-      body: _view(),
-      bottomNavigationBar: WorkoutListPageBottomBar(
-        onAddItemClicked: _onAddItemClicked,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: _model),
+        ChangeNotifierProvider.value(value: _uiModeViewModel),
+      ],
+      child: Scaffold(
+        appBar: WorkoutListPageAppBar(
+          onCloseButtonClicked: _onAppBarCloseButtonClicked,
+          onDeleteButtonClicked: _onAppBarDeleteButtonClicked,
+        ),
+        body: _view(),
+        bottomNavigationBar: WorkoutListPageBottomBar(
+          onAddItemClicked: _onAddItemClicked,
+        ),
       ),
     );
   }
 
   Widget _view() {
-    return ChangeNotifierProvider.value(
-      value: _model,
-      child: Consumer<WorkoutListViewModel>(
-        builder: (_, viewModel, __) {
-          final state = viewModel.workoutListUiState;
-          return state.run(
-            onLoading: () =>
-                Text(LocalizationUtil.localize(context).loadingWorkoutText),
-            onSuccess: () => WorkoutList(
-              workoutListState: state,
-              onItemClick: _onItemClick,
-            ),
-            onError: () => const Text("Error"),
-          );
-        },
-      ),
+    return Consumer<WorkoutListViewModel>(
+      builder: (_, viewModel, __) {
+        final state = viewModel.workoutListUiState;
+        return state.run(
+          onLoading: () =>
+              Text(LocalizationUtil.localize(context).loadingWorkoutText),
+          onSuccess: () => WorkoutList(
+            workoutListState: state,
+            onItemClick: _onItemClick,
+            onItemLongClick: _onItemLongClick,
+          ),
+          onError: () => const Text("Error"),
+        );
+      },
     );
   }
 }

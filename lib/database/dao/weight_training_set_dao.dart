@@ -86,4 +86,9 @@ class WeightTrainingSetDao extends BaseDao<WeightTrainingSetEntity, DaoFilter> {
   Future<DaoResult<bool>> update(WeightTrainingSetEntity entity) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<DaoResult<bool>> delete(List<int> ids) {
+    throw UnimplementedError();
+  }
 }

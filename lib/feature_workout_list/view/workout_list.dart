@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../core_view/ui_mode.dart';
+import '../../core_view/ui_mode_view_model.dart';
 import '../../core_view/workout_category.dart';
 import '../../core_view/workout_status.dart';
 import '../../themes/workout_app_theme_data.dart';
@@ -12,10 +15,12 @@ class WorkoutList extends StatelessWidget {
     Key? key,
     required this.workoutListState,
     required this.onItemClick,
+    required this.onItemLongClick,
   }) : super(key: key);
 
   final WorkoutListUiState workoutListState;
-  final void Function(WorkoutCategory, int) onItemClick;
+  final void Function(WorkoutUiState) onItemClick;
+  final void Function(WorkoutUiState) onItemLongClick;
 
   @override
   Widget build(BuildContext context) {
@@ -36,67 +41,81 @@ class WorkoutList extends StatelessWidget {
     return ListView.builder(
       itemCount: workoutListState.workouts.length,
       itemBuilder: (content, index) {
-        final workoutState = workoutListState.workouts[index];
-        final category = workoutState.category;
-        final workoutId = workoutState.workoutId;
+        final workoutUiState = workoutListState.workouts[index];
 
-        return Workout(
-          workoutState: workoutState,
-          onItemClick: () => onItemClick(category, workoutId),
+        return WorkoutListItem(
+          workoutState: workoutUiState,
+          onItemClick: () => onItemClick(workoutUiState),
+          onItemLongClick: () => onItemLongClick(workoutUiState),
         );
       },
     );
   }
 }
 
-class Workout extends StatelessWidget {
-  const Workout({
+class WorkoutListItem extends StatelessWidget {
+  const WorkoutListItem({
     Key? key,
     required this.workoutState,
     required this.onItemClick,
+    required this.onItemLongClick,
   }) : super(key: key);
 
   final WorkoutUiState workoutState;
   final void Function() onItemClick;
+  final void Function() onItemLongClick;
 
   @override
   Widget build(BuildContext context) {
-    return _container(context);
-  }
+    final uiMode = context.watch<UiModeViewModel>().uiMode;
+    final isSelected = workoutState.isSelected;
 
-  Widget _container(BuildContext context) {
     return InkWell(
       child: Container(
         margin: WorkoutAppThemeData.workoutMargin,
         padding: WorkoutAppThemeData.workoutPadding,
         color: Theme.of(context).colorScheme.surface,
-        child: _content(context),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(child: _title(context)),
+                if (uiMode == UiMode.edit)
+                  Icon(isSelected ? Icons.check_circle : Icons.circle),
+              ],
+            ),
+            Container(
+              margin: WorkoutAppThemeData.exerciseThumbnailListMargin,
+              height: WorkoutAppThemeData.exerciseThumbnailWidth,
+              child: _body(context),
+            )
+          ],
+        ),
       ),
       onTap: () => onItemClick(),
+      onLongPress: () => onItemLongClick(),
     );
   }
 
-  Widget _content(BuildContext context) {
-    return Column(
-      children: [
-        WorkoutListItemTitle(workoutState: workoutState),
-        Container(
-          margin: WorkoutAppThemeData.exerciseThumbnailListMargin,
-          height: WorkoutAppThemeData.exerciseThumbnailWidth,
-          child: _exerciseThumbnailListOrStatusText(context, workoutState.workoutStatus),
-        )
-      ],
+  Widget _title(BuildContext context) {
+    return Text(
+      "${WorkoutCategory.localizedString(context, workoutState.category)} ${workoutState.number}",
+      style: Theme.of(context).textTheme.titleLarge,
     );
   }
 
-  Widget _exerciseThumbnailListOrStatusText(BuildContext context, WorkoutStatus status) {
+  Widget _body(BuildContext context) {
+    final status = workoutState.workoutStatus;
+
     switch (status) {
       case WorkoutStatus.created:
-        return _WorkoutStatusText(
+        return _statusText(
+          context,
           text: LocalizationUtil.localize(context).workoutStatusCreated,
         );
       case WorkoutStatus.inProgress:
-        return _WorkoutStatusText(
+        return _statusText(
+          context,
           text: LocalizationUtil.localize(context).workoutStatusInProgress,
         );
       case WorkoutStatus.finished:
@@ -105,36 +124,8 @@ class Workout extends StatelessWidget {
         );
     }
   }
-}
 
-class WorkoutListItemTitle extends StatelessWidget {
-  const WorkoutListItemTitle({Key? key, required this.workoutState})
-      : super(key: key);
-
-  final WorkoutUiState workoutState;
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topLeft,
-      child: Text(
-        "${WorkoutCategory.localizedString(context, workoutState.category)} ${workoutState.number}",
-        style: Theme.of(context).textTheme.titleLarge,
-      ),
-    );
-  }
-}
-
-class _WorkoutStatusText extends StatelessWidget {
-  const _WorkoutStatusText({
-    Key? key,
-    required this.text,
-  }) : super(key: key);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _statusText(BuildContext context, {required String text}) {
     return Center(
       child: Text(
         text,

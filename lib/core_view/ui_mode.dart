@@ -1,0 +1,4 @@
+enum UiMode {
+  normal,
+  edit
+}

@@ -28,6 +28,14 @@ class WorkoutRepository with DaoProviderMixin {
     return daoResult.asResult();
   }
 
+  Future<Result<bool>> deleteWorkouts(List<int> workoutIds) async {
+    final DaoResult<bool> daoResult = await composedWorkoutDao.delete(
+      workoutIds,
+    );
+
+    return daoResult.asResult();
+  }
+
   Future<Result<bool>> updateWorkout(Workout workout) async {
     final DaoResult<bool> daoResult =
         await workoutDao.update(workout.asEntity());

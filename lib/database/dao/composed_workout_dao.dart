@@ -132,7 +132,8 @@ class ComposedWorkoutDao extends BaseDao<WorkoutWithExercisesAndSetsEntity,
         exerciseWithSetsEntity.exerciseSetEntities.add(exerciseSetEntity);
       }
 
-      final results = workoutWithExercisesAndSetsEntityMap.values.toList(growable: false);
+      final results =
+          workoutWithExercisesAndSetsEntityMap.values.toList(growable: false);
       return DaoSuccess(results);
     } on Exception catch (e) {
       Log.e(_tag, "Cannot findByFilter with filter '$filter'", e);
@@ -148,6 +149,30 @@ class ComposedWorkoutDao extends BaseDao<WorkoutWithExercisesAndSetsEntity,
   @override
   Future<DaoResult<bool>> update(WorkoutWithExercisesAndSetsEntity entity) {
     throw UnimplementedError();
+  }
+
+  @override
+  Future<DaoResult<bool>> delete(List<int> ids) async {
+    try {
+      final args = ids.join(",");
+      final where = "${WorkoutTable.columnWorkoutId} in ($args)";
+      final tables = [
+        WeightTrainingSetTable.name,
+        RunningSetTable.name,
+        WorkoutDetailTable.name,
+        WorkoutTable.name,
+      ];
+
+      for (final table in tables) {
+        final count = await database.delete(table, where: where);
+        Log.d(_tag, "Delete $count rows from '$table'");
+      }
+
+      return DaoSuccess(true);
+    } on Exception catch (e) {
+      Log.e(_tag, "Cannot delete with '$ids'", e);
+      return DaoError(e);
+    }
   }
 
   bool _hasExercise(Map<String, dynamic> map) =>
@@ -173,8 +198,8 @@ class WorkoutWithExercisesAndSetsEntityFilter implements DaoFilter {
   String toWhereClause() {
     final where = <String>[];
     if (workoutId != null) {
-
-      where.add("${WorkoutTable.name}.${WorkoutTable.columnWorkoutId} = $workoutId");
+      where.add(
+          "${WorkoutTable.name}.${WorkoutTable.columnWorkoutId} = $workoutId");
     }
     return where.join(",");
   }

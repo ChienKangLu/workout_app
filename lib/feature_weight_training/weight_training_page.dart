@@ -26,7 +26,7 @@ class WeightTrainingPage extends StatefulWidget {
 }
 
 class _WeightTrainingPageState extends State<WeightTrainingPage> {
-  late WeightTrainingViewModel _model;
+  late final WeightTrainingViewModel _model;
   int get workoutId => widget.workoutId;
 
   @override

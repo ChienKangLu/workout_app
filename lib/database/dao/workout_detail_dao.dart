@@ -51,4 +51,9 @@ class WorkoutDetailDao extends BaseDao<WorkoutDetailEntity, DaoFilter> {
   Future<DaoResult<bool>> update(WorkoutDetailEntity entity) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<DaoResult<bool>> delete(List<int> ids) {
+    throw UnimplementedError();
+  }
 }

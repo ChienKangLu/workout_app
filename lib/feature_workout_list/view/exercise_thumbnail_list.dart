@@ -18,8 +18,9 @@ class ExerciseThumbnailList extends StatelessWidget {
       itemCount: exerciseThumbnailListState.exerciseThumbnails.length,
       itemBuilder: (content, index) {
         return ExerciseThumbnail(
-            exerciseThumbnailState:
-                exerciseThumbnailListState.exerciseThumbnails[index]);
+          exerciseThumbnailState:
+              exerciseThumbnailListState.exerciseThumbnails[index],
+        );
       },
     );
   }

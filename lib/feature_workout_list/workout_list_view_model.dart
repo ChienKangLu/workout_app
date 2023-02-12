@@ -18,13 +18,17 @@ class WorkoutListViewModel extends ViewModel {
   WorkoutListUiState _workoutListUiState = WorkoutListUiState.loading();
   WorkoutListUiState get workoutListUiState => _workoutListUiState;
 
+  final _selectedWorkoutUiState = <WorkoutUiState>{};
+  int get selectedWorkoutCount => _selectedWorkoutUiState.length;
+
   @override
   Future<void> init() async {
-    await update();
+    await _updateWorkoutListState();
+    stateChange();
   }
 
   @override
-  Future<void> update() async {
+  Future<void> reload() async {
     if (_workoutListUiState.isLoading == false) {
       _workoutListUiState = WorkoutListUiState.loading();
       stateChange();
@@ -43,6 +47,37 @@ class WorkoutListViewModel extends ViewModel {
 
     final workouts = (result as Success<List<Workout>>).data;
     _workoutListUiState = WorkoutListUiState.success(workouts);
+  }
+
+  void selectWorkout(WorkoutUiState workoutUiState) {
+    final isSelected = workoutUiState.isSelected;
+    if (isSelected) {
+      _selectedWorkoutUiState.remove(workoutUiState);
+    } else {
+      _selectedWorkoutUiState.add(workoutUiState);
+    }
+    workoutUiState.isSelected = !isSelected;
+    stateChange();
+  }
+
+  void unselectWorkouts() {
+    for (final workoutUiState in _selectedWorkoutUiState) {
+      workoutUiState.isSelected = false;
+    }
+    _selectedWorkoutUiState.clear();
+    stateChange();
+  }
+
+  Future<void> deleteSelectedWorkouts() async {
+    final selectedWorkoutIds = _selectedWorkoutUiState
+        .map((workouts) => workouts.workoutId)
+        .toList(growable: false);
+
+    _selectedWorkoutUiState.clear();
+
+    await _workoutRepository.deleteWorkouts(selectedWorkoutIds);
+
+    reload();
   }
 }
 
@@ -93,6 +128,8 @@ class WorkoutUiState extends UiState {
   final WorkoutCategory category;
   final ExerciseThumbnailListUiState exerciseThumbnailList;
   final WorkoutStatus workoutStatus;
+
+  bool isSelected = false;
 
   WorkoutUiState.success(Workout workout)
       : this._(
