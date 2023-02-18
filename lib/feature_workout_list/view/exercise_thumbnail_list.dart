@@ -1,38 +1,37 @@
 import 'package:flutter/material.dart';
 
 import '../../themes/workout_app_theme_data.dart';
-import '../workout_list_view_model.dart';
+import '../ui_state/workout_list_ui_state.dart';
 
 class ExerciseThumbnailList extends StatelessWidget {
   const ExerciseThumbnailList({
     Key? key,
-    required this.exerciseThumbnailListState,
+    required this.exerciseThumbnails,
   }) : super(key: key);
 
-  final ExerciseThumbnailListUiState exerciseThumbnailListState;
+  final List<ExerciseThumbnail> exerciseThumbnails;
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       scrollDirection: Axis.horizontal,
-      itemCount: exerciseThumbnailListState.exerciseThumbnails.length,
+      itemCount: exerciseThumbnails.length,
       itemBuilder: (content, index) {
-        return ExerciseThumbnail(
-          exerciseThumbnailState:
-              exerciseThumbnailListState.exerciseThumbnails[index],
+        return ExerciseThumbnailCard(
+          exerciseThumbnail: exerciseThumbnails[index],
         );
       },
     );
   }
 }
 
-class ExerciseThumbnail extends StatelessWidget {
-  const ExerciseThumbnail({
+class ExerciseThumbnailCard extends StatelessWidget {
+  const ExerciseThumbnailCard({
     Key? key,
-    required this.exerciseThumbnailState,
+    required this.exerciseThumbnail,
   }) : super(key: key);
 
-  final ExerciseThumbnailUiState exerciseThumbnailState;
+  final ExerciseThumbnail exerciseThumbnail;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +45,7 @@ class ExerciseThumbnail extends StatelessWidget {
       height: WorkoutAppThemeData.exerciseThumbnailWidth,
       child: Center(
         child: Text(
-          exerciseThumbnailState.name,
+          exerciseThumbnail.name,
           textAlign: TextAlign.center,
           maxLines: 2,
         ),

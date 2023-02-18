@@ -9,6 +9,7 @@ import '../feature_weight_training/weight_training_page.dart';
 import '../feature_workout_add/workout_add_page.dart';
 import '../util/log_util.dart';
 import '../util/localization_util.dart';
+import 'ui_state/workout_list_ui_state.dart';
 import 'view/workout_list.dart';
 import 'view/workout_list_page_app_bar.dart';
 import 'view/workout_list_page_bottom_bar.dart';
@@ -58,17 +59,17 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
     await _reload();
   }
 
-  void _onItemClick(WorkoutUiState workoutUiState) async {
+  void _onItemClick(ReadableWorkout readableWorkout) async {
     final uiMode = _uiModeViewModel.uiMode;
-    final category = workoutUiState.category;
-    final workoutId = workoutUiState.workoutId;
+    final category = readableWorkout.category;
+    final workoutId = readableWorkout.workoutId;
 
     switch (uiMode) {
       case UiMode.normal:
         _openPage(category, workoutId);
         break;
       case UiMode.edit:
-        _model.selectWorkout(workoutUiState);
+        _model.selectWorkout(readableWorkout);
         HapticFeedback.selectionClick();
 
         final selectedWorkoutCount = _model.selectedWorkoutCount;
@@ -95,13 +96,13 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
     }
   }
 
-  void _onItemLongClick(WorkoutUiState workoutUiState) {
+  void _onItemLongClick(ReadableWorkout readableWorkout) {
     final uiMode = _uiModeViewModel.uiMode;
     if (uiMode == UiMode.edit) {
       return;
     }
 
-    _model.selectWorkout(workoutUiState);
+    _model.selectWorkout(readableWorkout);
     _uiModeViewModel.switchTo(UiMode.edit);
     HapticFeedback.selectionClick();
   }
@@ -139,12 +140,13 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
   Widget _view() {
     return Consumer<WorkoutListViewModel>(
       builder: (_, viewModel, __) {
-        final state = viewModel.workoutListUiState;
-        return state.run(
+        final workoutListUiState = viewModel.workoutListUiState;
+
+        return workoutListUiState.run(
           onLoading: () =>
               Text(LocalizationUtil.localize(context).loadingWorkoutText),
-          onSuccess: () => WorkoutList(
-            workoutListState: state,
+          onSuccess: (successState) => WorkoutList(
+            workoutListState: successState,
             onItemClick: _onItemClick,
             onItemLongClick: _onItemLongClick,
           ),

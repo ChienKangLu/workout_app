@@ -1,19 +1,20 @@
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
 
 import '../core_view/util/date_time_display_helper.dart';
+import '../core_view/view_model.dart';
 import '../core_view/workout_category.dart';
 import '../core_view/workout_status.dart';
 import '../model/exercise.dart';
 import '../model/result.dart';
-import '../model/unit.dart';
 import '../model/workout.dart';
 import '../repository/exercise_repository.dart';
 import '../repository/repository_manager.dart';
 import '../repository/workout_repository.dart';
 import '../util/log_util.dart';
+import 'ui_state/exercise_option_list_ui_state.dart';
+import 'ui_state/weight_training_ui_state.dart';
 
-class WeightTrainingViewModel extends ChangeNotifier {
+class WeightTrainingViewModel extends ViewModel {
   static const _tag = "WeightTrainingViewModel";
 
   WeightTrainingViewModel({
@@ -26,21 +27,80 @@ class WeightTrainingViewModel extends ChangeNotifier {
   final ExerciseRepository _exerciseRepository =
       RepositoryManager.instance.exerciseRepository;
 
-  WeightTrainingUiState? _weightTrainingUiState;
-  ExerciseOptionListUiState? _exerciseOptionListUiState;
+  WeightTrainingUiState _weightTrainingUiState =
+      WeightTrainingUiState.loading();
+  WeightTrainingUiState get weightTrainingUiState => _weightTrainingUiState;
 
-  WeightTrainingUiState? get weightTrainingUiState => _weightTrainingUiState;
-  ExerciseOptionListUiState? get exerciseOptionListUiState =>
+  ExerciseOptionListUiState _exerciseOptionListUiState =
+      ExerciseOptionListUiState.loading();
+  ExerciseOptionListUiState get exerciseOptionListUiState =>
       _exerciseOptionListUiState;
 
-  Future<void> initModel() async {
+  @override
+  Future<void> init() async {
+    await _updateWeightTrainingUiState();
+    await _updateExerciseOptionListUiState();
+    stateChange();
+  }
+
+  Future<void> _updateWeightTrainingUiState() async {
     final weightTraining = await _getWeightTraining();
-    _updateWeightTrainingUiState(weightTraining);
+    if (weightTraining == null) {
+      _weightTrainingUiState = WeightTrainingUiState.error();
+      return;
+    }
 
+    _weightTrainingUiState = WeightTrainingUiState.success(
+      EditableWeightTraining(
+        number: weightTraining.typeNum + 1,
+        category: WorkoutCategory.fromType(weightTraining.type),
+        startDateTime:
+            DateTimeDisplayHelper.dateTime(weightTraining.startDateTime),
+        duration: _duration(weightTraining),
+        editableExercises: weightTraining.exercises
+            .map(
+              (exercise) => EditableExercise(
+                name: exercise.name,
+                exerciseId: exercise.exerciseId,
+                editableExerciseSets: exercise.sets
+                    .mapIndexed(
+                      (index, set) => EditableExerciseSet(
+                        number: index + 1,
+                        weight: _totalWeight(set).toStringAsFixed(1),
+                        weightUnit: set.unit,
+                        repetition: set.repetition,
+                      ),
+                    )
+                    .toList(),
+              ),
+            )
+            .toList(),
+        workoutStatus: WorkoutStatus.fromDateTime(
+          weightTraining.startDateTime,
+          weightTraining.endDateTime,
+        ),
+        weightTraining: weightTraining,
+      ),
+    );
+  }
+
+  Future<void> _updateExerciseOptionListUiState() async {
     final exercises = await _getExercises();
-    _updateExerciseOptionListUiState(exercises);
+    if (exercises == null) {
+      _exerciseOptionListUiState = ExerciseOptionListUiState.error();
+      return;
+    }
 
-    notifyListeners();
+    _exerciseOptionListUiState = ExerciseOptionListUiState.success(
+      exercises
+          .map(
+            (exercise) => ExerciseOption(
+              exerciseTypeId: exercise.exerciseId,
+              name: exercise.name,
+            ),
+          )
+          .toList(),
+    );
   }
 
   Future<WeightTraining?> _getWeightTraining() async {
@@ -69,144 +129,40 @@ class WeightTrainingViewModel extends ChangeNotifier {
     return workout;
   }
 
-  Future<List<Exercise>> _getExercises() async {
+  Future<List<Exercise>?> _getExercises() async {
     final Result<List<Exercise>> result =
         await _exerciseRepository.getExercises(WorkoutType.weightTraining);
     if (result is Error<List<Exercise>>) {
       Log.e(_tag, "Error happens while get exercises", result.exception);
-      return [];
+      return null;
     }
 
     return (result as Success<List<Exercise>>).data;
   }
 
-  void _updateWeightTrainingUiState(WeightTraining? weightTraining) {
-    if (weightTraining == null) {
-      return;
-    }
-
-    _weightTrainingUiState = _createWeightTrainingUiState(weightTraining);
-  }
-
-  WeightTrainingUiState _createWeightTrainingUiState(
-    WeightTraining weightTraining,
-  ) {
-    return WeightTrainingUiState(
-      number: weightTraining.typeNum + 1,
-      category: WorkoutCategory.fromType(weightTraining.type),
-      startDateTime:
-          DateTimeDisplayHelper.dateTime(weightTraining.startDateTime),
-      duration: _duration(weightTraining),
-      exerciseListUiState: _createExerciseListUiState(weightTraining.exercises),
-      workoutStatus: WorkoutStatus.fromDateTime(
-        weightTraining.startDateTime,
-        weightTraining.endDateTime,
-      ),
-      weightTraining: weightTraining,
-    );
-  }
-
-  Duration _duration(WeightTraining weightTraining) {
-    final startTime = weightTraining.startDateTime;
-    final endTime = weightTraining.endDateTime;
-    if (startTime == null || endTime == null) {
-      return const Duration(hours: 0);
-    }
-
-    return endTime.difference(startTime);
-  }
-
-  WeightTrainingExerciseListUiState _createExerciseListUiState(
-    List<WeightTrainingExercise> exercises,
-  ) =>
-      WeightTrainingExerciseListUiState(
-        exerciseUiStates: exercises
-            .map((exercise) => _createExerciseUiState(exercise))
-            .toList(),
-      );
-
-  WeightTrainingExerciseUiState _createExerciseUiState(
-    WeightTrainingExercise exercise,
-  ) =>
-      WeightTrainingExerciseUiState(
-        name: exercise.name,
-        exerciseId: exercise.exerciseId,
-        exerciseSetListUiState: _createExerciseSetListUiState(exercise.sets),
-      );
-
-  WeightTrainingExerciseSetListUiState _createExerciseSetListUiState(
-    List<WeightTrainingExerciseSet> sets,
-  ) =>
-      WeightTrainingExerciseSetListUiState(
-          exerciseSetUiStates: sets
-              .mapIndexed(
-                  (index, set) => _createExerciseSetUiState(index + 1, set))
-              .toList());
-
-  WeightTrainingExerciseSetUiState _createExerciseSetUiState(
-    int number,
-    WeightTrainingExerciseSet exerciseSet,
-  ) =>
-      WeightTrainingExerciseSetUiState(
-        number: number,
-        weight: _totalWeight(exerciseSet.baseWeight, exerciseSet.sideWeight)
-            .toStringAsFixed(1),
-        weightUnit: exerciseSet.unit,
-        repetition: exerciseSet.repetition,
-      );
-
-  double _totalWeight(double baseWeight, double sideWeight) =>
-      baseWeight + sideWeight * 2;
-
-  void _updateExerciseOptionListUiState(List<Exercise<ExerciseSet>> exercises) {
-    _exerciseOptionListUiState = _createExerciseOptionListUiState(exercises);
-  }
-
-  ExerciseOptionListUiState _createExerciseOptionListUiState(
-    List<Exercise<ExerciseSet>> exercises,
-  ) {
-    return ExerciseOptionListUiState(
-        exerciseOptionUiStates: exercises
-            .map((exercise) => _createExerciseOptionUiState(exercise))
-            .toList());
-  }
-
-  ExerciseOptionUiState _createExerciseOptionUiState(
-    Exercise exercise,
-  ) {
-    return ExerciseOptionUiState(
-      exerciseTypeId: exercise.exerciseId,
-      name: exercise.name,
-    );
-  }
-
-  Future<void> startWorkout() async {
-    final weightTrainingUiState = _weightTrainingUiState;
-    if (weightTrainingUiState == null) {
-      return;
-    }
-
-    final weightTraining = weightTrainingUiState.weightTraining
+  Future<void> startWorkout(
+    EditableWeightTraining editableWeightTraining,
+  ) async {
+    final weightTraining = editableWeightTraining.weightTraining
       ..startDateTime = DateTime.now();
+
     final result = await _workoutRepository.updateWorkout(weightTraining);
     if (result is Success) {
-      _updateWeightTrainingUiState(weightTraining);
-      notifyListeners();
+      await _updateWeightTrainingUiState();
+      stateChange();
     }
   }
 
-  Future<void> finishWorkout() async {
-    final weightTrainingUiState = _weightTrainingUiState;
-    if (weightTrainingUiState == null) {
-      return;
-    }
-
-    final weightTraining = weightTrainingUiState.weightTraining
+  Future<void> finishWorkout(
+    EditableWeightTraining editableWeightTraining,
+  ) async {
+    final weightTraining = editableWeightTraining.weightTraining
       ..endDateTime = DateTime.now();
+
     final result = await _workoutRepository.updateWorkout(weightTraining);
     if (result is Success) {
-      _updateWeightTrainingUiState(weightTraining);
-      notifyListeners();
+      await _updateWeightTrainingUiState();
+      stateChange();
     }
   }
 
@@ -217,21 +173,18 @@ class WeightTrainingViewModel extends ChangeNotifier {
       return;
     }
 
-    final exercises = await _getExercises();
-    _updateExerciseOptionListUiState(exercises);
-    notifyListeners();
+    await _updateExerciseOptionListUiState();
+    stateChange();
   }
 
   Future<void> addExercise(int exerciseId) async {
-    final result =
-        await _exerciseRepository.addExercise(workoutId, exerciseId);
+    final result = await _exerciseRepository.addExercise(workoutId, exerciseId);
     if (result is Error) {
       return;
     }
 
-    final weightTraining = await _getWeightTraining();
-    _updateWeightTrainingUiState(weightTraining);
-    notifyListeners();
+    await _updateWeightTrainingUiState();
+    stateChange();
   }
 
   Future<void> addExerciseSet({
@@ -251,88 +204,20 @@ class WeightTrainingViewModel extends ChangeNotifier {
       return;
     }
 
-    final weightTraining = await _getWeightTraining();
-    _updateWeightTrainingUiState(weightTraining);
-    notifyListeners();
+    await _updateWeightTrainingUiState();
+    stateChange();
   }
-}
 
-class WeightTrainingExerciseSetUiState {
-  WeightTrainingExerciseSetUiState({
-    required this.number,
-    required this.weight,
-    required this.weightUnit,
-    required this.repetition,
-  });
+  double _totalWeight(WeightTrainingExerciseSet set) =>
+      set.baseWeight + set.sideWeight * 2;
 
-  final int number;
-  final String weight;
-  final WeightUnit weightUnit;
-  final int repetition;
-}
+  Duration _duration(WeightTraining weightTraining) {
+    final startTime = weightTraining.startDateTime;
+    final endTime = weightTraining.endDateTime;
+    if (startTime == null || endTime == null) {
+      return const Duration(hours: 0);
+    }
 
-class WeightTrainingExerciseSetListUiState {
-  WeightTrainingExerciseSetListUiState({
-    required this.exerciseSetUiStates,
-  });
-
-  final List<WeightTrainingExerciseSetUiState> exerciseSetUiStates;
-}
-
-class WeightTrainingExerciseUiState {
-  WeightTrainingExerciseUiState({
-    required this.name,
-    required this.exerciseId,
-    required this.exerciseSetListUiState,
-  });
-
-  final String name;
-  final int exerciseId;
-  final WeightTrainingExerciseSetListUiState exerciseSetListUiState;
-}
-
-class WeightTrainingExerciseListUiState {
-  WeightTrainingExerciseListUiState({
-    required this.exerciseUiStates,
-  });
-
-  final List<WeightTrainingExerciseUiState> exerciseUiStates;
-}
-
-class WeightTrainingUiState {
-  WeightTrainingUiState({
-    required this.number,
-    required this.category,
-    required this.startDateTime,
-    required this.duration,
-    required this.exerciseListUiState,
-    required this.workoutStatus,
-    required this.weightTraining,
-  });
-
-  final int number;
-  final WorkoutCategory category;
-  final String startDateTime;
-  final Duration duration;
-  final WeightTrainingExerciseListUiState exerciseListUiState;
-  final WorkoutStatus workoutStatus;
-  final WeightTraining weightTraining;
-}
-
-class ExerciseOptionUiState {
-  ExerciseOptionUiState({
-    required this.exerciseTypeId,
-    required this.name,
-  });
-
-  final int exerciseTypeId;
-  final String name;
-}
-
-class ExerciseOptionListUiState {
-  ExerciseOptionListUiState({
-    required this.exerciseOptionUiStates,
-  });
-
-  final List<ExerciseOptionUiState> exerciseOptionUiStates;
+    return endTime.difference(startTime);
+  }
 }

@@ -1,12 +1,11 @@
-import '../core_view/ui_state.dart';
 import '../core_view/view_model.dart';
 import '../core_view/workout_category.dart';
 import '../core_view/workout_status.dart';
-import '../model/exercise.dart';
 import '../model/result.dart';
 import '../model/workout.dart';
 import '../repository/repository_manager.dart';
 import '../repository/workout_repository.dart';
+import 'ui_state/workout_list_ui_state.dart';
 
 class WorkoutListViewModel extends ViewModel {
   final WorkoutRepository _workoutRepository =
@@ -18,8 +17,8 @@ class WorkoutListViewModel extends ViewModel {
   WorkoutListUiState _workoutListUiState = WorkoutListUiState.loading();
   WorkoutListUiState get workoutListUiState => _workoutListUiState;
 
-  final _selectedWorkoutUiState = <WorkoutUiState>{};
-  int get selectedWorkoutCount => _selectedWorkoutUiState.length;
+  final _selectedReadableWorkout = <ReadableWorkout>{}; // TODO: should be view internal logic!
+  int get selectedWorkoutCount => _selectedReadableWorkout.length;
 
   @override
   Future<void> init() async {
@@ -29,7 +28,7 @@ class WorkoutListViewModel extends ViewModel {
 
   @override
   Future<void> reload() async {
-    if (_workoutListUiState.isLoading == false) {
+    if (_workoutListUiState is! WorkoutListLoadingUiState) {
       _workoutListUiState = WorkoutListUiState.loading();
       stateChange();
     }
@@ -46,129 +45,54 @@ class WorkoutListViewModel extends ViewModel {
     }
 
     final workouts = (result as Success<List<Workout>>).data;
-    _workoutListUiState = WorkoutListUiState.success(workouts);
+    _workoutListUiState = WorkoutListUiState.success(
+      workouts
+          .map(
+            (workout) => ReadableWorkout(
+              workoutId: workout.workoutId,
+              number: workout.typeNum + 1,
+              category: WorkoutCategory.fromType(workout.type),
+              exerciseThumbnails: workout.exercises
+                  .map(
+                    (exercise) => ExerciseThumbnail(name: exercise.name),
+                  )
+                  .toList(),
+              workoutStatus: WorkoutStatus.fromDateTime(
+                  workout.startDateTime, workout.endDateTime),
+            ),
+          )
+          .toList(),
+    );
   }
 
-  void selectWorkout(WorkoutUiState workoutUiState) {
-    final isSelected = workoutUiState.isSelected;
+  void selectWorkout(ReadableWorkout readableWorkout) {
+    final isSelected = readableWorkout.isSelected;
     if (isSelected) {
-      _selectedWorkoutUiState.remove(workoutUiState);
+      _selectedReadableWorkout.remove(readableWorkout);
     } else {
-      _selectedWorkoutUiState.add(workoutUiState);
+      _selectedReadableWorkout.add(readableWorkout);
     }
-    workoutUiState.isSelected = !isSelected;
+    readableWorkout.isSelected = !isSelected;
     stateChange();
   }
 
   void unselectWorkouts() {
-    for (final workoutUiState in _selectedWorkoutUiState) {
+    for (final workoutUiState in _selectedReadableWorkout) {
       workoutUiState.isSelected = false;
     }
-    _selectedWorkoutUiState.clear();
+    _selectedReadableWorkout.clear();
     stateChange();
   }
 
   Future<void> deleteSelectedWorkouts() async {
-    final selectedWorkoutIds = _selectedWorkoutUiState
+    final selectedWorkoutIds = _selectedReadableWorkout
         .map((workouts) => workouts.workoutId)
         .toList(growable: false);
 
-    _selectedWorkoutUiState.clear();
+    _selectedReadableWorkout.clear();
 
     await _workoutRepository.deleteWorkouts(selectedWorkoutIds);
 
     reload();
   }
-}
-
-class ExerciseThumbnailUiState extends UiState {
-  ExerciseThumbnailUiState._({
-    required super.status,
-    required this.name,
-  });
-
-  final String name;
-
-  ExerciseThumbnailUiState.from(Exercise exercise)
-      : this._(
-          status: UiStatus.success,
-          name: exercise.name,
-        );
-}
-
-class ExerciseThumbnailListUiState extends UiState {
-  ExerciseThumbnailListUiState._({
-    required super.status,
-    required this.exerciseThumbnails,
-  });
-
-  final List<ExerciseThumbnailUiState> exerciseThumbnails;
-
-  ExerciseThumbnailListUiState.from(List<Exercise> exercises)
-      : this._(
-          status: UiStatus.success,
-          exerciseThumbnails: exercises
-              .map((exercise) => ExerciseThumbnailUiState.from(exercise))
-              .toList(),
-        );
-}
-
-class WorkoutUiState extends UiState {
-  WorkoutUiState._({
-    required super.status,
-    required this.workoutId,
-    required this.number,
-    required this.category,
-    required this.exerciseThumbnailList,
-    required this.workoutStatus,
-  });
-
-  final int workoutId;
-  final int number;
-  final WorkoutCategory category;
-  final ExerciseThumbnailListUiState exerciseThumbnailList;
-  final WorkoutStatus workoutStatus;
-
-  bool isSelected = false;
-
-  WorkoutUiState.success(Workout workout)
-      : this._(
-          status: UiStatus.success,
-          workoutId: workout.workoutId,
-          number: workout.typeNum + 1,
-          category: WorkoutCategory.fromType(workout.type),
-          exerciseThumbnailList:
-              ExerciseThumbnailListUiState.from(workout.exercises),
-          workoutStatus: WorkoutStatus.fromDateTime(
-              workout.startDateTime, workout.endDateTime),
-        );
-}
-
-class WorkoutListUiState extends UiState {
-  WorkoutListUiState._({
-    required super.status,
-    required this.workouts,
-  });
-
-  final List<WorkoutUiState> workouts;
-
-  WorkoutListUiState.loading()
-      : this._(
-          status: UiStatus.loading,
-          workouts: [],
-        );
-
-  WorkoutListUiState.success(List<Workout> workouts)
-      : this._(
-          status: UiStatus.success,
-          workouts: workouts
-              .map((workout) => WorkoutUiState.success(workout))
-              .toList(),
-        );
-
-  WorkoutListUiState.error()
-      : this._(
-          status: UiStatus.error,
-          workouts: [],
-        );
 }

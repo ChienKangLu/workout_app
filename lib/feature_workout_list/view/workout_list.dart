@@ -7,7 +7,7 @@ import '../../core_view/workout_category.dart';
 import '../../core_view/workout_status.dart';
 import '../../themes/workout_app_theme_data.dart';
 import '../../util/localization_util.dart';
-import '../workout_list_view_model.dart';
+import '../ui_state/workout_list_ui_state.dart';
 import 'exercise_thumbnail_list.dart';
 
 class WorkoutList extends StatelessWidget {
@@ -18,9 +18,9 @@ class WorkoutList extends StatelessWidget {
     required this.onItemLongClick,
   }) : super(key: key);
 
-  final WorkoutListUiState workoutListState;
-  final void Function(WorkoutUiState) onItemClick;
-  final void Function(WorkoutUiState) onItemLongClick;
+  final WorkoutListSuccessUiState workoutListState;
+  final void Function(ReadableWorkout) onItemClick;
+  final void Function(ReadableWorkout) onItemLongClick;
 
   @override
   Widget build(BuildContext context) {
@@ -39,14 +39,14 @@ class WorkoutList extends StatelessWidget {
 
   Widget _listView(BuildContext context) {
     return ListView.builder(
-      itemCount: workoutListState.workouts.length,
+      itemCount: workoutListState.readableWorkouts.length,
       itemBuilder: (content, index) {
-        final workoutUiState = workoutListState.workouts[index];
+        final readableWorkout = workoutListState.readableWorkouts[index];
 
         return WorkoutListItem(
-          workoutState: workoutUiState,
-          onItemClick: () => onItemClick(workoutUiState),
-          onItemLongClick: () => onItemLongClick(workoutUiState),
+          readableWorkout: readableWorkout,
+          onItemClick: () => onItemClick(readableWorkout),
+          onItemLongClick: () => onItemLongClick(readableWorkout),
         );
       },
     );
@@ -56,19 +56,19 @@ class WorkoutList extends StatelessWidget {
 class WorkoutListItem extends StatelessWidget {
   const WorkoutListItem({
     Key? key,
-    required this.workoutState,
+    required this.readableWorkout,
     required this.onItemClick,
     required this.onItemLongClick,
   }) : super(key: key);
 
-  final WorkoutUiState workoutState;
+  final ReadableWorkout readableWorkout;
   final void Function() onItemClick;
   final void Function() onItemLongClick;
 
   @override
   Widget build(BuildContext context) {
     final uiMode = context.watch<UiModeViewModel>().uiMode;
-    final isSelected = workoutState.isSelected;
+    final isSelected = readableWorkout.isSelected;
 
     return InkWell(
       child: Container(
@@ -99,13 +99,13 @@ class WorkoutListItem extends StatelessWidget {
 
   Widget _title(BuildContext context) {
     return Text(
-      "${WorkoutCategory.localizedString(context, workoutState.category)} ${workoutState.number}",
+      "${WorkoutCategory.localizedString(context, readableWorkout.category)} ${readableWorkout.number}",
       style: Theme.of(context).textTheme.titleLarge,
     );
   }
 
   Widget _body(BuildContext context) {
-    final status = workoutState.workoutStatus;
+    final status = readableWorkout.workoutStatus;
 
     switch (status) {
       case WorkoutStatus.created:
@@ -120,7 +120,7 @@ class WorkoutListItem extends StatelessWidget {
         );
       case WorkoutStatus.finished:
         return ExerciseThumbnailList(
-          exerciseThumbnailListState: workoutState.exerciseThumbnailList,
+          exerciseThumbnails: readableWorkout.exerciseThumbnails,
         );
     }
   }

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-import '../weight_training_view_model.dart';
+import '../ui_state/weight_training_ui_state.dart';
 import 'weight_training_exercise_set.dart';
 
 class WeightTrainingExerciseSetList extends StatelessWidget {
   const WeightTrainingExerciseSetList({
     Key? key,
-    required this.exerciseSetListUiState,
+    required this.editableExerciseSets,
   }) : super(key: key);
 
-  final WeightTrainingExerciseSetListUiState exerciseSetListUiState;
+  final List<EditableExerciseSet> editableExerciseSets;
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +17,10 @@ class WeightTrainingExerciseSetList extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.all(0),
       shrinkWrap: true,
-      itemCount: exerciseSetListUiState.exerciseSetUiStates.length,
+      itemCount: editableExerciseSets.length,
       itemBuilder: (content, index) {
         return WeightTrainingExerciseSet(
-          exerciseSetUiState: exerciseSetListUiState.exerciseSetUiStates[index],
+          editableExerciseSet: editableExerciseSets[index],
         );
       },
     );

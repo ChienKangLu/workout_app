@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 import '../../themes/workout_app_theme_data.dart';
-import '../weight_training_view_model.dart';
+import '../ui_state/weight_training_ui_state.dart';
 import 'weight_training_exercise_set_list.dart';
 
 class WeightTrainingExercise extends StatelessWidget {
   const WeightTrainingExercise({
     Key? key,
-    required this.exerciseUiStates,
+    required this.editableExercise,
     required this.onAddSet,
   }) : super(key: key);
 
-  final WeightTrainingExerciseUiState exerciseUiStates;
+  final EditableExercise editableExercise;
   final void Function(int) onAddSet;
 
   @override
@@ -26,19 +26,29 @@ class WeightTrainingExercise extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text(
-                  exerciseUiStates.name,
-                  style: Theme.of(context).textTheme.titleLarge,
+                child: Row(
+                  children: [
+                    Text(
+                      editableExercise.name,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.more_horiz),
+                      onPressed: () {
+                        print("TODO: WeightTrainingExercise delete");
+                      },
+                    ),
+                  ],
                 ),
               ),
               IconButton(
                 icon: const Icon(Icons.add),
-                onPressed: () => onAddSet(exerciseUiStates.exerciseId),
+                onPressed: () => onAddSet(editableExercise.exerciseId),
               ),
             ],
           ),
           WeightTrainingExerciseSetList(
-            exerciseSetListUiState: exerciseUiStates.exerciseSetListUiState,
+            editableExerciseSets: editableExercise.editableExerciseSets,
           ),
         ],
       ),
