@@ -18,6 +18,7 @@
   "actionItemStart": "開始運動",
   "actionItemAddExercise": "新增項目",
   "actionItemFinish": "運動結束",
+  "actionItemEdit": "編輯",
 
   "createExerciseDialogTitle": "新增項目",
   "exerciseNameTextFieldHint": "項目名稱",

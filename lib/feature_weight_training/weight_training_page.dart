@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../core_view/confirm_dialog.dart';
+import '../core_view/ui_mode.dart';
+import '../core_view/ui_mode_view_model.dart';
 import '../core_view/util/duration_util.dart';
+import '../core_view/workout_status.dart';
 import '../themes/workout_app_theme_data.dart';
 import '../util/localization_util.dart';
 import 'ui_state/weight_training_ui_state.dart';
@@ -12,8 +15,7 @@ import 'view/edit_set_sheet.dart';
 import 'view/create_exercise_dialog.dart';
 import 'view/exercise_option_dialog.dart';
 import 'view/weight_training_exercise_list.dart';
-import 'view/weight_training_more_action_item.dart';
-import 'view/weight_training_title.dart';
+import 'view/weight_training_page_app_bar.dart';
 import 'weight_training_view_model.dart';
 
 class WeightTrainingPage extends StatefulWidget {
@@ -30,12 +32,14 @@ class WeightTrainingPage extends StatefulWidget {
 
 class _WeightTrainingPageState extends State<WeightTrainingPage> {
   late final WeightTrainingViewModel _model;
+  late final UiModeViewModel _uiModeViewModel;
 
   int get workoutId => widget.workoutId;
 
   @override
   void initState() {
     _model = WeightTrainingViewModel(workoutId: workoutId);
+    _uiModeViewModel = UiModeViewModel();
 
     initViewModels();
 
@@ -50,19 +54,47 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
 
   Future<void> initViewModels() async {
     await _model.init();
+
+    _model.weightTrainingUiState.run(
+      onLoading: () {
+        // Do nothing
+      },
+      onSuccess: (success) {
+        final workoutStatus = success.editableWeightTraining.workoutStatus;
+        switch (workoutStatus) {
+          case WorkoutStatus.created:
+          case WorkoutStatus.inProgress:
+            _uiModeViewModel.switchTo(UiMode.edit);
+            break;
+          case WorkoutStatus.finished:
+            break;
+        }
+      },
+      onError: () {
+        // Do nothing
+      },
+    );
   }
 
   void _onMoreItemClicked() {
     showActionSheet(
         context: context,
-        builder: (context) => ChangeNotifierProvider.value(
-              value: _model,
+        builder: (context) => MultiProvider(
+              providers: [
+                ChangeNotifierProvider.value(value: _model),
+                ChangeNotifierProvider.value(value: _uiModeViewModel),
+              ],
               child: WeightTrainingActionSheet(
                 onStartItemClicked: _onStartItemClicked,
                 onAddExerciseItemClicked: _onAddExerciseItemClicked,
                 onFinishItemClicked: _onFinishItemClicked,
+                onEditItemClicked: _onEditItemClicked,
               ),
             ));
+  }
+
+  void _onAppBarCloseButtonClicked() {
+    _uiModeViewModel.switchTo(UiMode.normal);
   }
 
   void _onStartItemClicked(EditableWeightTraining editableWeightTraining) {
@@ -73,6 +105,12 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
   void _onFinishItemClicked(EditableWeightTraining editableWeightTraining) {
     Navigator.pop(context);
     _model.finishWorkout(editableWeightTraining);
+    _uiModeViewModel.switchTo(UiMode.normal);
+  }
+
+  void _onEditItemClicked() {
+    Navigator.pop(context);
+    _uiModeViewModel.switchTo(UiMode.edit);
   }
 
   void _onAddExerciseItemClicked(
@@ -196,17 +234,15 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: _model,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: _model),
+        ChangeNotifierProvider.value(value: _uiModeViewModel),
+      ],
       child: Scaffold(
-        appBar: AppBar(
-          title: const WeightTrainingTitle(),
-          actions: [
-            WeightTrainingAppBarActionItem(
-              iconData: Icons.more_horiz,
-              onClick: _onMoreItemClicked,
-            ),
-          ],
+        appBar: WeightTrainingPageAppBar(
+          onMoreItemClicked: _onMoreItemClicked,
+          onCloseButtonClicked: _onAppBarCloseButtonClicked,
         ),
         body: _weightTrainingPageView(),
       ),

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../core_view/ui_mode.dart';
+import '../../core_view/ui_mode_view_model.dart';
 import '../../themes/workout_app_theme_data.dart';
 import '../ui_state/weight_training_ui_state.dart';
 import 'weight_training_exercise_set_list.dart';
@@ -20,6 +23,8 @@ class WeightTrainingExercise extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final uiMode = context.watch<UiModeViewModel>().uiMode;
+
     return Container(
       margin: WorkoutAppThemeData.exerciseContainerMargin,
       child: ListView(
@@ -30,23 +35,31 @@ class WeightTrainingExercise extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Row(
-                  children: [
-                    Text(
-                      editableExercise.name,
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () => onRemoveExercise(editableExercise.exerciseId),
-                    ),
-                  ],
+                child: ConstrainedBox(
+                  constraints: BoxConstraints.tightFor(
+                    height: WorkoutAppThemeData.exerciseTitleHeight,
+                  ),
+                  child: Row(
+                    children: [
+                      Text(
+                        editableExercise.name,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      if (uiMode == UiMode.edit)
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () =>
+                              onRemoveExercise(editableExercise.exerciseId),
+                        ),
+                    ],
+                  ),
                 ),
               ),
-              IconButton(
-                icon: const Icon(Icons.add),
-                onPressed: () => onAddSet(editableExercise),
-              ),
+              if (uiMode == UiMode.edit)
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () => onAddSet(editableExercise),
+                ),
             ],
           ),
           WeightTrainingExerciseSetList(

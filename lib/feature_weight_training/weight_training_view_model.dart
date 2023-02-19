@@ -36,6 +36,15 @@ class WeightTrainingViewModel extends ViewModel {
   ExerciseOptionListUiState get exerciseOptionListUiState =>
       _exerciseOptionListUiState;
 
+  bool get isWorkoutFinished => _weightTrainingUiState.run(
+        onLoading: () => false,
+        onSuccess: (success) {
+          return success.editableWeightTraining.workoutStatus ==
+              WorkoutStatus.finished;
+        },
+        onError: () => false,
+      );
+
   @override
   Future<void> init() async {
     await _updateWeightTrainingUiState();
@@ -190,7 +199,8 @@ class WeightTrainingViewModel extends ViewModel {
   }
 
   Future<void> removeExerciseFromWorkout(int exerciseId) async {
-    final result = await _exerciseRepository.removeExercise(workoutId, exerciseId);
+    final result =
+        await _exerciseRepository.removeExercise(workoutId, exerciseId);
     if (result is Error) {
       return;
     }

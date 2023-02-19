@@ -72,6 +72,10 @@
   "@actionItemFinish": {
     "description": "Text for finish action item"
   },
+  "actionItemEdit": "Edit",
+  "@actionItemEdit": {
+    "description": "Text for edit action item"
+  },
 
   "createExerciseDialogTitle": "Create Exercise",
   "@createExerciseDialogTitle": {
