@@ -93,6 +93,18 @@
   "@createExerciseDialogNegativeBtn": {
     "description": "Text for negative button in create exercise dialog"
   },
+  "removeExerciseConfirmDialogTitle":  "Are you sure to remove it?",
+  "@removeExerciseConfirmDialogTitle": {
+    "description": "Title for remove exercise dialog"
+  },
+  "removeExerciseConfirmDialogPositiveBtn": "Yes",
+  "@removeExerciseConfirmDialogPositiveBtn": {
+    "description": "Text for positive button in remove exercise dialog"
+  },
+  "removeExerciseConfirmDialogNegativeBtn": "No",
+  "@removeExerciseConfirmDialogNegativeBtn": {
+    "description": "Text for negative button in remove exercise dialog"
+  },
 
   "exerciseOptionDialogTitle": "Add Exercise",
   "@exerciseOptionDialogTitle": {

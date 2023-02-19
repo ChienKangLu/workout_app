@@ -1,8 +1,8 @@
 abstract class DaoFilter {
-  String toWhereClause();
+  String? toWhereClause();
 
   @override
   String toString() {
-    return toWhereClause();
+    return toWhereClause() ?? "null";
   }
 }

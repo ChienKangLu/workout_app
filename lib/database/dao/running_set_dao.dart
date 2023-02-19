@@ -7,7 +7,7 @@ import 'base_dao.dart';
 import 'dao_filter.dart';
 import 'dao_result.dart';
 
-class RunningSetDao extends BaseDao<RunningSetEntity, DaoFilter> {
+class RunningSetDao extends BaseDao<RunningSetEntity, RunningSetEntityFilter> {
   static const _tag = "RunningSetDao";
 
   @override
@@ -27,7 +27,9 @@ class RunningSetDao extends BaseDao<RunningSetEntity, DaoFilter> {
   }
 
   @override
-  Future<DaoResult<List<RunningSetEntity>>> findByFilter(DaoFilter? filter) {
+  Future<DaoResult<List<RunningSetEntity>>> findByFilter(
+    RunningSetEntityFilter? filter,
+  ) {
     throw UnimplementedError();
   }
 
@@ -53,7 +55,41 @@ class RunningSetDao extends BaseDao<RunningSetEntity, DaoFilter> {
   }
 
   @override
-  Future<DaoResult<bool>> delete(List<int> ids) {
-    throw UnimplementedError();
+  Future<DaoResult<bool>> delete(RunningSetEntityFilter filter) async {
+    try {
+      final count = await database.delete(
+        RunningSetTable.name,
+        where: filter.toWhereClause(),
+      );
+      Log.d(_tag, "Delete $count rows from '${RunningSetTable.name}'");
+
+      return DaoSuccess(true);
+    } on Exception catch (e) {
+      Log.e(_tag, "Cannot findByFilter with filter '$filter'", e);
+      return DaoError(e);
+    }
+  }
+}
+
+class RunningSetEntityFilter implements DaoFilter {
+  RunningSetEntityFilter({
+    required this.workoutIds,
+  });
+
+  final List<int> workoutIds;
+
+  @override
+  String? toWhereClause() {
+    final where = <String>[];
+    if (workoutIds.isNotEmpty) {
+      final args = workoutIds.join(",");
+      where.add("${RunningSetTable.columnWorkoutId} in ($args)");
+    }
+
+    if (where.isEmpty) {
+      return null;
+    }
+
+    return where.join(" AND ");
   }
 }

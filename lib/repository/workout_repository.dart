@@ -1,6 +1,10 @@
 import '../database/dao/composed_workout_dao.dart';
 import '../database/dao/dao_provider_mixin.dart';
 import '../database/dao/dao_result.dart';
+import '../database/dao/running_set_dao.dart';
+import '../database/dao/weight_training_set_dao.dart';
+import '../database/dao/workout_dao.dart';
+import '../database/dao/workout_detail_dao.dart';
 import '../database/model/embedded_object/workout_with_exercises_and_sets_entity.dart';
 import '../database/model/workout_entity.dart';
 import '../database/model/workout_type_entity.dart';
@@ -29,9 +33,34 @@ class WorkoutRepository with DaoProviderMixin {
   }
 
   Future<Result<bool>> deleteWorkouts(List<int> workoutIds) async {
-    final DaoResult<bool> daoResult = await composedWorkoutDao.delete(
-      workoutIds,
-    );
+    DaoResult<bool> daoResult;
+    daoResult = await weightTrainingSetDao.delete(WeightTrainingSetEntityFilter(
+      workoutIds: workoutIds,
+    ));
+
+    if (daoResult is DaoError<bool>) {
+      return daoResult.asResult();
+    }
+
+    daoResult = await runningSetDao.delete(RunningSetEntityFilter(
+      workoutIds: workoutIds,
+    ));
+
+    if (daoResult is DaoError<bool>) {
+      return daoResult.asResult();
+    }
+
+    daoResult = await workoutDetailDao.delete(WorkoutDetailEntityFilter(
+      workoutIds: workoutIds,
+    ));
+
+    if (daoResult is DaoError<bool>) {
+      return daoResult.asResult();
+    }
+
+    daoResult = await workoutDao.delete(WorkoutEntityFilter(
+      workoutIds: workoutIds,
+    ));
 
     return daoResult.asResult();
   }
@@ -43,10 +72,10 @@ class WorkoutRepository with DaoProviderMixin {
   }
 
   Future<Result<List<Workout>>> getWorkouts({
-    int? workoutId,
+    List<int> workoutIds = const [],
   }) async {
-    final filter = WorkoutWithExercisesAndSetsEntityFilter(
-      workoutId: workoutId,
+    final filter = ComposedWorkoutFilter(
+      workoutIds: workoutIds,
     );
 
     final DaoResult<List<WorkoutWithExercisesAndSetsEntity>> daoResult =

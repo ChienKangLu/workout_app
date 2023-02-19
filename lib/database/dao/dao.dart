@@ -19,5 +19,5 @@ abstract class Dao<T extends BaseEntity, F extends DaoFilter> {
 
   Future<DaoResult<bool>> update(T entity);
 
-  Future<DaoResult<bool>> delete(List<int> ids);
+  Future<DaoResult<bool>> delete(F filter);
 }

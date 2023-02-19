@@ -13,20 +13,20 @@ import 'base_dao.dart';
 import 'dao_filter.dart';
 import 'dao_result.dart';
 
-class ComposedWorkoutDao extends BaseDao<WorkoutWithExercisesAndSetsEntity,
-    WorkoutWithExercisesAndSetsEntityFilter> {
+class ComposedWorkoutDao
+    extends BaseDao<WorkoutWithExercisesAndSetsEntity, ComposedWorkoutFilter> {
   static const _tag = "ComposedWorkoutDao";
   static const String _columnSetNum = "set_num";
   static const String _columnSetEndDateTime = "set_end_date_time";
 
   @override
   Future<DaoResult<List<WorkoutWithExercisesAndSetsEntity>>> findAll() {
-    throw findByFilter(null);
+    return findByFilter(null);
   }
 
   @override
   Future<DaoResult<List<WorkoutWithExercisesAndSetsEntity>>> findByFilter(
-    WorkoutWithExercisesAndSetsEntityFilter? filter,
+    ComposedWorkoutFilter? filter,
   ) async {
     try {
       String query = '''
@@ -67,7 +67,7 @@ class ComposedWorkoutDao extends BaseDao<WorkoutWithExercisesAndSetsEntity,
       ''';
 
       final whereClause = filter?.toWhereClause();
-      if (whereClause != null && whereClause.isNotEmpty) {
+      if (whereClause != null) {
         query += '''WHERE $whereClause''';
       }
 
@@ -152,27 +152,8 @@ class ComposedWorkoutDao extends BaseDao<WorkoutWithExercisesAndSetsEntity,
   }
 
   @override
-  Future<DaoResult<bool>> delete(List<int> ids) async {
-    try {
-      final args = ids.join(",");
-      final where = "${WorkoutTable.columnWorkoutId} in ($args)";
-      final tables = [
-        WeightTrainingSetTable.name,
-        RunningSetTable.name,
-        WorkoutDetailTable.name,
-        WorkoutTable.name,
-      ];
-
-      for (final table in tables) {
-        final count = await database.delete(table, where: where);
-        Log.d(_tag, "Delete $count rows from '$table'");
-      }
-
-      return DaoSuccess(true);
-    } on Exception catch (e) {
-      Log.e(_tag, "Cannot delete with '$ids'", e);
-      return DaoError(e);
-    }
+  Future<DaoResult<bool>> delete(ComposedWorkoutFilter filter) async {
+    throw UnimplementedError();
   }
 
   bool _hasExercise(Map<String, dynamic> map) =>
@@ -187,20 +168,25 @@ class ComposedWorkoutDao extends BaseDao<WorkoutWithExercisesAndSetsEntity,
   bool _hasSet(Map<String, dynamic> map) => map[_columnSetNum] != null;
 }
 
-class WorkoutWithExercisesAndSetsEntityFilter implements DaoFilter {
-  WorkoutWithExercisesAndSetsEntityFilter({
-    this.workoutId,
+class ComposedWorkoutFilter implements DaoFilter {
+  ComposedWorkoutFilter({
+    required this.workoutIds,
   });
 
-  final int? workoutId;
+  final List<int> workoutIds;
 
   @override
-  String toWhereClause() {
+  String? toWhereClause() {
     final where = <String>[];
-    if (workoutId != null) {
-      where.add(
-          "${WorkoutTable.name}.${WorkoutTable.columnWorkoutId} = $workoutId");
+    if (workoutIds.isNotEmpty) {
+      final args = workoutIds.join(",");
+      where.add("${WorkoutTable.name}.${WorkoutTable.columnWorkoutId} in ($args)");
     }
-    return where.join(",");
+
+    if (where.isEmpty) {
+      return null;
+    }
+
+    return where.join(" AND ");
   }
 }

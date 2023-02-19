@@ -24,6 +24,9 @@
   "exerciseNameTextFieldError": "請輸入文字",
   "createExerciseDialogPositiveBtn": "確定",
   "createExerciseDialogNegativeBtn": "取消",
+  "removeExerciseConfirmDialogTitle":  "您確定要移除此項目？",
+  "removeExerciseConfirmDialogPositiveBtn": "是",
+  "removeExerciseConfirmDialogNegativeBtn": "否",
 
   "exerciseOptionDialogTitle": "增加項目",
   "newExerciseOptionTitle": "新增項目",

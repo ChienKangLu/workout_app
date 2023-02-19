@@ -9,10 +9,12 @@ class WeightTrainingExercise extends StatelessWidget {
     Key? key,
     required this.editableExercise,
     required this.onAddSet,
+    required this.onRemoveExercise,
   }) : super(key: key);
 
   final EditableExercise editableExercise;
   final void Function(int) onAddSet;
+  final void Function(int) onRemoveExercise;
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +35,8 @@ class WeightTrainingExercise extends StatelessWidget {
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     IconButton(
-                      icon: const Icon(Icons.more_horiz),
-                      onPressed: () {
-                        print("TODO: WeightTrainingExercise delete");
-                      },
+                      icon: const Icon(Icons.delete),
+                      onPressed: () => onRemoveExercise(editableExercise.exerciseId),
                     ),
                   ],
                 ),

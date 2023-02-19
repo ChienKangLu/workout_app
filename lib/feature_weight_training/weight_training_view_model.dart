@@ -105,7 +105,7 @@ class WeightTrainingViewModel extends ViewModel {
 
   Future<WeightTraining?> _getWeightTraining() async {
     final Result<List<Workout>> result = await _workoutRepository.getWorkouts(
-      workoutId: workoutId,
+      workoutIds: [workoutId],
     );
 
     if (result is Error<List<Workout>>) {
@@ -179,6 +179,16 @@ class WeightTrainingViewModel extends ViewModel {
 
   Future<void> addExercise(int exerciseId) async {
     final result = await _exerciseRepository.addExercise(workoutId, exerciseId);
+    if (result is Error) {
+      return;
+    }
+
+    await _updateWeightTrainingUiState();
+    stateChange();
+  }
+
+  Future<void> removeExerciseFromWorkout(int workoutId, int exerciseId) async {
+    final result = await _exerciseRepository.removeExercise(workoutId, exerciseId);
     if (result is Error) {
       return;
     }

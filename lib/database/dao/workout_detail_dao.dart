@@ -7,7 +7,8 @@ import 'base_dao.dart';
 import 'dao_filter.dart';
 import 'dao_result.dart';
 
-class WorkoutDetailDao extends BaseDao<WorkoutDetailEntity, DaoFilter> {
+class WorkoutDetailDao
+    extends BaseDao<WorkoutDetailEntity, WorkoutDetailEntityFilter> {
   static const _tag = "WorkoutDetailDao";
 
   @override
@@ -53,7 +54,52 @@ class WorkoutDetailDao extends BaseDao<WorkoutDetailEntity, DaoFilter> {
   }
 
   @override
-  Future<DaoResult<bool>> delete(List<int> ids) {
-    throw UnimplementedError();
+  Future<DaoResult<bool>> delete(WorkoutDetailEntityFilter filter) async {
+    try {
+      final count = await database.delete(
+        WorkoutDetailTable.name,
+        where: filter.toWhereClause(),
+      );
+      Log.d(_tag, "Delete $count rows from '${WorkoutDetailTable.name}'");
+
+      return DaoSuccess(true);
+    } on Exception catch (e) {
+      Log.e(_tag, "Cannot findByFilter with filter '$filter'", e);
+      return DaoError(e);
+    }
+  }
+}
+
+class WorkoutDetailEntityFilter implements DaoFilter {
+  WorkoutDetailEntityFilter({
+    this.workoutIds = const [],
+    this.workoutId,
+    this.exerciseId,
+  });
+
+  List<int> workoutIds;
+  int? workoutId;
+  int? exerciseId;
+
+
+  @override
+  String? toWhereClause() {
+    final where = <String>[];
+    if (workoutIds.isNotEmpty) {
+      final args = workoutIds.join(",");
+      where.add("${WorkoutDetailTable.columnWorkoutId} in ($args)");
+    }
+    if (workoutId != null) {
+      where.add("${WorkoutDetailTable.columnWorkoutId} = $workoutId");
+    }
+    if (exerciseId != null) {
+      where.add("${WorkoutDetailTable.columnExerciseId} = $exerciseId");
+    }
+
+    if (where.isEmpty) {
+      return null;
+    }
+
+    return where.join(" AND ");
   }
 }

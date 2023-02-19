@@ -1,6 +1,8 @@
 import '../database/dao/dao_provider_mixin.dart';
 import '../database/dao/dao_result.dart';
 import '../database/dao/exercise_dao.dart';
+import '../database/dao/weight_training_set_dao.dart';
+import '../database/dao/workout_detail_dao.dart';
 import '../database/model/exercise_entity.dart';
 import '../database/model/weight_training_set_entity.dart';
 import '../database/model/workout_detail_entity.dart';
@@ -47,6 +49,25 @@ class ExerciseRepository with DaoProviderMixin {
       workoutId: workoutId,
       exerciseId: exerciseId,
       createDateTime: DateTime.now().millisecondsSinceEpoch,
+    ));
+
+    return daoResult.asResult();
+  }
+
+  Future<Result<bool>> removeExercise(int workoutId, int exerciseId) async {
+    DaoResult<bool> daoResult;
+    daoResult = await weightTrainingSetDao.delete(WeightTrainingSetEntityFilter(
+      workoutId: workoutId,
+      exerciseId: exerciseId,
+    ));
+
+    if (daoResult is DaoError<bool>) {
+      return daoResult.asResult();
+    }
+
+    daoResult = await workoutDetailDao.delete(WorkoutDetailEntityFilter(
+      workoutId: workoutId,
+      exerciseId: exerciseId,
     ));
 
     return daoResult.asResult();

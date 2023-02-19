@@ -7,7 +7,8 @@ import 'base_dao.dart';
 import 'dao_filter.dart';
 import 'dao_result.dart';
 
-class WeightTrainingSetDao extends BaseDao<WeightTrainingSetEntity, DaoFilter> {
+class WeightTrainingSetDao
+    extends BaseDao<WeightTrainingSetEntity, WeightTrainingSetEntityFilter> {
   static const _tag = "WeightTrainingSetDao";
   static const _initSetNum = 1;
 
@@ -28,7 +29,8 @@ class WeightTrainingSetDao extends BaseDao<WeightTrainingSetEntity, DaoFilter> {
 
   @override
   Future<DaoResult<List<WeightTrainingSetEntity>>> findByFilter(
-      DaoFilter? filter) {
+    WeightTrainingSetEntityFilter? filter,
+  ) {
     throw UnimplementedError();
   }
 
@@ -88,7 +90,51 @@ class WeightTrainingSetDao extends BaseDao<WeightTrainingSetEntity, DaoFilter> {
   }
 
   @override
-  Future<DaoResult<bool>> delete(List<int> ids) {
-    throw UnimplementedError();
+  Future<DaoResult<bool>> delete(WeightTrainingSetEntityFilter filter) async {
+    try {
+      final count = await database.delete(
+        WeightTrainingSetTable.name,
+        where: filter.toWhereClause(),
+      );
+      Log.d(_tag, "Delete $count rows from '${WeightTrainingSetTable.name}'");
+
+      return DaoSuccess(true);
+    } on Exception catch (e) {
+      Log.e(_tag, "Cannot findByFilter with filter '$filter'", e);
+      return DaoError(e);
+    }
+  }
+}
+
+class WeightTrainingSetEntityFilter implements DaoFilter {
+  WeightTrainingSetEntityFilter({
+    this.workoutIds = const [],
+    this.workoutId,
+    this.exerciseId,
+  });
+
+  List<int> workoutIds;
+  int? workoutId;
+  int? exerciseId;
+
+  @override
+  String? toWhereClause() {
+    final where = <String>[];
+    if (workoutIds.isNotEmpty) {
+      final args = workoutIds.join(",");
+      where.add("${WeightTrainingSetTable.columnWorkoutId} in ($args)");
+    }
+    if (workoutId != null) {
+      where.add("${WeightTrainingSetTable.columnWorkoutId} = $workoutId");
+    }
+    if (exerciseId != null) {
+      where.add("${WeightTrainingSetTable.columnExerciseId} = $exerciseId");
+    }
+
+    if (where.isEmpty) {
+      return null;
+    }
+
+    return where.join(" AND ");
   }
 }

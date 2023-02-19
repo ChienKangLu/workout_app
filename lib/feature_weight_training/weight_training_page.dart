@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../core_view/confirm_dialog.dart';
 import '../core_view/util/duration_util.dart';
 import '../themes/workout_app_theme_data.dart';
+import '../util/localization_util.dart';
 import 'ui_state/weight_training_ui_state.dart';
 import 'view/weight_training_action_sheet.dart';
 import '../util/weight_unit_convertor.dart';
@@ -128,6 +130,23 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
     );
   }
 
+  void onRemoveExercise(int exerciseId) async {
+    final shouldRemoveExercise = await showDialog<bool>(
+      context: context,
+      builder: (context) => ConfirmDialog(
+        title: LocalizationUtil.localize(context).removeExerciseConfirmDialogTitle,
+        positiveButtonTitle: LocalizationUtil.localize(context).removeExerciseConfirmDialogPositiveBtn,
+        negativeButtonTitle: LocalizationUtil.localize(context).removeExerciseConfirmDialogNegativeBtn,
+      ),
+    );
+
+    if (shouldRemoveExercise != true) {
+      return;
+    }
+
+    _model.removeExerciseFromWorkout(workoutId, exerciseId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
@@ -174,6 +193,7 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
                       editableExercises:
                           editableWeightTraining.editableExercises,
                       onAddSet: onAddSet,
+                      onRemoveExercise: onRemoveExercise,
                     ),
                   ],
                 ),

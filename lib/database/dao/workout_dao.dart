@@ -110,24 +110,41 @@ class WorkoutDao extends BaseDao<WorkoutEntity, WorkoutEntityFilter> {
   }
 
   @override
-  Future<DaoResult<bool>> delete(List<int> ids) {
-    throw UnimplementedError();
+  Future<DaoResult<bool>> delete(WorkoutEntityFilter filter) async {
+    try {
+      final count = await database.delete(
+        WorkoutTable.name,
+        where: filter.toWhereClause(),
+      );
+      Log.d(_tag, "Delete $count rows from '${WorkoutTable.name}'");
+
+      return DaoSuccess(true);
+    } on Exception catch (e) {
+      Log.e(_tag, "Cannot findByFilter with filter '$filter'", e);
+      return DaoError(e);
+    }
   }
 }
 
 class WorkoutEntityFilter implements DaoFilter {
   WorkoutEntityFilter({
-    this.workoutId,
+    required this.workoutIds,
   });
 
-  final int? workoutId;
+  final List<int> workoutIds;
 
   @override
-  String toWhereClause() {
+  String? toWhereClause() {
     final where = <String>[];
-    if (workoutId != null) {
-      where.add("${WorkoutTable.columnWorkoutId} = $workoutId");
+    if (workoutIds.isNotEmpty) {
+      final args = workoutIds.join(",");
+      where.add("${WorkoutTable.columnWorkoutId} in ($args)");
     }
-    return where.join(",");
+
+    if (where.isEmpty) {
+      return null;
+    }
+
+    return where.join(" AND ");
   }
 }

@@ -59,7 +59,7 @@ class ExerciseDao extends BaseDao<ExerciseEntity, ExerciseEntityFilter> {
   }
 
   @override
-  Future<DaoResult<bool>> delete(List<int> ids) {
+  Future<DaoResult<bool>> delete(ExerciseEntityFilter  filter) {
     throw UnimplementedError();
   }
 }
