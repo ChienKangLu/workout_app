@@ -31,6 +31,9 @@
   "exerciseOptionDialogTitle": "增加項目",
   "newExerciseOptionTitle": "新增項目",
 
+  "addExerciseSetTitle": "新增組數 - {exerciseName}",
+  "editExerciseSetTitle": "修改組數",
+
   "repetitionTitle": "次數",
   "baseWeightTitle": "基本重量",
   "sideWeightTitle": "單邊重量"

@@ -8,11 +8,13 @@ class WeightTrainingExerciseList extends StatelessWidget {
     Key? key,
     required this.editableExercises,
     required this.onAddSet,
+    required this.onEditSet,
     required this.onRemoveExercise,
   }) : super(key: key);
 
   final List<EditableExercise> editableExercises;
-  final void Function(int) onAddSet;
+  final void Function(EditableExercise) onAddSet;
+  final void Function(EditableExerciseSet) onEditSet;
   final void Function(int) onRemoveExercise;
 
   @override
@@ -23,6 +25,7 @@ class WeightTrainingExerciseList extends StatelessWidget {
             (exercise) => WeightTrainingExercise(
               editableExercise: exercise,
               onAddSet: onAddSet,
+              onEditSet: onEditSet,
               onRemoveExercise: onRemoveExercise,
             ),
           )

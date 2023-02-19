@@ -1,5 +1,6 @@
 import '../../core_view/workout_category.dart';
 import '../../core_view/workout_status.dart';
+import '../../model/exercise.dart';
 import '../../model/unit.dart';
 import '../../model/workout.dart';
 
@@ -92,14 +93,18 @@ class EditableExercise {
 
 class EditableExerciseSet {
   EditableExerciseSet({
+    required this.exerciseId,
     required this.number,
     required this.weight,
     required this.weightUnit,
     required this.repetition,
+    required this.set,
   });
 
+  final int exerciseId;
   final int number;
   final String weight;
   final WeightUnit weightUnit;
   final int repetition;
+  final WeightTrainingExerciseSet set;
 }

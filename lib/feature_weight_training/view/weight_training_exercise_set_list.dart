@@ -7,9 +7,11 @@ class WeightTrainingExerciseSetList extends StatelessWidget {
   const WeightTrainingExerciseSetList({
     Key? key,
     required this.editableExerciseSets,
+    required this.onEditSet,
   }) : super(key: key);
 
   final List<EditableExerciseSet> editableExerciseSets;
+  final void Function(EditableExerciseSet) onEditSet;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +23,7 @@ class WeightTrainingExerciseSetList extends StatelessWidget {
       itemBuilder: (content, index) {
         return WeightTrainingExerciseSet(
           editableExerciseSet: editableExerciseSets[index],
+          onEditSet: onEditSet,
         );
       },
     );

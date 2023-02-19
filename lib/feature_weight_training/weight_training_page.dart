@@ -110,15 +110,20 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
     await _model.addExercise(exerciseTypeId);
   }
 
-  void onAddSet(int exerciseId) async {
-    final addSetData = await showActionSheet<AddSetData>(
+  void _onAddSet(EditableExercise editableExercise) async {
+    final addSetData = await showActionSheet<EditSetData>(
       context: context,
-      builder: (context) => const AddSetSheet(),
+      builder: (context) => EditSetSheet(
+        title: LocalizationUtil.localize(context)
+            .addExerciseSetTitle(editableExercise.name),
+      ),
     );
 
     if (addSetData == null) {
       return;
     }
+
+    final exerciseId = editableExercise.exerciseId;
 
     _model.addExerciseSet(
       exerciseId: exerciseId,
@@ -130,13 +135,45 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
     );
   }
 
-  void onRemoveExercise(int exerciseId) async {
+  void _onEditSet(EditableExerciseSet editableExerciseSet) async {
+    final editSetData = await showActionSheet<EditSetData>(
+      context: context,
+      builder: (context) => EditSetSheet(
+        title: LocalizationUtil.localize(context).editExerciseSetTitle,
+        repetition: editableExerciseSet.repetition,
+        baseWeight: editableExerciseSet.set.baseWeight,
+        sideWeight: editableExerciseSet.set.sideWeight,
+      ),
+    );
+
+    if (editSetData == null) {
+      return;
+    }
+
+    final exerciseId = editableExerciseSet.exerciseId;
+    final number = editableExerciseSet.number;
+
+    _model.updateExerciseSet(
+      exerciseId: exerciseId,
+      setNum: number,
+      baseWeight: WeightUnitConvertor.convert(
+          editSetData.baseWeight, editSetData.baseWeightUnit),
+      sideWeight: WeightUnitConvertor.convert(
+          editSetData.sideWeight, editSetData.sideWeightUnit),
+      repetition: editSetData.repetition,
+    );
+  }
+
+  void _onRemoveExercise(int exerciseId) async {
     final shouldRemoveExercise = await showDialog<bool>(
       context: context,
       builder: (context) => ConfirmDialog(
-        title: LocalizationUtil.localize(context).removeExerciseConfirmDialogTitle,
-        positiveButtonTitle: LocalizationUtil.localize(context).removeExerciseConfirmDialogPositiveBtn,
-        negativeButtonTitle: LocalizationUtil.localize(context).removeExerciseConfirmDialogNegativeBtn,
+        title:
+            LocalizationUtil.localize(context).removeExerciseConfirmDialogTitle,
+        positiveButtonTitle: LocalizationUtil.localize(context)
+            .removeExerciseConfirmDialogPositiveBtn,
+        negativeButtonTitle: LocalizationUtil.localize(context)
+            .removeExerciseConfirmDialogNegativeBtn,
       ),
     );
 
@@ -144,7 +181,7 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
       return;
     }
 
-    _model.removeExerciseFromWorkout(workoutId, exerciseId);
+    _model.removeExerciseFromWorkout(exerciseId);
   }
 
   @override
@@ -192,8 +229,9 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
                     WeightTrainingExerciseList(
                       editableExercises:
                           editableWeightTraining.editableExercises,
-                      onAddSet: onAddSet,
-                      onRemoveExercise: onRemoveExercise,
+                      onAddSet: _onAddSet,
+                      onEditSet: _onEditSet,
+                      onRemoveExercise: _onRemoveExercise,
                     ),
                   ],
                 ),

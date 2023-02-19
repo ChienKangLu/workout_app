@@ -92,4 +92,26 @@ class ExerciseRepository with DaoProviderMixin {
 
     return daoResult.asResult();
   }
+
+  Future<Result<bool>> updateWeightTrainingSet({
+    required int workoutId,
+    required int exerciseId,
+    required int setNum,
+    required double baseWeight,
+    required double sideWeight,
+    required int repetition,
+  }) async {
+    final DaoResult<bool> daoResult = await weightTrainingSetDao.update(
+      WeightTrainingSetEntity.update(
+        workoutId: workoutId,
+        exerciseId: exerciseId,
+        setNum: setNum,
+        baseWeight: baseWeight,
+        sideWeight: sideWeight,
+        repetition: repetition,
+      ),
+    );
+
+    return daoResult.asResult();
+  }
 }

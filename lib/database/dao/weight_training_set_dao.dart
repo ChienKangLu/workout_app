@@ -85,8 +85,27 @@ class WeightTrainingSetDao
   }
 
   @override
-  Future<DaoResult<bool>> update(WeightTrainingSetEntity entity) {
-    throw UnimplementedError();
+  Future<DaoResult<bool>> update(WeightTrainingSetEntity entity) async {
+    try {
+      final entityMap = entity.toMap();
+
+      final count = await database.update(
+        WeightTrainingSetTable.name,
+        entityMap,
+        where: WeightTrainingSetEntityFilter(
+          workoutId: entity.workoutId,
+          exerciseId: entity.exerciseId,
+          setNum: entity.setNum,
+        ).toWhereClause(),
+        conflictAlgorithm: ConflictAlgorithm.ignore,
+      );
+      Log.d(_tag, "Update $count rows in '${WeightTrainingSetTable.name}'");
+
+      return DaoSuccess(true);
+    } on Exception catch (e) {
+      Log.e(_tag, "Cannot add entity '$entity'", e);
+      return DaoError(e);
+    }
   }
 
   @override
@@ -111,11 +130,13 @@ class WeightTrainingSetEntityFilter implements DaoFilter {
     this.workoutIds = const [],
     this.workoutId,
     this.exerciseId,
+    this.setNum,
   });
 
   List<int> workoutIds;
   int? workoutId;
   int? exerciseId;
+  int? setNum;
 
   @override
   String? toWhereClause() {
@@ -129,6 +150,9 @@ class WeightTrainingSetEntityFilter implements DaoFilter {
     }
     if (exerciseId != null) {
       where.add("${WeightTrainingSetTable.columnExerciseId} = $exerciseId");
+    }
+    if (setNum != null) {
+      where.add("${WeightTrainingSetTable.columnSetNum} = $setNum");
     }
 
     if (where.isEmpty) {

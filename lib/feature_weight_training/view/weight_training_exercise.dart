@@ -9,11 +9,13 @@ class WeightTrainingExercise extends StatelessWidget {
     Key? key,
     required this.editableExercise,
     required this.onAddSet,
+    required this.onEditSet,
     required this.onRemoveExercise,
   }) : super(key: key);
 
   final EditableExercise editableExercise;
-  final void Function(int) onAddSet;
+  final void Function(EditableExercise) onAddSet;
+  final void Function(EditableExerciseSet) onEditSet;
   final void Function(int) onRemoveExercise;
 
   @override
@@ -43,12 +45,13 @@ class WeightTrainingExercise extends StatelessWidget {
               ),
               IconButton(
                 icon: const Icon(Icons.add),
-                onPressed: () => onAddSet(editableExercise.exerciseId),
+                onPressed: () => onAddSet(editableExercise),
               ),
             ],
           ),
           WeightTrainingExerciseSetList(
             editableExerciseSets: editableExercise.editableExerciseSets,
+            onEditSet: onEditSet,
           ),
         ],
       ),

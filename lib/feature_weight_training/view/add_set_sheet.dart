@@ -4,8 +4,8 @@ import '../../core_view/util/weight_unit_display_helper.dart';
 import '../../model/unit.dart';
 import '../../util/localization_util.dart';
 
-class AddSetData {
-  AddSetData(
+class EditSetData {
+  EditSetData(
     this.repetition,
     this.baseWeight,
     this.sideWeight,
@@ -20,24 +20,56 @@ class AddSetData {
   final WeightUnit sideWeightUnit;
 }
 
-class AddSetSheet extends StatefulWidget {
-  const AddSetSheet({
+class EditSetSheet extends StatefulWidget {
+  const EditSetSheet({
     Key? key,
+    required this.title,
+    this.repetition,
+    this.baseWeight,
+    this.sideWeight,
   }) : super(key: key);
 
+  final String title;
+  final int? repetition;
+  final double? baseWeight;
+  final double? sideWeight;
+
   @override
-  State<AddSetSheet> createState() => _AddSetSheetState();
+  State<EditSetSheet> createState() => _EditSetSheetState();
 }
 
-class _AddSetSheetState extends State<AddSetSheet> {
+class _EditSetSheetState extends State<EditSetSheet> {
   final _formKey = GlobalKey<FormState>();
-  final _repetitionController = TextEditingController();
-  final _baseWeightController = TextEditingController();
-  final _sideWeightController = TextEditingController();
+  late final TextEditingController _repetitionController;
+  late final TextEditingController _baseWeightController;
+  late final TextEditingController _sideWeightController;
 
   final weightUnits = [WeightUnit.kilogram, WeightUnit.pound];
   WeightUnit baseWeightUnit = WeightUnit.kilogram;
   WeightUnit sideWeightUnit = WeightUnit.kilogram;
+
+  String get title => widget.title;
+  int? get repetition => widget.repetition;
+  double? get baseWeight => widget.baseWeight;
+  double? get sideWeight => widget.sideWeight;
+
+  @override
+  void initState() {
+    _repetitionController = TextEditingController(text: repetition?.toString());
+    _baseWeightController = TextEditingController(text: baseWeight?.toString());
+    _sideWeightController = TextEditingController(text: sideWeight?.toString());
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _repetitionController.dispose();
+    _baseWeightController.dispose();
+    _sideWeightController.dispose();
+
+    super.dispose();
+  }
 
   void _onSaveButtonClicked() {
     if (_formKey.currentState?.validate() == false) {
@@ -50,7 +82,7 @@ class _AddSetSheetState extends State<AddSetSheet> {
 
     Navigator.pop(
       context,
-      AddSetData(
+      EditSetData(
         repetition,
         baseWeight,
         sideWeight,
@@ -98,7 +130,7 @@ class _AddSetSheetState extends State<AddSetSheet> {
         children: [
           Expanded(
             child: Text(
-              "Add set - Squat",
+              title,
               style: Theme.of(context).textTheme.titleLarge,
             ),
           ),

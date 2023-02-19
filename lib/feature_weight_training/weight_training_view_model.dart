@@ -65,10 +65,12 @@ class WeightTrainingViewModel extends ViewModel {
                 editableExerciseSets: exercise.sets
                     .mapIndexed(
                       (index, set) => EditableExerciseSet(
+                        exerciseId: exercise.exerciseId,
                         number: index + 1,
                         weight: _totalWeight(set).toStringAsFixed(1),
                         weightUnit: set.unit,
                         repetition: set.repetition,
+                        set: set,
                       ),
                     )
                     .toList(),
@@ -187,7 +189,7 @@ class WeightTrainingViewModel extends ViewModel {
     stateChange();
   }
 
-  Future<void> removeExerciseFromWorkout(int workoutId, int exerciseId) async {
+  Future<void> removeExerciseFromWorkout(int exerciseId) async {
     final result = await _exerciseRepository.removeExercise(workoutId, exerciseId);
     if (result is Error) {
       return;
@@ -206,6 +208,29 @@ class WeightTrainingViewModel extends ViewModel {
     final result = await _exerciseRepository.addWeightTrainingSet(
       workoutId: workoutId,
       exerciseId: exerciseId,
+      baseWeight: baseWeight,
+      sideWeight: sideWeight,
+      repetition: repetition,
+    );
+    if (result is Error) {
+      return;
+    }
+
+    await _updateWeightTrainingUiState();
+    stateChange();
+  }
+
+  Future<void> updateExerciseSet({
+    required int exerciseId,
+    required int setNum,
+    required double baseWeight,
+    required double sideWeight,
+    required int repetition,
+  }) async {
+    final result = await _exerciseRepository.updateWeightTrainingSet(
+      workoutId: workoutId,
+      exerciseId: exerciseId,
+      setNum: setNum,
       baseWeight: baseWeight,
       sideWeight: sideWeight,
       repetition: repetition,

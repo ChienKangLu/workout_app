@@ -115,6 +115,22 @@
     "description": "Title for new exercise option"
   },
 
+  "addExerciseSetTitle": "Add set - {exerciseName}",
+  "@addExerciseSetTitle": {
+    "description": "Title for add exercise set",
+    "placeholders": {
+      "device": {
+        "type": "String",
+        "example": "Squat"
+      }
+    }
+  },
+
+  "editExerciseSetTitle": "Edit set",
+  "@editExerciseSetTitle": {
+    "description": "Title for edit exercise set"
+  },
+
   "repetitionTitle": "Repetition",
   "@repetitionTitle": {
     "description": "Title for repetition"
