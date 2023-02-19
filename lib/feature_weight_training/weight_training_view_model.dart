@@ -243,6 +243,23 @@ class WeightTrainingViewModel extends ViewModel {
     stateChange();
   }
 
+  Future<void> removeExerciseSet({
+    required int exerciseId,
+    required int setNum,
+  }) async {
+    final result = await _exerciseRepository.removeWeightTrainingSet(
+      workoutId: workoutId,
+      exerciseId: exerciseId,
+      setNum: setNum,
+    );
+    if (result is Error) {
+      return;
+    }
+
+    await _updateWeightTrainingUiState();
+    stateChange();
+  }
+
   double _totalWeight(WeightTrainingExerciseSet set) =>
       set.baseWeight + set.sideWeight * 2;
 

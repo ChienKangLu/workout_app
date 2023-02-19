@@ -8,7 +8,7 @@ import '../util/localization_util.dart';
 import 'ui_state/weight_training_ui_state.dart';
 import 'view/weight_training_action_sheet.dart';
 import '../util/weight_unit_convertor.dart';
-import 'view/add_set_sheet.dart';
+import 'view/edit_set_sheet.dart';
 import 'view/create_exercise_dialog.dart';
 import 'view/exercise_option_dialog.dart';
 import 'view/weight_training_exercise_list.dart';
@@ -111,7 +111,7 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
   }
 
   void _onAddSet(EditableExercise editableExercise) async {
-    final addSetData = await showActionSheet<EditSetData>(
+    final editSetData = await showActionSheet<EditSetData>(
       context: context,
       builder: (context) => EditSetSheet(
         title: LocalizationUtil.localize(context)
@@ -119,20 +119,22 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
       ),
     );
 
-    if (addSetData == null) {
+    if (editSetData == null) {
       return;
     }
 
     final exerciseId = editableExercise.exerciseId;
 
-    _model.addExerciseSet(
-      exerciseId: exerciseId,
-      baseWeight: WeightUnitConvertor.convert(
-          addSetData.baseWeight, addSetData.baseWeightUnit),
-      sideWeight: WeightUnitConvertor.convert(
-          addSetData.sideWeight, addSetData.sideWeightUnit),
-      repetition: addSetData.repetition,
-    );
+    if (editSetData is CreateOrUpdateSetData) {
+      _model.addExerciseSet(
+        exerciseId: exerciseId,
+        baseWeight: WeightUnitConvertor.convert(
+            editSetData.baseWeight, editSetData.baseWeightUnit),
+        sideWeight: WeightUnitConvertor.convert(
+            editSetData.sideWeight, editSetData.sideWeightUnit),
+        repetition: editSetData.repetition,
+      );
+    }
   }
 
   void _onEditSet(EditableExerciseSet editableExerciseSet) async {
@@ -140,6 +142,7 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
       context: context,
       builder: (context) => EditSetSheet(
         title: LocalizationUtil.localize(context).editExerciseSetTitle,
+        removeAllowed: true,
         repetition: editableExerciseSet.repetition,
         baseWeight: editableExerciseSet.set.baseWeight,
         sideWeight: editableExerciseSet.set.sideWeight,
@@ -153,15 +156,22 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
     final exerciseId = editableExerciseSet.exerciseId;
     final number = editableExerciseSet.number;
 
-    _model.updateExerciseSet(
-      exerciseId: exerciseId,
-      setNum: number,
-      baseWeight: WeightUnitConvertor.convert(
-          editSetData.baseWeight, editSetData.baseWeightUnit),
-      sideWeight: WeightUnitConvertor.convert(
-          editSetData.sideWeight, editSetData.sideWeightUnit),
-      repetition: editSetData.repetition,
-    );
+    if (editSetData is CreateOrUpdateSetData) {
+      _model.updateExerciseSet(
+        exerciseId: exerciseId,
+        setNum: number,
+        baseWeight: WeightUnitConvertor.convert(
+            editSetData.baseWeight, editSetData.baseWeightUnit),
+        sideWeight: WeightUnitConvertor.convert(
+            editSetData.sideWeight, editSetData.sideWeightUnit),
+        repetition: editSetData.repetition,
+      );
+    } else if (editSetData is RemoveSetData) {
+      _model.removeExerciseSet(
+        exerciseId: exerciseId,
+        setNum: number,
+      );
+    }
   }
 
   void _onRemoveExercise(int exerciseId) async {

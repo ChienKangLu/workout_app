@@ -119,7 +119,7 @@
   "@addExerciseSetTitle": {
     "description": "Title for add exercise set",
     "placeholders": {
-      "device": {
+      "exerciseName": {
         "type": "String",
         "example": "Squat"
       }
@@ -129,6 +129,14 @@
   "editExerciseSetTitle": "Edit set",
   "@editExerciseSetTitle": {
     "description": "Title for edit exercise set"
+  },
+  "saveExerciseSetTitle": "Save",
+  "@saveExerciseSetTitle": {
+    "description": "Title for save exercise set"
+  },
+  "removeExerciseSetTitle": "Remove",
+  "@removeExerciseSetTitle": {
+    "description": "Title for remove exercise set"
   },
 
   "repetitionTitle": "Repetition",

@@ -33,6 +33,8 @@
 
   "addExerciseSetTitle": "新增組數 - {exerciseName}",
   "editExerciseSetTitle": "修改組數",
+  "saveExerciseSetTitle": "儲存",
+  "removeExerciseSetTitle": "刪除",
 
   "repetitionTitle": "次數",
   "baseWeightTitle": "基本重量",

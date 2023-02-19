@@ -4,8 +4,10 @@ import '../../core_view/util/weight_unit_display_helper.dart';
 import '../../model/unit.dart';
 import '../../util/localization_util.dart';
 
-class EditSetData {
-  EditSetData(
+abstract class EditSetData {}
+
+class CreateOrUpdateSetData extends EditSetData {
+  CreateOrUpdateSetData(
     this.repetition,
     this.baseWeight,
     this.sideWeight,
@@ -20,16 +22,20 @@ class EditSetData {
   final WeightUnit sideWeightUnit;
 }
 
+class RemoveSetData extends EditSetData {}
+
 class EditSetSheet extends StatefulWidget {
   const EditSetSheet({
     Key? key,
     required this.title,
+    this.removeAllowed = false,
     this.repetition,
     this.baseWeight,
     this.sideWeight,
   }) : super(key: key);
 
   final String title;
+  final bool removeAllowed;
   final int? repetition;
   final double? baseWeight;
   final double? sideWeight;
@@ -49,6 +55,7 @@ class _EditSetSheetState extends State<EditSetSheet> {
   WeightUnit sideWeightUnit = WeightUnit.kilogram;
 
   String get title => widget.title;
+  bool get allowRemove => widget.removeAllowed;
   int? get repetition => widget.repetition;
   double? get baseWeight => widget.baseWeight;
   double? get sideWeight => widget.sideWeight;
@@ -82,13 +89,20 @@ class _EditSetSheetState extends State<EditSetSheet> {
 
     Navigator.pop(
       context,
-      EditSetData(
+      CreateOrUpdateSetData(
         repetition,
         baseWeight,
         sideWeight,
         baseWeightUnit,
         sideWeightUnit,
       ),
+    );
+  }
+
+  void _onRemoveButtonClicked() {
+    Navigator.pop(
+      context,
+      RemoveSetData(),
     );
   }
 
@@ -134,9 +148,16 @@ class _EditSetSheetState extends State<EditSetSheet> {
               style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
+          if (allowRemove)
+            TextButton(
+              onPressed: _onRemoveButtonClicked,
+              child: Text(
+                  LocalizationUtil.localize(context).removeExerciseSetTitle),
+            ),
           TextButton(
             onPressed: _onSaveButtonClicked,
-            child: const Text('Save'),
+            child:
+                Text(LocalizationUtil.localize(context).saveExerciseSetTitle),
           ),
         ],
       ),

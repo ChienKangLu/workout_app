@@ -114,4 +114,20 @@ class ExerciseRepository with DaoProviderMixin {
 
     return daoResult.asResult();
   }
+
+  Future<Result<bool>> removeWeightTrainingSet({
+    required int workoutId,
+    required int exerciseId,
+    required int setNum,
+  }) async {
+    final DaoResult<bool> daoResult = await weightTrainingSetDao.delete(
+      WeightTrainingSetEntityFilter(
+        workoutId: workoutId,
+        exerciseId: exerciseId,
+        setNum: setNum,
+      ),
+    );
+
+    return daoResult.asResult();
+  }
 }
