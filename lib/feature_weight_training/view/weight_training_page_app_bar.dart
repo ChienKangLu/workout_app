@@ -27,21 +27,55 @@ class WeightTrainingPageAppBar extends StatelessWidget
       return _appBarInEditMode(context);
     }
 
-    return _appBarInNormalMode(context);
+    final startDateTime = weightTrainingViewModel.weightTrainingUiState.run(
+      onLoading: () => "",
+      onSuccess: (success) => success.editableWeightTraining.startDateTime,
+      onError: () => "",
+    );
+
+    return _appBarInNormalMode(
+      context,
+      startDateTime,
+    );
   }
 
   @override
   Size get preferredSize => const Size.fromHeight(56);
 
-  Widget _appBarInNormalMode(BuildContext context) {
+  Widget _appBarInNormalMode(
+    BuildContext context,
+    String startDateTime,
+  ) {
     return AppBar(
-      title: const WeightTrainingTitle(),
+      title: Column(
+        children: [
+          const WeightTrainingTitle(),
+          if (startDateTime.isNotEmpty) _subTitle(context, startDateTime),
+        ],
+      ),
       actions: [
         WeightTrainingAppBarActionItem(
           iconData: Icons.more_horiz,
           onClick: onMoreItemClicked,
         ),
       ],
+    );
+  }
+
+  Widget _subTitle(
+    BuildContext context,
+    String startDateTime,
+  ) {
+    return Container(
+      padding: const EdgeInsets.only(top: 2),
+      child: Text(
+        startDateTime,
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.outline,
+          fontWeight: FontWeight.w100,
+          fontSize: 12,
+        ),
+      ),
     );
   }
 

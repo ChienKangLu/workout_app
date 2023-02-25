@@ -103,7 +103,10 @@ class WorkoutAppThemeData {
   static BorderRadius get exerciseThumbnailBorderRadius =>
       BorderRadius.circular(12.0);
 
-  static EdgeInsets get exerciseListContainerMargin => const EdgeInsets.all(16);
+  static EdgeInsets get exerciseListContainerMargin =>
+      const EdgeInsets.symmetric(
+        horizontal: 16,
+      );
   static EdgeInsets get exerciseContainerMargin =>
       const EdgeInsets.fromLTRB(0, 20, 0, 0);
   static double get exerciseTitleHeight => 48.0;

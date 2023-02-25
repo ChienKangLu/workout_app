@@ -33,22 +33,6 @@
     "description": "The title of running category"
   },
 
-  "hourUnitText": "hour",
-  "@hourUnitText": {
-    "description": "Text for hour unit"
-  },
-  "minuteUnitText": "min",
-  "@minuteUnitText": {
-    "description": "Text for minute unit"
-  },
-  "secondUnitText": "sec",
-  "@secondUnitText": {
-    "description": "Text for second unit"
-  },
-  "millisecondUnitText": "sec",
-  "@millisecondUnitText": {
-    "description": "Text for millisecond unit"
-  },
   "repetitionText": "{rep} rep",
   "@repetitionText": {
     "description": "Text for repetition",

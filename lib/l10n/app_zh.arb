@@ -9,10 +9,6 @@
   "workoutCategoryWeightTrainingTitle": "重量訓練",
   "workoutCategoryRunningTitle": "跑步",
 
-  "hourUnitText": "小時",
-  "minuteUnitText": "分",
-  "secondUnitText": "秒",
-  "millisecondUnitText": "毫秒",
   "repetitionText": "{rep} 次",
 
   "actionItemStart": "開始運動",
