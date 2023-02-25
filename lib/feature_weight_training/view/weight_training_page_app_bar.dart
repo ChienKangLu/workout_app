@@ -29,7 +29,7 @@ class WeightTrainingPageAppBar extends StatelessWidget
 
     final startDateTime = weightTrainingViewModel.weightTrainingUiState.run(
       onLoading: () => "",
-      onSuccess: (success) => success.editableWeightTraining.startDateTime,
+      onSuccess: (success) => success.editableWeightTraining.startDateTimeText,
       onError: () => "",
     );
 

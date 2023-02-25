@@ -9,6 +9,7 @@ import '../core_view/workout_status.dart';
 import '../themes/workout_app_theme_data.dart';
 import '../util/localization_util.dart';
 import 'ui_state/weight_training_ui_state.dart';
+import 'view/weight_training_stopwatch.dart';
 import 'view/weight_training_action_sheet.dart';
 import '../util/weight_unit_convertor.dart';
 import 'view/edit_set_sheet.dart';
@@ -258,6 +259,7 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
           onLoading: () => const SizedBox(),
           onSuccess: (success) {
             final editableWeightTraining = success.editableWeightTraining;
+            final isWorkoutInProgress = viewModel.isWorkoutInProgress;
             final duration = editableWeightTraining.duration;
 
             return Container(
@@ -266,8 +268,11 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const SizedBox(height: 20),
                     Center(
-                      child: _durationText(duration),
+                      child: isWorkoutInProgress
+                          ? const WeightTrainingStopwatch()
+                          : _durationText(duration),
                     ),
                     WeightTrainingExerciseList(
                       editableExercises:

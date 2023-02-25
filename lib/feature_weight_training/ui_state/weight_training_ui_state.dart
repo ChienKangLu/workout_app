@@ -63,7 +63,7 @@ class EditableWeightTraining {
   EditableWeightTraining({
     required this.number,
     required this.category,
-    required this.startDateTime,
+    required this.startDateTimeText,
     required this.duration,
     required this.editableExercises,
     required this.workoutStatus,
@@ -72,7 +72,7 @@ class EditableWeightTraining {
 
   final int number;
   final WorkoutCategory category;
-  final String startDateTime;
+  final String startDateTimeText;
   final Duration duration;
   final List<EditableExercise> editableExercises;
   final WorkoutStatus workoutStatus;
