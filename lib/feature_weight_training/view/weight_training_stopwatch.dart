@@ -16,6 +16,8 @@ class _WeightTrainingStopwatchState extends State<WeightTrainingStopwatch>
     with SingleTickerProviderStateMixin {
   late final AnimationController controller;
 
+  DateTime? _lapStartDateTime;
+
   @override
   void initState() {
     controller = AnimationController(
@@ -23,45 +25,120 @@ class _WeightTrainingStopwatchState extends State<WeightTrainingStopwatch>
       duration: const Duration(
         seconds: 1,
       ),
-    )..addListener(() => setState(() {}));
-    controller.repeat();
+    )..repeat();
+
     super.initState();
   }
 
   @override
   void dispose() {
     controller.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final weightTrainingViewModel = context.watch<WeightTrainingViewModel>();
-    return AnimatedBuilder(
-        animation: controller,
-        builder: (context, _) {
-          final weightTrainingUiState =
-              weightTrainingViewModel.weightTrainingUiState;
+    final weightTrainingUiState = weightTrainingViewModel.weightTrainingUiState;
 
-          final startDateTime = weightTrainingUiState.run(
-            onLoading: () => null,
-            onSuccess: (success) =>
-                success.editableWeightTraining.weightTraining.startDateTime,
-            onError: () => null,
+    return weightTrainingUiState.run(
+      onLoading: () => const SizedBox(),
+      onSuccess: (success) {
+        final editableWeightTraining = success.editableWeightTraining;
+        final isWorkoutFinished = weightTrainingViewModel.isWorkoutFinished;
+
+        if (isWorkoutFinished) {
+          controller.stop();
+          return _stopWatch(
+            editableWeightTraining.duration,
+            hasLap: !isWorkoutFinished,
           );
+        }
 
-          final duration = startDateTime == null
-              ? Duration.zero
-              : DateTime.now().difference(startDateTime);
+        return AnimatedBuilder(
+            animation: controller,
+            builder: (context, _) {
+              final startDateTime =
+                  editableWeightTraining.weightTraining.startDateTime;
 
-          return Text(
-            DurationUtil.displayText(context, duration),
-            style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  fontSize: 85,
-                  fontWeight: FontWeight.w100,
-                  color: Theme.of(context).colorScheme.onBackground,
-                ),
-          );
-        });
+              final duration = startDateTime == null
+                  ? Duration.zero
+                  : DateTime.now().difference(startDateTime);
+
+              return _stopWatch(
+                duration,
+                lapStartDateTime: _lapStartDateTime,
+              );
+            });
+      },
+      onError: () => const SizedBox(),
+    );
+  }
+
+  Widget _stopWatch(
+    Duration duration, {
+    bool hasLap = true,
+    DateTime? lapStartDateTime,
+  }) {
+    final lapDuration = lapStartDateTime != null
+        ? DateTime.now().difference(lapStartDateTime)
+        : duration;
+    return _container(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 30),
+        child: Column(
+          children: [
+            _timer(duration, fontSize: 85),
+            if (hasLap) _lapTimer(lapDuration),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _container({
+    required Widget child,
+  }) {
+    return SizedBox(
+      width: double.infinity,
+      child: Material(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: const BorderRadius.all(
+          Radius.circular(12),
+        ),
+        child: InkWell(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(12),
+          ),
+          onTap: () {
+            setState(() => _lapStartDateTime = DateTime.now());
+          },
+          child: child,
+        ),
+      ),
+    );
+  }
+
+  Widget _lapTimer(Duration duration) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Icon(Icons.timer_outlined),
+        const SizedBox(width: 10),
+        _timer(duration, fontSize: 20),
+      ],
+    );
+  }
+
+  Widget _timer(Duration duration, {double? fontSize}) {
+    return Text(
+      DurationUtil.displayText(context, duration),
+      style: Theme.of(context).textTheme.displayLarge?.copyWith(
+            fontSize: fontSize,
+            fontWeight: FontWeight.w100,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+    );
   }
 }

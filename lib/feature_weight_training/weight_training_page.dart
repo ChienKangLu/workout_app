@@ -260,7 +260,6 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
           onSuccess: (success) {
             final editableWeightTraining = success.editableWeightTraining;
             final isWorkoutInProgress = viewModel.isWorkoutInProgress;
-            final duration = editableWeightTraining.duration;
 
             return Container(
               margin: WorkoutAppThemeData.exerciseListContainerMargin,
@@ -268,12 +267,11 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 20),
-                    Center(
-                      child: isWorkoutInProgress
-                          ? const WeightTrainingStopwatch()
-                          : _durationText(duration),
+                    const SizedBox(height: 24),
+                    const Center(
+                      child: WeightTrainingStopwatch(),
                     ),
+                    const SizedBox(height: 16),
                     WeightTrainingExerciseList(
                       editableExercises:
                           editableWeightTraining.editableExercises,
@@ -289,17 +287,6 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
           onError: () => const SizedBox(),
         );
       },
-    );
-  }
-
-  Widget _durationText(Duration duration) {
-    return Text(
-      DurationUtil.displayText(context, duration),
-      style: Theme.of(context).textTheme.displayLarge?.copyWith(
-            fontSize: 85,
-            fontWeight: FontWeight.w100,
-            color: Theme.of(context).colorScheme.onBackground,
-          ),
     );
   }
 }

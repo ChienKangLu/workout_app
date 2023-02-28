@@ -107,8 +107,6 @@ class WorkoutAppThemeData {
       const EdgeInsets.symmetric(
         horizontal: 16,
       );
-  static EdgeInsets get exerciseContainerMargin =>
-      const EdgeInsets.fromLTRB(0, 20, 0, 0);
   static double get exerciseTitleHeight => 48.0;
   static double get exerciseSetHeight => 48.0;
   static double get exerciseSetDataMargin => 20.0;

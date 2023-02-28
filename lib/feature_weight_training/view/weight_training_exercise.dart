@@ -25,49 +25,46 @@ class WeightTrainingExercise extends StatelessWidget {
   Widget build(BuildContext context) {
     final uiMode = context.watch<UiModeViewModel>().uiMode;
 
-    return Container(
-      margin: WorkoutAppThemeData.exerciseContainerMargin,
-      child: ListView(
-        padding: const EdgeInsets.all(0),
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints.tightFor(
-                    height: WorkoutAppThemeData.exerciseTitleHeight,
-                  ),
-                  child: Row(
-                    children: [
-                      Text(
-                        editableExercise.name,
-                        style: Theme.of(context).textTheme.titleLarge,
+    return ListView(
+      padding: const EdgeInsets.all(0),
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: ConstrainedBox(
+                constraints: BoxConstraints.tightFor(
+                  height: WorkoutAppThemeData.exerciseTitleHeight,
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      editableExercise.name,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    if (uiMode == UiMode.edit)
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () =>
+                            onRemoveExercise(editableExercise.exerciseId),
                       ),
-                      if (uiMode == UiMode.edit)
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () =>
-                              onRemoveExercise(editableExercise.exerciseId),
-                        ),
-                    ],
-                  ),
+                  ],
                 ),
               ),
-              if (uiMode == UiMode.edit)
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () => onAddSet(editableExercise),
-                ),
-            ],
-          ),
-          WeightTrainingExerciseSetList(
-            editableExerciseSets: editableExercise.editableExerciseSets,
-            onEditSet: onEditSet,
-          ),
-        ],
-      ),
+            ),
+            if (uiMode == UiMode.edit)
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: () => onAddSet(editableExercise),
+              ),
+          ],
+        ),
+        WeightTrainingExerciseSetList(
+          editableExerciseSets: editableExercise.editableExerciseSets,
+          onEditSet: onEditSet,
+        ),
+      ],
     );
   }
 }
