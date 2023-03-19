@@ -59,6 +59,8 @@ class ReadableWorkout {
     required this.workoutId,
     required this.number,
     required this.category,
+    required this.day,
+    required this.date,
     required this.exerciseThumbnails,
     required this.workoutStatus,
   });
@@ -66,6 +68,8 @@ class ReadableWorkout {
   final int workoutId;
   final int number;
   final WorkoutCategory category;
+  final String day;
+  final String date;
   final List<ExerciseThumbnail> exerciseThumbnails;
   final WorkoutStatus workoutStatus;
 

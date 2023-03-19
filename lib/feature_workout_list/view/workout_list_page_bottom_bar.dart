@@ -4,9 +4,9 @@ import 'package:provider/provider.dart';
 import '../../core_view/ui_mode.dart';
 import '../../core_view/ui_mode_view_model.dart';
 import '../../themes/workout_app_theme_data.dart';
-import 'bottom_bar_item.dart';
+import '../../util/localization_util.dart';
 
-class WorkoutListPageBottomBar extends StatelessWidget {
+class WorkoutListPageBottomBar extends StatefulWidget {
   const WorkoutListPageBottomBar({
     Key? key,
     required this.onAddItemClicked,
@@ -15,39 +15,43 @@ class WorkoutListPageBottomBar extends StatelessWidget {
   final void Function() onAddItemClicked;
 
   @override
+  State<WorkoutListPageBottomBar> createState() =>
+      _WorkoutListPageBottomBarState();
+}
+
+class _WorkoutListPageBottomBarState extends State<WorkoutListPageBottomBar> {
+  int currentPageIndex = 0;
+
+  void onDestinationSelected(int index) {
+    setState(() {
+      currentPageIndex = index;
+    });
+    if (index == 0) {
+      widget.onAddItemClicked();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final uiMode = context.watch<UiModeViewModel>().uiMode;
 
     return _animatedContainer(
       uiMode: uiMode,
-      child: Wrap(
-        children: [
-          Container(
-            height: WorkoutAppThemeData.bottomBarHeight,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  BottomBarItem(
-                    onTap: onAddItemClicked,
-                    icon: Icons.add_box,
-                    text: "Workout",
-                  ),
-                ],
-              ),
-            ),
+      child: NavigationBar(
+        onDestinationSelected: onDestinationSelected,
+        selectedIndex: currentPageIndex,
+        destinations: <Widget>[
+          NavigationDestination(
+            icon: const Icon(Icons.home),
+            label: LocalizationUtil.localize(context).navigationHomeTitle,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.water_drop_rounded),
+            label: LocalizationUtil.localize(context).navigationWaterTitle,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.local_fire_department),
+            label: LocalizationUtil.localize(context).navigationFoodTitle,
           ),
         ],
       ),
@@ -55,9 +59,12 @@ class WorkoutListPageBottomBar extends StatelessWidget {
   }
 
   Widget _animatedContainer({required child, required uiMode}) {
+    final bottomPadding = MediaQuery.paddingOf(context).bottom;
+    final height = WorkoutAppThemeData.bottomBarHeight + bottomPadding;
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
-      height: uiMode == UiMode.edit ? 0 : WorkoutAppThemeData.bottomBarHeight,
+      height: uiMode == UiMode.edit ? 0 : height,
       child: child,
     );
   }

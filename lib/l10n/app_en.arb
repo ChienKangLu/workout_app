@@ -19,6 +19,18 @@
   "@workoutStatusInProgress": {
     "description": "Text for workout item which is in progress"
   },
+  "navigationHomeTitle": "Home",
+  "@navigationHomeTitle": {
+    "description": "Text for navigation home"
+  },
+  "navigationWaterTitle": "Water",
+  "@navigationWaterTitle": {
+    "description": "Text for navigation water"
+  },
+  "navigationFoodTitle": "Food",
+  "@navigationFoodTitle": {
+    "description": "Text for navigation food"
+  },
 
   "workoutAddPageTitle": "Workout Categories",
   "@workoutAddPageTitle": {

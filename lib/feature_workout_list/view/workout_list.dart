@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 
 import '../../core_view/ui_mode.dart';
 import '../../core_view/ui_mode_view_model.dart';
-import '../../core_view/workout_category.dart';
 import '../../core_view/workout_status.dart';
 import '../../themes/workout_app_theme_data.dart';
 import '../../util/localization_util.dart';
@@ -68,39 +67,65 @@ class WorkoutListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final uiMode = context.watch<UiModeViewModel>().uiMode;
-    final isSelected = readableWorkout.isSelected;
 
     return InkWell(
       child: Container(
-        margin: WorkoutAppThemeData.workoutMargin,
-        padding: WorkoutAppThemeData.workoutPadding,
+        margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+        padding: const EdgeInsets.only(left: 16, top: 8, bottom: 8),
         color: Theme.of(context).colorScheme.surface,
-        child: Column(
-          children: [
-            Row(
+        child: Row(children: [
+          _date(context, uiMode),
+          const SizedBox(width: 16),
+          _number(context),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
               children: [
-                Expanded(child: _title(context)),
-                if (uiMode == UiMode.edit)
-                  Icon(isSelected ? Icons.check_circle : Icons.circle),
+                SizedBox(
+                  height: WorkoutAppThemeData.exerciseThumbnailHeight,
+                  child: _body(context),
+                )
               ],
             ),
-            Container(
-              margin: WorkoutAppThemeData.exerciseThumbnailListMargin,
-              height: WorkoutAppThemeData.exerciseThumbnailWidth,
-              child: _body(context),
-            )
-          ],
-        ),
+          ),
+        ]),
       ),
       onTap: () => onItemClick(),
       onLongPress: () => onItemLongClick(),
     );
   }
 
-  Widget _title(BuildContext context) {
+  Widget _date(BuildContext context, UiMode uiMode) {
+    final isSelected = readableWorkout.isSelected;
+    final primaryColor = Theme.of(context).colorScheme.primary;
+    final onSurfaceColor = Theme.of(context).colorScheme.onSurface;
+
+    return SizedBox(
+      width: 24,
+      child: uiMode == UiMode.edit
+          ? Icon(
+              isSelected ? Icons.check_circle : Icons.circle_outlined,
+              color: isSelected ? primaryColor : onSurfaceColor,
+            )
+          : Column(
+              children: [
+                Text(
+                  readableWorkout.day,
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+                Text(
+                  readableWorkout.date,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ],
+            ),
+    );
+  }
+
+  Widget _number(BuildContext context) {
     return Text(
-      "${WorkoutCategory.localizedString(context, readableWorkout.category)} ${readableWorkout.number}",
-      style: Theme.of(context).textTheme.titleLarge,
+      "#${readableWorkout.number}",
+      style: Theme.of(context).textTheme.bodySmall,
     );
   }
 

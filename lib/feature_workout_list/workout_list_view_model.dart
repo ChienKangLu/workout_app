@@ -1,3 +1,4 @@
+import '../core_view/util/date_time_display_helper.dart';
 import '../core_view/view_model.dart';
 import '../core_view/workout_category.dart';
 import '../core_view/workout_status.dart';
@@ -52,6 +53,10 @@ class WorkoutListViewModel extends ViewModel {
               workoutId: workout.workoutId,
               number: workout.typeNum + 1,
               category: WorkoutCategory.fromType(workout.type),
+              day: DateTimeDisplayHelper.day(
+                  workout.startDateTime ?? workout.createDateTime),
+              date: DateTimeDisplayHelper.date(
+                  workout.startDateTime ?? workout.createDateTime),
               exerciseThumbnails: workout.exercises
                   .map(
                     (exercise) => ExerciseThumbnail(name: exercise.name),

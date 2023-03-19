@@ -42,7 +42,7 @@ class ExerciseThumbnailCard extends StatelessWidget {
         border: Border.all(color: Theme.of(context).colorScheme.onSurface),
         borderRadius: WorkoutAppThemeData.exerciseThumbnailBorderRadius,
       ),
-      height: WorkoutAppThemeData.exerciseThumbnailWidth,
+      height: WorkoutAppThemeData.exerciseThumbnailHeight,
       child: Center(
         child: Text(
           exerciseThumbnail.name,

@@ -89,17 +89,12 @@ class WorkoutAppThemeData {
     ),
   );
 
-  static EdgeInsets get workoutMargin => const EdgeInsets.fromLTRB(0, 10, 0, 0);
-  static EdgeInsets get workoutPadding => const EdgeInsets.all(16);
-
   static double get bottomBarHeight => 80;
 
-  static EdgeInsets get exerciseThumbnailListMargin =>
-      const EdgeInsets.fromLTRB(0, 10, 0, 0);
-  static double get exerciseThumbnailWidth => 50.0;
+  static double get exerciseThumbnailHeight => 50.0;
   static EdgeInsets get exerciseThumbnailMargin =>
-      const EdgeInsets.fromLTRB(0, 0, 10, 0);
-  static EdgeInsets get exerciseThumbnailPadding => const EdgeInsets.all(5.0);
+      const EdgeInsets.fromLTRB(0, 5, 10, 5);
+  static EdgeInsets get exerciseThumbnailPadding => const EdgeInsets.all(5);
   static BorderRadius get exerciseThumbnailBorderRadius =>
       BorderRadius.circular(12.0);
 
