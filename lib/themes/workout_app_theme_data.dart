@@ -111,9 +111,3 @@ class WorkoutAppThemeData {
   static EdgeInsets get workoutPickerMargin =>
       const EdgeInsets.symmetric(vertical: 10);
 }
-
-extension CustomColorScheme on ColorScheme {
-  Color get listBackgroundColor => brightness == Brightness.light
-      ? const Color(0xFFEEEEEE)
-      : const Color(0xFF000000);
-}

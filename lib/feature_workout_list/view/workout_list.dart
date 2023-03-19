@@ -31,7 +31,7 @@ class WorkoutList extends StatelessWidget {
 
   Widget _listContainer(BuildContext context, {required Widget child}) {
     return Container(
-      color: Theme.of(context).colorScheme.listBackgroundColor,
+      color: Theme.of(context).colorScheme.background,
       child: child,
     );
   }
@@ -42,10 +42,16 @@ class WorkoutList extends StatelessWidget {
       itemBuilder: (content, index) {
         final readableWorkout = workoutListState.readableWorkouts[index];
 
-        return WorkoutListItem(
-          readableWorkout: readableWorkout,
-          onItemClick: () => onItemClick(readableWorkout),
-          onItemLongClick: () => onItemLongClick(readableWorkout),
+        return Column(
+          children: [
+            WorkoutListItem(
+              readableWorkout: readableWorkout,
+              onItemClick: () => onItemClick(readableWorkout),
+              onItemLongClick: () => onItemLongClick(readableWorkout),
+            ),
+            if (index != workoutListState.readableWorkouts.length - 1)
+              Divider(height: 1, color: Theme.of(context).colorScheme.surfaceVariant,)
+          ],
         );
       },
     );
@@ -70,7 +76,6 @@ class WorkoutListItem extends StatelessWidget {
 
     return InkWell(
       child: Container(
-        margin: const EdgeInsets.fromLTRB(0, 10, 0, 0),
         padding: const EdgeInsets.only(left: 16, top: 8, bottom: 8),
         color: Theme.of(context).colorScheme.surface,
         child: Row(children: [
