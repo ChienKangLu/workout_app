@@ -5,12 +5,46 @@ import 'package:sqflite/sqflite.dart';
 import '../util/log_util.dart';
 import 'schema.dart';
 
+class MigrationStep {
+  MigrationStep({
+    required this.scripts,
+  });
+
+  final List<String> scripts;
+
+  Future<void> execute(Database database) async {
+    for (final script in scripts) {
+      await database.execute(script);
+    }
+  }
+}
+
 class DatabaseInitializer {
   static const _tag = "DatabaseInitializer";
-  static const _version = 1;
+  static const _version = 2;
   static const _workoutDatabasePath = "workout_database.db";
 
   bool isFirstCreation = false;
+
+  final _migrationSteps = [
+    MigrationStep(
+      scripts: [
+        ExerciseTable.create,
+        WorkoutTable.create,
+        WorkoutDetailTable.create,
+        WeightTrainingSetTable.create,
+        RunningSetTable.create,
+      ],
+    ),
+    MigrationStep(
+      scripts: [
+        WaterLogTable.create,
+        WaterGoalTable.create,
+        FoodTable.create,
+        FoodLogTable.create,
+      ],
+    ),
+  ];
 
   Future<Database> open() async {
     Log.d(_tag, "open");
@@ -18,8 +52,9 @@ class DatabaseInitializer {
 
     return openDatabase(
       join(await getDatabasesPath(), _workoutDatabasePath),
-      onConfigure: (database) async => await _onConfigure(database),
-      onCreate: (database, version) async => await _onCreate(database, version),
+      onConfigure: _onConfigure,
+      onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
       onOpen: (database) async => await _onOpen(database),
       version: _version,
     );
@@ -32,8 +67,21 @@ class DatabaseInitializer {
 
   Future<void> _onCreate(Database database, int version) async {
     Log.d(_tag, "_onCreate");
-    await _createTables(database);
+    for (var i = 0; i < version; i++) {
+      await _migrationSteps[i].execute(database);
+    }
     isFirstCreation = true;
+  }
+
+  Future<void> _onUpgrade(
+    Database database,
+    int oldVersion,
+    int newVersion,
+  ) async {
+    Log.d(_tag, "_onUpgrade from $oldVersion to $newVersion");
+    for (var i = oldVersion; i < newVersion; i++) {
+      await _migrationSteps[i].execute(database);
+    }
   }
 
   Future<void> _onOpen(Database database) async {
@@ -42,13 +90,5 @@ class DatabaseInitializer {
     final tables = await database
         .rawQuery("SELECT * FROM sqlite_master where type='table'");
     Log.d(_tag, tables.toString());
-  }
-
-  Future<void> _createTables(Database database) async {
-    await database.execute(ExerciseTable.create);
-    await database.execute(WorkoutTable.create);
-    await database.execute(WorkoutDetailTable.create);
-    await database.execute(WeightTrainingSetTable.create);
-    await database.execute(RunningSetTable.create);
   }
 }

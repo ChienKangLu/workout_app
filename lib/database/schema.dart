@@ -107,3 +107,66 @@ class RunningSetTable {
     $primaryKey($columnWorkoutId, $columnExerciseId, $columnSetNum)
   )''';
 }
+
+class WaterLogTable {
+  static const String name = "water_log";
+  static const String columnWaterLogId = "water_log_id";
+  static const String columnWaterLogVolume = "water_log_volume";
+  static const String columnWaterLogDateTime = "water_log_date_time";
+
+  static const create = '''$createTable $name(
+    $columnWaterLogId $primaryKeyInteger,
+    $columnWaterLogVolume $real,
+    $columnWaterLogDateTime $dateTime
+  )''';
+}
+
+class WaterGoalTable {
+  static const String name = "water_goal";
+  static const String columnWaterGoalId = "water_goal_id";
+  static const String columnWaterGoalVolume = "water_goal_volume";
+  static const String columnWaterGoalDateTime = "water_goal_date_time";
+
+  static const create = '''$createTable $name(
+    $columnWaterGoalId $primaryKeyInteger,
+    $columnWaterGoalVolume $real,
+    $columnWaterGoalDateTime $dateTime
+  )''';
+}
+
+class FoodTable {
+  static const String name = "food";
+  static const String columnFoodId = "food_id";
+  static const String columnFoodBrandName = "food_brand_name";
+  static const String columnFoodName = "food_name";
+  static const String columnFoodEnergy = "food_energy";
+  static const String columnFoodFat = "food_fat";
+  static const String columnFoodCarbohydrate = "food_carbohydrate";
+  static const String columnFoodProtein = "food_protein";
+  static const String columnFoodSodium = "food_sodium";
+
+  static const create = '''$createTable $name(
+    $columnFoodId $primaryKeyInteger,
+    $columnFoodBrandName $text,
+    $columnFoodName $text,
+    $columnFoodEnergy $real,
+    $columnFoodFat $real,
+    $columnFoodCarbohydrate $real,
+    $columnFoodProtein $real,
+    $columnFoodSodium $real,
+  )''';
+}
+
+class FoodLogTable {
+  static const String name = "food_log";
+  static const String columnFoodLogId = "food_log_id";
+  static const String columnFoodId = "food_id";
+  static const String columnFoodLogDateTime = "food_log_date_time";
+
+  static const create = '''$createTable $name(
+    $columnFoodLogId $primaryKeyInteger,
+    $columnFoodId $integer,
+    $columnFoodLogDateTime $dateTime,
+    $foreignKey($columnFoodId) $references ${FoodTable.name}(${FoodTable.columnFoodId})
+  )''';
+}
