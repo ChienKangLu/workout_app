@@ -118,6 +118,11 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
     _uiModeViewModel.switchTo(UiMode.normal);
   }
 
+  void _onAddItemClicked() async {
+    await _model.createWorkout(WorkoutCategory.weightTraining);
+    await _reload();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -131,6 +136,17 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
           onDeleteButtonClicked: _onAppBarDeleteButtonClicked,
         ),
         body: _view(),
+        floatingActionButton: Consumer<UiModeViewModel>(
+          builder: (_, viewModel, __) {
+            return Visibility(
+              visible: viewModel.uiMode == UiMode.normal,
+              child: FloatingActionButton(
+                onPressed: _onAddItemClicked,
+                child: const Icon(Icons.add),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
