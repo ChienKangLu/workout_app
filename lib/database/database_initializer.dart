@@ -40,8 +40,6 @@ class DatabaseInitializer {
       scripts: [
         WaterLogTable.create,
         WaterGoalTable.create,
-        FoodTable.create,
-        FoodLogTable.create,
       ],
     ),
   ];
