@@ -5,14 +5,13 @@ import 'package:provider/provider.dart';
 import '../core_view/ui_mode.dart';
 import '../core_view/ui_mode_view_model.dart';
 import '../core_view/workout_category.dart';
+import '../feature_root/root_view_model.dart';
 import '../feature_weight_training/weight_training_page.dart';
-import '../feature_workout_add/workout_add_page.dart';
 import '../util/log_util.dart';
 import '../util/localization_util.dart';
 import 'ui_state/workout_list_ui_state.dart';
 import 'view/workout_list.dart';
 import 'view/workout_list_page_app_bar.dart';
-import 'view/workout_list_page_bottom_bar.dart';
 import 'workout_list_view_model.dart';
 
 class WorkoutListPage extends StatefulWidget {
@@ -34,6 +33,12 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
     _model = WorkoutListViewModel();
     _uiModeViewModel = UiModeViewModel();
 
+    _uiModeViewModel.addListener(() {
+      final rootViewModel = context.read<RootViewModel>();
+      rootViewModel.isNavigationVisible =
+          _uiModeViewModel.uiMode != UiMode.edit;
+    });
+
     initViewModels();
 
     super.initState();
@@ -47,16 +52,12 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
   @override
   void dispose() {
     _model.release();
+    _uiModeViewModel.dispose();
     super.dispose();
   }
 
   Future<void> _reload() async {
     await _model.reload();
-  }
-
-  void _onAddItemClicked() async {
-    await Navigator.pushNamed(context, WorkoutAddPage.routeName);
-    await _reload();
   }
 
   void _onItemClick(ReadableWorkout readableWorkout) async {
@@ -130,9 +131,6 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
           onDeleteButtonClicked: _onAppBarDeleteButtonClicked,
         ),
         body: _view(),
-        bottomNavigationBar: WorkoutListPageBottomBar(
-          onAddItemClicked: _onAddItemClicked,
-        ),
       ),
     );
   }
