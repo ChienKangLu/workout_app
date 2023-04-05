@@ -108,4 +108,6 @@ class WorkoutAppThemeData {
       const EdgeInsets.fromLTRB(0, 80, 0, 0);
   static EdgeInsets get workoutPickerMargin =>
       const EdgeInsets.symmetric(vertical: 10);
+
+  static Duration animationDuration = const Duration(milliseconds: 300);
 }

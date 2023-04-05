@@ -280,6 +280,7 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
                       onEditSet: _onEditSet,
                       onRemoveExercise: _onRemoveExercise,
                     ),
+                    const SizedBox(height: 16),
                   ],
                 ),
               ),

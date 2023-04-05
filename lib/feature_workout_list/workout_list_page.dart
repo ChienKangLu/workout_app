@@ -8,6 +8,7 @@ import '../core_view/workout_category.dart';
 import '../feature_root/root_view_model.dart';
 import '../feature_setting/setting_page.dart';
 import '../feature_weight_training/weight_training_page.dart';
+import '../themes/workout_app_theme_data.dart';
 import '../util/log_util.dart';
 import '../util/localization_util.dart';
 import 'ui_state/workout_list_ui_state.dart';
@@ -148,8 +149,9 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
         body: _view(),
         floatingActionButton: Consumer<UiModeViewModel>(
           builder: (_, viewModel, __) {
-            return Visibility(
-              visible: viewModel.uiMode == UiMode.normal,
+            return AnimatedOpacity(
+              opacity: viewModel.uiMode == UiMode.normal ? 1.0 : 0.0,
+              duration: WorkoutAppThemeData.animationDuration,
               child: FloatingActionButton(
                 onPressed: _onAddItemClicked,
                 child: const Icon(Icons.add),

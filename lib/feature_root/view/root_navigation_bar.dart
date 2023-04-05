@@ -56,9 +56,9 @@ class _RootNavigationBarState extends State<RootNavigationBar> {
     final height = WorkoutAppThemeData.bottomBarHeight + bottomPadding;
 
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
+      duration: WorkoutAppThemeData.animationDuration,
       height: isNavigationVisible ? height : 0,
-      child: child,
+      child: Wrap(children: [child]),
     );
   }
 }
