@@ -18,15 +18,19 @@
   "actionItemAddExercise": "新增項目",
   "actionItemFinish": "運動結束",
   "actionItemEdit": "編輯",
+  "actionItemRename": "重新命名",
+  "actionItemDelete": "刪除",
 
   "createExerciseDialogTitle": "新增項目",
+  "editExerciseDialogTitle": "編輯項目",
   "exerciseNameTextFieldHint": "項目名稱",
-  "exerciseNameTextFieldError": "請輸入文字",
-  "createExerciseDialogPositiveBtn": "確定",
-  "createExerciseDialogNegativeBtn": "取消",
   "removeExerciseConfirmDialogTitle":  "您確定要移除此項目？",
   "removeExerciseConfirmDialogPositiveBtn": "是",
   "removeExerciseConfirmDialogNegativeBtn": "否",
+
+  "dialogEmptyTextError": "請輸入文字",
+  "dialogPositiveBtn": "確定",
+  "dialogNegativeBtn": "取消",
 
   "exerciseOptionDialogTitle": "增加項目",
   "newExerciseOptionTitle": "新增項目",
@@ -38,5 +42,8 @@
 
   "repetitionTitle": "次數",
   "baseWeightTitle": "基本重量",
-  "sideWeightTitle": "單邊重量"
+  "sideWeightTitle": "單邊重量",
+
+  "settingPageTitle": "設定",
+  "settingWorkoutTitle": "運動"
 }

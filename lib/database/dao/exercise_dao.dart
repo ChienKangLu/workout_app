@@ -1,88 +1,47 @@
-import 'package:sqflite/sqflite.dart';
-
-import '../../util/log_util.dart';
 import '../model/exercise_entity.dart';
 import '../model/workout_type_entity.dart';
 import '../schema.dart';
-import 'base_dao.dart';
-import 'dao_filter.dart';
-import 'dao_result.dart';
+import 'simple_dao.dart';
 
-class ExerciseDao extends BaseDao<ExerciseEntity, ExerciseEntityFilter> {
+class ExerciseDao extends SimpleDao<ExerciseEntity, ExerciseEntityFilter> {
   static const _tag = "ExerciseDao";
 
   @override
-  Future<DaoResult<List<ExerciseEntity>>> findAll() async {
-    return findByFilter(null);
-  }
+  String get tag => _tag;
 
   @override
-  Future<DaoResult<List<ExerciseEntity>>> findByFilter(
-    ExerciseEntityFilter? filter,
-  ) async {
-    try {
-      final maps = await database.query(
-        ExerciseTable.name,
-        where: filter?.toWhereClause(),
+  String get tableName => ExerciseTable.name;
+
+  @override
+  ExerciseEntity createEntityFromMap(Map<String, dynamic> map) =>
+      ExerciseEntity.fromMap(map);
+
+  @override
+  ExerciseEntityFilter createUpdateFilter(ExerciseEntity entity) =>
+      ExerciseEntityFilter(
+        id: entity.exerciseId,
       );
-      final results = <ExerciseEntity>[];
-      for (final map in maps) {
-        results.add(ExerciseEntity.fromMap(map));
-      }
-
-      return DaoSuccess(results);
-    } on Exception catch (e) {
-      Log.e(_tag, "Cannot findByFilter with filter '$filter'", e);
-      return DaoError(e);
-    }
-  }
-
-  @override
-  Future<DaoResult<int>> add(ExerciseEntity entity) async {
-    try {
-      final id = await database.insert(
-        ExerciseTable.name,
-        entity.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.ignore,
-      );
-
-      return DaoSuccess(id);
-    } on Exception catch (e) {
-      Log.e(_tag, "Cannot add entity '$entity'", e);
-      return DaoError(e);
-    }
-  }
-
-  @override
-  Future<DaoResult<bool>> update(ExerciseEntity entity) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<DaoResult<bool>> delete(ExerciseEntityFilter  filter) {
-    throw UnimplementedError();
-  }
 }
 
-class ExerciseEntityFilter implements DaoFilter {
+class ExerciseEntityFilter extends SimpleEntityFilter {
   ExerciseEntityFilter({
+    super.ids,
+    super.id,
     this.workoutTypeEntity,
-    this.exerciseName,
   });
 
   final WorkoutTypeEntity? workoutTypeEntity;
-  final String? exerciseName;
 
   @override
-  String toWhereClause() {
-    final where = <String>[];
+  String get columnId => ExerciseTable.columnExerciseId;
+
+  @override
+  String? toWhereClause() {
     final workoutTypeEntity = this.workoutTypeEntity;
     if (workoutTypeEntity != null) {
-      where.add("${ExerciseTable.columnWorkoutTypeId} = ${workoutTypeEntity.id}");
+      return "${ExerciseTable.columnWorkoutTypeId} = ${workoutTypeEntity.id}";
     }
-    if (exerciseName != null) {
-      where.add("${ExerciseTable.columnExerciseName} = $exerciseName");
-    }
-    return where.join(",");
+
+    return super.toWhereClause();
   }
 }

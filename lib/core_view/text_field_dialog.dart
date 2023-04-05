@@ -3,22 +3,30 @@ import 'package:flutter/material.dart';
 import '../../core_view/custom_dialog.dart';
 import '../../util/localization_util.dart';
 
-class CreateExerciseDialog extends StatefulWidget {
-  const CreateExerciseDialog({
+class TextFieldDialog extends StatefulWidget {
+  const TextFieldDialog({
     Key? key,
+    required this.title,
+    required this.hint,
   }) : super(key: key);
 
+  final String title;
+  final String hint;
+
   @override
-  State<CreateExerciseDialog> createState() => _CreateExerciseDialogState();
+  State<TextFieldDialog> createState() => _TextFieldDialogState();
 }
 
-class _CreateExerciseDialogState extends State<CreateExerciseDialog> {
+class _TextFieldDialogState extends State<TextFieldDialog> {
   final _formKey = GlobalKey<FormState>();
-  final _exerciseNameController = TextEditingController();
+  final _textController = TextEditingController();
+
+  String get _title => widget.title;
+  String get _hint => widget.hint;
 
   @override
   void dispose() {
-    _exerciseNameController.dispose();
+    _textController.dispose();
     super.dispose();
   }
 
@@ -31,13 +39,13 @@ class _CreateExerciseDialogState extends State<CreateExerciseDialog> {
       return;
     }
 
-    Navigator.pop(context, _exerciseNameController.text);
+    Navigator.pop(context, _textController.text);
   }
 
   @override
   Widget build(BuildContext context) {
     return CustomDialog(
-      title: LocalizationUtil.localize(context).createExerciseDialogTitle,
+      title: _title,
       child: Form(
         key: _formKey,
         child: Column(
@@ -49,16 +57,15 @@ class _CreateExerciseDialogState extends State<CreateExerciseDialog> {
               child: SizedBox(
                 height: 48,
                 child: TextFormField(
-                  controller: _exerciseNameController,
+                  controller: _textController,
                   decoration: InputDecoration(
-                    labelText: LocalizationUtil.localize(context)
-                        .exerciseNameTextFieldHint,
+                    labelText: _hint,
                     border: const OutlineInputBorder(),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return LocalizationUtil.localize(context)
-                          .exerciseNameTextFieldError;
+                          .dialogEmptyTextError;
                     }
                     return null;
                   },
@@ -71,14 +78,14 @@ class _CreateExerciseDialogState extends State<CreateExerciseDialog> {
               children: [
                 TextButton(
                   onPressed: () => onNegativeButtonClicked(context),
-                  child: Text(LocalizationUtil.localize(context)
-                      .createExerciseDialogNegativeBtn),
+                  child: Text(
+                      LocalizationUtil.localize(context).dialogNegativeBtn),
                 ),
                 const SizedBox(width: 8),
                 TextButton(
                   onPressed: () => onPositiveButtonClicked(context),
-                  child: Text(LocalizationUtil.localize(context)
-                      .createExerciseDialogPositiveBtn),
+                  child: Text(
+                      LocalizationUtil.localize(context).dialogPositiveBtn),
                 ),
                 const SizedBox(width: 8),
               ],

@@ -6,6 +6,7 @@ import '../core_view/ui_mode.dart';
 import '../core_view/ui_mode_view_model.dart';
 import '../core_view/workout_category.dart';
 import '../feature_root/root_view_model.dart';
+import '../feature_setting/setting_page.dart';
 import '../feature_weight_training/weight_training_page.dart';
 import '../util/log_util.dart';
 import '../util/localization_util.dart';
@@ -118,6 +119,14 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
     _uiModeViewModel.switchTo(UiMode.normal);
   }
 
+  void _onAppBarSettingButtonClicked() async {
+    await Navigator.pushNamed(
+      context,
+      SettingPage.routeName,
+    );
+    _reload();
+  }
+
   void _onAddItemClicked() async {
     await _model.createWorkout(WorkoutCategory.weightTraining);
     await _reload();
@@ -134,6 +143,7 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
         appBar: WorkoutListPageAppBar(
           onCloseButtonClicked: _onAppBarCloseButtonClicked,
           onDeleteButtonClicked: _onAppBarDeleteButtonClicked,
+          onSettingButtonClicked: _onAppBarSettingButtonClicked,
         ),
         body: _view(),
         floatingActionButton: Consumer<UiModeViewModel>(

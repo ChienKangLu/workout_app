@@ -18,10 +18,21 @@ class ExerciseEntity extends BaseEntity {
           name: name,
         );
 
+  ExerciseEntity.update({
+    required int exerciseId,
+    required WorkoutTypeEntity workoutType,
+    required String name,
+  }) : this(
+          exerciseId: exerciseId,
+          workoutTypeEntity: workoutType,
+          name: name,
+        );
+
   ExerciseEntity.fromMap(Map<String, dynamic> map)
       : this(
           exerciseId: map[ExerciseTable.columnExerciseId],
-          workoutTypeEntity: WorkoutTypeEntity.fromId(map[ExerciseTable.columnWorkoutTypeId]),
+          workoutTypeEntity:
+              WorkoutTypeEntity.fromId(map[ExerciseTable.columnWorkoutTypeId]),
           name: map[ExerciseTable.columnExerciseName],
         );
 

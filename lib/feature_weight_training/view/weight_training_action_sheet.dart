@@ -87,32 +87,9 @@ class WeightTrainingActionSheet extends StatelessWidget {
                 text: LocalizationUtil.localize(context).actionItemEdit,
                 onTap: onEditItemClicked,
               ),
-            const SizedBox(
-              height: 50,
-            )
           ],
         ),
       ),
     );
   }
 }
-
-Future<T?> showActionSheet<T>({
-  required BuildContext context,
-  required WidgetBuilder builder,
-}) =>
-    showModalBottomSheet<T>(
-      isScrollControlled: true,
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.zero,
-          topLeft: Radius.circular(15),
-          bottomRight: Radius.zero,
-          topRight: Radius.circular(15),
-        ),
-      ),
-      builder: (context) {
-        return builder(context);
-      },
-    );

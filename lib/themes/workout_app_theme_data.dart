@@ -91,6 +91,8 @@ class WorkoutAppThemeData {
 
   static double get bottomBarHeight => 80;
 
+  static double get pageMargin => 16;
+
   static double get exerciseThumbnailHeight => 50.0;
   static EdgeInsets get exerciseThumbnailMargin =>
       const EdgeInsets.fromLTRB(0, 5, 10, 5);
@@ -98,10 +100,6 @@ class WorkoutAppThemeData {
   static BorderRadius get exerciseThumbnailBorderRadius =>
       BorderRadius.circular(12.0);
 
-  static EdgeInsets get exerciseListContainerMargin =>
-      const EdgeInsets.symmetric(
-        horizontal: 16,
-      );
   static double get exerciseTitleHeight => 48.0;
   static double get exerciseSetHeight => 48.0;
   static double get exerciseSetDataMargin => 20.0;

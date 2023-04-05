@@ -4,19 +4,19 @@ import 'package:provider/provider.dart';
 import '../core_view/confirm_dialog.dart';
 import '../core_view/ui_mode.dart';
 import '../core_view/ui_mode_view_model.dart';
-import '../core_view/util/duration_util.dart';
+import '../core_view/util/sheet_util.dart';
 import '../core_view/workout_status.dart';
+import '../feature_setting_exercise/view/create_exercise_dialog.dart';
 import '../themes/workout_app_theme_data.dart';
 import '../util/localization_util.dart';
-import 'ui_state/weight_training_ui_state.dart';
-import 'view/weight_training_stopwatch.dart';
-import 'view/weight_training_action_sheet.dart';
 import '../util/weight_unit_convertor.dart';
+import 'ui_state/weight_training_ui_state.dart';
 import 'view/edit_set_sheet.dart';
-import 'view/create_exercise_dialog.dart';
 import 'view/exercise_option_dialog.dart';
+import 'view/weight_training_action_sheet.dart';
 import 'view/weight_training_exercise_list.dart';
 import 'view/weight_training_page_app_bar.dart';
+import 'view/weight_training_stopwatch.dart';
 import 'weight_training_view_model.dart';
 
 class WeightTrainingPage extends StatefulWidget {
@@ -78,20 +78,21 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
   }
 
   void _onMoreItemClicked() {
-    showActionSheet(
-        context: context,
-        builder: (context) => MultiProvider(
-              providers: [
-                ChangeNotifierProvider.value(value: _model),
-                ChangeNotifierProvider.value(value: _uiModeViewModel),
-              ],
-              child: WeightTrainingActionSheet(
-                onStartItemClicked: _onStartItemClicked,
-                onAddExerciseItemClicked: _onAddExerciseItemClicked,
-                onFinishItemClicked: _onFinishItemClicked,
-                onEditItemClicked: _onEditItemClicked,
-              ),
-            ));
+    SheetUtil.showSheet(
+      context: context,
+      builder: (context) => MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: _model),
+          ChangeNotifierProvider.value(value: _uiModeViewModel),
+        ],
+        child: WeightTrainingActionSheet(
+          onStartItemClicked: _onStartItemClicked,
+          onAddExerciseItemClicked: _onAddExerciseItemClicked,
+          onFinishItemClicked: _onFinishItemClicked,
+          onEditItemClicked: _onEditItemClicked,
+        ),
+      ),
+    );
   }
 
   void _onAppBarCloseButtonClicked() {
@@ -150,7 +151,7 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
   }
 
   void _onAddSet(EditableExercise editableExercise) async {
-    final editSetData = await showActionSheet<EditSetData>(
+    final editSetData = await SheetUtil.showSheet<EditSetData>(
       context: context,
       builder: (context) => EditSetSheet(
         title: LocalizationUtil.localize(context)
@@ -177,7 +178,7 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
   }
 
   void _onEditSet(EditableExerciseSet editableExerciseSet) async {
-    final editSetData = await showActionSheet<EditSetData>(
+    final editSetData = await SheetUtil.showSheet<EditSetData>(
       context: context,
       builder: (context) => EditSetSheet(
         title: LocalizationUtil.localize(context).editExerciseSetTitle,
@@ -259,10 +260,10 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
           onLoading: () => const SizedBox(),
           onSuccess: (success) {
             final editableWeightTraining = success.editableWeightTraining;
-            final isWorkoutInProgress = viewModel.isWorkoutInProgress;
 
             return Container(
-              margin: WorkoutAppThemeData.exerciseListContainerMargin,
+              margin: EdgeInsets.symmetric(
+                  horizontal: WorkoutAppThemeData.pageMargin),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

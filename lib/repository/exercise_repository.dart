@@ -54,7 +54,8 @@ class ExerciseRepository with DaoProviderMixin {
     return daoResult.asResult();
   }
 
-  Future<Result<bool>> removeExercise(int workoutId, int exerciseId) async {
+  Future<Result<bool>> removeExerciseFromWorkout(
+      int workoutId, int exerciseId) async {
     DaoResult<bool> daoResult;
     daoResult = await weightTrainingSetDao.delete(WeightTrainingSetEntityFilter(
       workoutId: workoutId,
@@ -69,6 +70,45 @@ class ExerciseRepository with DaoProviderMixin {
       workoutId: workoutId,
       exerciseId: exerciseId,
     ));
+
+    return daoResult.asResult();
+  }
+
+  Future<Result<bool>> removeExercises(List<int> exerciseIds) async {
+    DaoResult<bool> daoResult;
+    daoResult = await weightTrainingSetDao.delete(WeightTrainingSetEntityFilter(
+      exerciseIds: exerciseIds,
+    ));
+
+    if (daoResult is DaoError<bool>) {
+      return daoResult.asResult();
+    }
+
+    daoResult = await workoutDetailDao.delete(WorkoutDetailEntityFilter(
+      exerciseIds: exerciseIds,
+    ));
+
+    if (daoResult is DaoError<bool>) {
+      return daoResult.asResult();
+    }
+
+    await exerciseDao.delete(ExerciseEntityFilter(ids: exerciseIds));
+
+    return daoResult.asResult();
+  }
+
+  Future<Result<bool>> updateExercise({
+    required int exerciseId,
+    required WorkoutType workoutType,
+    required String name,
+  }) async {
+    final DaoResult<bool> daoResult = await exerciseDao.update(
+      ExerciseEntity.update(
+        exerciseId: exerciseId,
+        workoutType: WorkoutTypeEntityFactory.fromType(workoutType),
+        name: name,
+      ),
+    );
 
     return daoResult.asResult();
   }

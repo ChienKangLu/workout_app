@@ -48,7 +48,7 @@ class ExerciseOptionDialog extends StatelessWidget {
                   text: exerciseOption.name,
                   onTap: () {
                     Navigator.pop(context);
-                    onExerciseSelected(exerciseOption.exerciseTypeId);
+                    onExerciseSelected(exerciseOption.exerciseId);
                   });
             },
           ),

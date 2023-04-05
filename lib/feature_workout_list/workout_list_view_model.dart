@@ -18,7 +18,7 @@ class WorkoutListViewModel extends ViewModel {
   WorkoutListUiState _workoutListUiState = WorkoutListUiState.loading();
   WorkoutListUiState get workoutListUiState => _workoutListUiState;
 
-  final _selectedReadableWorkout = <ReadableWorkout>{}; // TODO: should be view internal logic!
+  final _selectedReadableWorkout = <ReadableWorkout>{};
   int get selectedWorkoutCount => _selectedReadableWorkout.length;
 
   @override

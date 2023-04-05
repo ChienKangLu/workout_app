@@ -1,66 +1,56 @@
-import 'package:sqflite/sqflite.dart';
-
-import '../../util/log_util.dart';
 import '../model/weight_training_set_entity.dart';
 import '../schema.dart';
-import 'base_dao.dart';
 import 'dao_filter.dart';
 import 'dao_result.dart';
+import 'simple_dao.dart';
 
 class WeightTrainingSetDao
-    extends BaseDao<WeightTrainingSetEntity, WeightTrainingSetEntityFilter> {
+    extends SimpleDao<WeightTrainingSetEntity, WeightTrainingSetEntityFilter> {
   static const _tag = "WeightTrainingSetDao";
   static const _initSetNum = 1;
 
   @override
-  Future<DaoResult<List<WeightTrainingSetEntity>>> findAll() async {
-    try {
-      final maps = await database.query(WeightTrainingSetTable.name);
-      final results = <WeightTrainingSetEntity>[];
-      for (final map in maps) {
-        results.add(WeightTrainingSetEntity.fromMap(map));
-      }
-      return DaoSuccess(results);
-    } on Exception catch (e) {
-      Log.e(_tag, "Cannot findAll", e);
-      return DaoError(e);
-    }
-  }
+  String get tag => _tag;
 
   @override
-  Future<DaoResult<List<WeightTrainingSetEntity>>> findByFilter(
-    WeightTrainingSetEntityFilter? filter,
-  ) {
-    throw UnimplementedError();
-  }
+  String get tableName => WeightTrainingSetTable.name;
+
+  @override
+  WeightTrainingSetEntity createEntityFromMap(Map<String, dynamic> map) =>
+      WeightTrainingSetEntity.fromMap(map);
+
+  @override
+  WeightTrainingSetEntityFilter createUpdateFilter(
+          WeightTrainingSetEntity entity) =>
+      WeightTrainingSetEntityFilter(
+        workoutId: entity.workoutId,
+        exerciseId: entity.exerciseId,
+        setNum: entity.setNum,
+      );
 
   @override
   Future<DaoResult<int>> add(WeightTrainingSetEntity entity) async {
-    try {
-      final lastSetNum =
-          await _getLastSetNum(entity.workoutId, entity.exerciseId);
+    final lastSetNum =
+        await _getLastSetNum(entity.workoutId, entity.exerciseId);
 
-      final int setNum;
-      if (lastSetNum == -1) {
-        setNum = _initSetNum;
-      } else {
-        setNum = lastSetNum + 1;
-      }
-
-      final entityMap = entity.toMap();
-      entityMap[WeightTrainingSetTable.columnSetNum] = setNum;
-
-      final id = await database.insert(
-        WeightTrainingSetTable.name,
-        entityMap,
-        conflictAlgorithm: ConflictAlgorithm.ignore,
-      );
-
-      return DaoSuccess(id);
-    } on Exception catch (e) {
-      Log.e(_tag, "Cannot add entity '$entity'", e);
-      return DaoError(e);
+    final int setNum;
+    if (lastSetNum == -1) {
+      setNum = _initSetNum;
+    } else {
+      setNum = lastSetNum + 1;
     }
+
+    return super.add(
+      WeightTrainingSetEntity(
+        workoutId: entity.workoutId,
+        exerciseId: entity.exerciseId,
+        setNum: setNum,
+        baseWeight: entity.baseWeight,
+        sideWeight: entity.sideWeight,
+        repetition: entity.repetition,
+        endDateTime: entity.endDateTime,
+      ),
+    );
   }
 
   Future<int> _getLastSetNum(
@@ -83,58 +73,20 @@ class WeightTrainingSetDao
 
     return lastSetNumResults[0][WeightTrainingSetTable.columnSetNum] as int;
   }
-
-  @override
-  Future<DaoResult<bool>> update(WeightTrainingSetEntity entity) async {
-    try {
-      final entityMap = entity.toMap();
-
-      final count = await database.update(
-        WeightTrainingSetTable.name,
-        entityMap,
-        where: WeightTrainingSetEntityFilter(
-          workoutId: entity.workoutId,
-          exerciseId: entity.exerciseId,
-          setNum: entity.setNum,
-        ).toWhereClause(),
-        conflictAlgorithm: ConflictAlgorithm.ignore,
-      );
-      Log.d(_tag, "Update $count rows in '${WeightTrainingSetTable.name}'");
-
-      return DaoSuccess(true);
-    } on Exception catch (e) {
-      Log.e(_tag, "Cannot add entity '$entity'", e);
-      return DaoError(e);
-    }
-  }
-
-  @override
-  Future<DaoResult<bool>> delete(WeightTrainingSetEntityFilter filter) async {
-    try {
-      final count = await database.delete(
-        WeightTrainingSetTable.name,
-        where: filter.toWhereClause(),
-      );
-      Log.d(_tag, "Delete $count rows from '${WeightTrainingSetTable.name}'");
-
-      return DaoSuccess(true);
-    } on Exception catch (e) {
-      Log.e(_tag, "Cannot findByFilter with filter '$filter'", e);
-      return DaoError(e);
-    }
-  }
 }
 
 class WeightTrainingSetEntityFilter implements DaoFilter {
   WeightTrainingSetEntityFilter({
     this.workoutIds = const [],
     this.workoutId,
+    this.exerciseIds = const [],
     this.exerciseId,
     this.setNum,
   });
 
   List<int> workoutIds;
   int? workoutId;
+  List<int> exerciseIds;
   int? exerciseId;
   int? setNum;
 
@@ -147,6 +99,10 @@ class WeightTrainingSetEntityFilter implements DaoFilter {
     }
     if (workoutId != null) {
       where.add("${WeightTrainingSetTable.columnWorkoutId} = $workoutId");
+    }
+    if (exerciseIds.isNotEmpty) {
+      final args = exerciseIds.join(",");
+      where.add("${WeightTrainingSetTable.columnExerciseId} in ($args)");
     }
     if (exerciseId != null) {
       where.add("${WeightTrainingSetTable.columnExerciseId} = $exerciseId");

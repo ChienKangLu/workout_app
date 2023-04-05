@@ -72,26 +72,26 @@
   "@actionItemEdit": {
     "description": "Text for edit action item"
   },
+  "actionItemRename": "Rename",
+  "@actionItemRename": {
+    "description": "Text for rename action item"
+  },
+  "actionItemDelete": "Delete",
+  "@actionItemDelete": {
+    "description": "Text for delete action item"
+  },
 
   "createExerciseDialogTitle": "Create Exercise",
   "@createExerciseDialogTitle": {
     "description": "Title for create exercise dialog"
   },
+  "editExerciseDialogTitle": "Edit Exercise",
+  "@editExerciseDialogTitle": {
+    "description": "Title for edit exercise dialog"
+  },
   "exerciseNameTextFieldHint": "Exercise Name",
   "@exerciseNameTextFieldHint": {
     "description": "Hint for exercise name"
-  },
-  "exerciseNameTextFieldError": "Please enter some text",
-  "@exerciseNameTextFieldError": {
-    "description": "Text for exercise name error"
-  },
-  "createExerciseDialogPositiveBtn": "Ok",
-  "@createExerciseDialogPositiveBtn": {
-    "description": "Text for positive button in create exercise dialog"
-  },
-  "createExerciseDialogNegativeBtn": "Cancel",
-  "@createExerciseDialogNegativeBtn": {
-    "description": "Text for negative button in create exercise dialog"
   },
   "removeExerciseConfirmDialogTitle":  "Are you sure to remove it?",
   "@removeExerciseConfirmDialogTitle": {
@@ -104,6 +104,19 @@
   "removeExerciseConfirmDialogNegativeBtn": "No",
   "@removeExerciseConfirmDialogNegativeBtn": {
     "description": "Text for negative button in remove exercise dialog"
+  },
+
+  "dialogEmptyTextError": "Please enter some text",
+  "@dialogEmptyTextError": {
+    "description": "Text for empty error in dialog"
+  },
+  "dialogPositiveBtn": "Ok",
+  "@dialogPositiveBtn": {
+    "description": "Text for positive button"
+  },
+  "dialogNegativeBtn": "Cancel",
+  "@dialogNegativeBtn": {
+    "description": "Text for negative button"
   },
 
   "exerciseOptionDialogTitle": "Add Exercise",
@@ -158,5 +171,18 @@
   "unitPound": "lb",
   "@unitPound": {
     "description": "Text for pound unit"
+  },
+
+  "settingPageTitle": "Settings",
+  "@settingPageTitle": {
+    "description": "Title for setting page"
+  },
+  "settingWorkoutTitle": "Workout",
+  "@settingWorkoutTitle": {
+    "description": "Title for setting workout"
+  },
+  "settingWorkoutEditExerciseTitle": "Edit Exercises",
+  "@settingWorkoutEditExerciseTitle": {
+    "description": "Title for setting exercise"
   }
 }

@@ -6,7 +6,7 @@ import 'base_dao.dart';
 import 'dao_filter.dart';
 import 'dao_result.dart';
 
-abstract class SimpleDao<T extends BaseEntity, F extends SimpleEntityFilter>
+abstract class SimpleDao<T extends BaseEntity, F extends DaoFilter>
     extends BaseDao<T, F> {
   String get tag;
   String get tableName;
@@ -15,9 +15,19 @@ abstract class SimpleDao<T extends BaseEntity, F extends SimpleEntityFilter>
   F createUpdateFilter(T entity);
 
   @override
-  Future<DaoResult<List<T>>> findAll() async {
+  Future<DaoResult<List<T>>> findAll() {
+    return findByFilter(null);
+  }
+
+  @override
+  Future<DaoResult<List<T>>> findByFilter(
+    DaoFilter? filter,
+  ) async {
     try {
-      final maps = await database.query(tableName);
+      final maps = await database.query(
+        tableName,
+        where: filter?.toWhereClause(),
+      );
       final results = <T>[];
       for (final map in maps) {
         results.add(createEntityFromMap(map));
@@ -25,16 +35,9 @@ abstract class SimpleDao<T extends BaseEntity, F extends SimpleEntityFilter>
 
       return DaoSuccess(results);
     } on Exception catch (e) {
-      Log.e(tag, "Cannot findAll", e);
+      Log.e(tag, "Cannot findByFilter with filter '$filter'", e);
       return DaoError(e);
     }
-  }
-
-  @override
-  Future<DaoResult<List<T>>> findByFilter(
-    SimpleEntityFilter? filter,
-  ) {
-    throw UnimplementedError();
   }
 
   @override
@@ -43,7 +46,6 @@ abstract class SimpleDao<T extends BaseEntity, F extends SimpleEntityFilter>
       final id = await database.insert(
         tableName,
         entity.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.ignore,
       );
 
       return DaoSuccess(id);
@@ -74,7 +76,7 @@ abstract class SimpleDao<T extends BaseEntity, F extends SimpleEntityFilter>
   }
 
   @override
-  Future<DaoResult<bool>> delete(SimpleEntityFilter filter) async {
+  Future<DaoResult<bool>> delete(DaoFilter filter) async {
     try {
       final count = await database.delete(
         tableName,

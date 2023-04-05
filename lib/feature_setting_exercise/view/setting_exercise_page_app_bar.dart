@@ -1,32 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../core_view/ui_mode.dart';
-import '../../core_view/ui_mode_view_model.dart';
-import '../../util/localization_util.dart';
-import '../workout_list_view_model.dart';
+import '../../../core_view/ui_mode.dart';
+import '../../../core_view/ui_mode_view_model.dart';
+import '../../../util/localization_util.dart';
+import '../setting_exercise_view_model.dart';
 
-class WorkoutListPageAppBar extends StatelessWidget
+class SettingExercisePageAppBar extends StatelessWidget
     implements PreferredSizeWidget {
-  const WorkoutListPageAppBar({
+  const SettingExercisePageAppBar({
     Key? key,
     required this.onCloseButtonClicked,
     required this.onDeleteButtonClicked,
-    required this.onSettingButtonClicked,
   }) : super(key: key);
 
   final void Function() onCloseButtonClicked;
   final void Function() onDeleteButtonClicked;
-  final void Function() onSettingButtonClicked;
 
   @override
   Widget build(BuildContext context) {
     final uiMode = context.watch<UiModeViewModel>().uiMode;
-    final selectedWorkoutCount =
-        context.watch<WorkoutListViewModel>().selectedWorkoutCount;
+    final selectedItemCount =
+        context.watch<SettingExerciseViewModel>().selectedItemCount;
 
     if (uiMode == UiMode.edit) {
-      return _appBarInEditMode(context, selectedWorkoutCount);
+      return _appBarInEditMode(context, selectedItemCount);
     }
 
     return _appBarInNormalMode(context);
@@ -37,8 +35,8 @@ class WorkoutListPageAppBar extends StatelessWidget
 
   Widget _appBarInNormalMode(BuildContext context) {
     return AppBar(
-      title: Text(LocalizationUtil.localize(context).appTitle),
-      actions: [_settingButton(context)],
+      title: Text(
+          LocalizationUtil.localize(context).settingWorkoutEditExerciseTitle),
       toolbarHeight: 56,
     );
   }
@@ -63,13 +61,6 @@ class WorkoutListPageAppBar extends StatelessWidget
     return IconButton(
       icon: const Icon(Icons.close),
       onPressed: onCloseButtonClicked,
-    );
-  }
-
-  Widget _settingButton(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.settings_outlined),
-      onPressed: onSettingButtonClicked,
     );
   }
 }

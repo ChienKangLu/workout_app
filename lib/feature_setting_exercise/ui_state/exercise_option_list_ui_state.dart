@@ -1,3 +1,5 @@
+import '../../core_view/ui_state/selectable.dart';
+
 abstract class ExerciseOptionListUiState {
   ExerciseOptionListUiState();
 
@@ -54,7 +56,7 @@ class ExerciseOptionListErrorUiState extends ExerciseOptionListUiState {
   ExerciseOptionListErrorUiState._internal();
 }
 
-class ExerciseOption {
+class ExerciseOption extends Selectable {
   ExerciseOption({
     required this.exerciseId,
     required this.name,

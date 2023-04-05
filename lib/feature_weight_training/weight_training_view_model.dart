@@ -10,6 +10,7 @@ import '../model/workout.dart';
 import '../repository/exercise_repository.dart';
 import '../repository/repository_manager.dart';
 import '../repository/workout_repository.dart';
+import '../use_case/exercise_use_case.dart';
 import '../util/log_util.dart';
 import 'ui_state/exercise_option_list_ui_state.dart';
 import 'ui_state/weight_training_ui_state.dart';
@@ -26,6 +27,7 @@ class WeightTrainingViewModel extends ViewModel {
       RepositoryManager.instance.workoutRepository;
   final ExerciseRepository _exerciseRepository =
       RepositoryManager.instance.exerciseRepository;
+  final ExerciseUseCase _exerciseUseCase = ExerciseUseCase();
 
   WeightTrainingUiState _weightTrainingUiState =
       WeightTrainingUiState.loading();
@@ -90,7 +92,7 @@ class WeightTrainingViewModel extends ViewModel {
   }
 
   Future<void> _updateExerciseOptionListUiState() async {
-    final exercises = await _getExercises();
+    final exercises = await _exerciseUseCase.getExercises();
     if (exercises == null) {
       _exerciseOptionListUiState = ExerciseOptionListUiState.error();
       return;
@@ -100,7 +102,7 @@ class WeightTrainingViewModel extends ViewModel {
       exercises
           .map(
             (exercise) => ExerciseOption(
-              exerciseTypeId: exercise.exerciseId,
+              exerciseId: exercise.exerciseId,
               name: exercise.name,
             ),
           )
@@ -134,17 +136,6 @@ class WeightTrainingViewModel extends ViewModel {
     return workout;
   }
 
-  Future<List<Exercise>?> _getExercises() async {
-    final Result<List<Exercise>> result =
-        await _exerciseRepository.getExercises(WorkoutType.weightTraining);
-    if (result is Error<List<Exercise>>) {
-      Log.e(_tag, "Error happens while get exercises", result.exception);
-      return null;
-    }
-
-    return (result as Success<List<Exercise>>).data;
-  }
-
   Future<void> startWorkout(
     EditableWeightTraining editableWeightTraining,
   ) async {
@@ -172,9 +163,8 @@ class WeightTrainingViewModel extends ViewModel {
   }
 
   Future<void> createExercise(String name) async {
-    final result = await _exerciseRepository.createExercise(
-        WorkoutType.weightTraining, name);
-    if (result is Error) {
+    final result = await _exerciseUseCase.createExercise(name);
+    if (result == false) {
       return;
     }
 
@@ -194,7 +184,7 @@ class WeightTrainingViewModel extends ViewModel {
 
   Future<void> removeExerciseFromWorkout(int exerciseId) async {
     final result =
-        await _exerciseRepository.removeExercise(workoutId, exerciseId);
+        await _exerciseRepository.removeExerciseFromWorkout(workoutId, exerciseId);
     if (result is Error) {
       return;
     }

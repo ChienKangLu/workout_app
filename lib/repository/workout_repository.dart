@@ -43,7 +43,7 @@ class WorkoutRepository with DaoProviderMixin {
     }
 
     daoResult = await runningSetDao.delete(RunningSetEntityFilter(
-      workoutIds: workoutIds,
+      ids: workoutIds,
     ));
 
     if (daoResult is DaoError<bool>) {
