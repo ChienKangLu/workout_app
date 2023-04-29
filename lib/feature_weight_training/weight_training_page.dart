@@ -14,9 +14,10 @@ import 'ui_state/weight_training_ui_state.dart';
 import 'view/edit_set_sheet.dart';
 import 'view/exercise_option_dialog.dart';
 import 'view/weight_training_action_sheet.dart';
+import 'view/weight_training_control_panel.dart';
 import 'view/weight_training_exercise_list.dart';
 import 'view/weight_training_page_app_bar.dart';
-import 'view/weight_training_stopwatch.dart';
+import 'view/weight_training_start_view.dart';
 import 'weight_training_view_model.dart';
 
 class WeightTrainingPage extends StatefulWidget {
@@ -80,34 +81,10 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
   void _onMoreItemClicked() {
     SheetUtil.showSheet(
       context: context,
-      builder: (context) => MultiProvider(
-        providers: [
-          ChangeNotifierProvider.value(value: _model),
-          ChangeNotifierProvider.value(value: _uiModeViewModel),
-        ],
-        child: WeightTrainingActionSheet(
-          onStartItemClicked: _onStartItemClicked,
-          onAddExerciseItemClicked: _onAddExerciseItemClicked,
-          onFinishItemClicked: _onFinishItemClicked,
-          onEditItemClicked: _onEditItemClicked,
-        ),
+      builder: (context) => WeightTrainingActionSheet(
+        onEditItemClicked: _onEditItemClicked,
       ),
     );
-  }
-
-  void _onAppBarCloseButtonClicked() {
-    _uiModeViewModel.switchTo(UiMode.normal);
-  }
-
-  void _onStartItemClicked(EditableWeightTraining editableWeightTraining) {
-    Navigator.pop(context);
-    _model.startWorkout(editableWeightTraining);
-  }
-
-  void _onFinishItemClicked(EditableWeightTraining editableWeightTraining) {
-    Navigator.pop(context);
-    _model.finishWorkout(editableWeightTraining);
-    _uiModeViewModel.switchTo(UiMode.normal);
   }
 
   void _onEditItemClicked() {
@@ -115,10 +92,22 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
     _uiModeViewModel.switchTo(UiMode.edit);
   }
 
-  void _onAddExerciseItemClicked(
+  void _onAppBarCloseButtonClicked() {
+    _uiModeViewModel.switchTo(UiMode.normal);
+  }
+
+  void _onStartButtonClicked(EditableWeightTraining editableWeightTraining) {
+    _model.startWorkout(editableWeightTraining);
+  }
+
+  void _onStopButtonClicked(EditableWeightTraining editableWeightTraining) {
+    _model.finishWorkout(editableWeightTraining);
+    _uiModeViewModel.switchTo(UiMode.normal);
+  }
+
+  void _onAddButtonClicked(
     EditableWeightTraining editableWeightTraining,
   ) async {
-    Navigator.pop(context);
     showDialog(
       context: context,
       builder: (context) => ChangeNotifierProvider.value(
@@ -133,11 +122,12 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
 
   void _onNewExercise() async {
     final exerciseName = await showDialog<String>(
-        context: context,
-        builder: (context) => ChangeNotifierProvider.value(
-              value: _model,
-              child: const CreateExerciseDialog(),
-            ));
+      context: context,
+      builder: (context) => ChangeNotifierProvider.value(
+        value: _model,
+        child: const CreateExerciseDialog(),
+      ),
+    );
 
     if (exerciseName == null) {
       return;
@@ -260,6 +250,13 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
           onLoading: () => const SizedBox(),
           onSuccess: (success) {
             final editableWeightTraining = success.editableWeightTraining;
+            final workoutStatus = editableWeightTraining.workoutStatus;
+            if (workoutStatus == WorkoutStatus.created) {
+              return WeightTrainingStartView(
+                onStartButtonClicked: () =>
+                    _onStartButtonClicked(editableWeightTraining),
+              );
+            }
 
             return Container(
               margin: EdgeInsets.symmetric(
@@ -269,10 +266,12 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 24),
-                    const Center(
-                      child: WeightTrainingStopwatch(),
+                    WeightTrainingControlPanel(
+                      onStopButtonClicked: () =>
+                          _onStopButtonClicked(editableWeightTraining),
+                      onAddButtonClicked: () =>
+                          _onAddButtonClicked(editableWeightTraining),
                     ),
-                    const SizedBox(height: 16),
                     WeightTrainingExerciseList(
                       editableExercises:
                           editableWeightTraining.editableExercises,

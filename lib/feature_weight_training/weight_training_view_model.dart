@@ -38,9 +38,6 @@ class WeightTrainingViewModel extends ViewModel {
   ExerciseOptionListUiState get exerciseOptionListUiState =>
       _exerciseOptionListUiState;
 
-  bool get isWorkoutInProgress => _isWorkoutIn(WorkoutStatus.inProgress);
-  bool get isWorkoutFinished => _isWorkoutIn(WorkoutStatus.finished);
-
   @override
   Future<void> init() async {
     await _updateWeightTrainingUiState();
@@ -265,15 +262,5 @@ class WeightTrainingViewModel extends ViewModel {
     }
 
     return endTime.difference(startTime);
-  }
-
-  bool _isWorkoutIn(WorkoutStatus status) {
-    return _weightTrainingUiState.run(
-      onLoading: () => false,
-      onSuccess: (success) {
-        return success.editableWeightTraining.workoutStatus == status;
-      },
-      onError: () => false,
-    );
   }
 }

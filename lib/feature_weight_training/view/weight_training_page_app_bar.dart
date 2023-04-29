@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 
 import '../../core_view/ui_mode.dart';
 import '../../core_view/ui_mode_view_model.dart';
+import '../../core_view/workout_status.dart';
 import '../weight_training_view_model.dart';
 import 'weight_training_more_action_item.dart';
-import 'weight_training_title.dart';
 
 class WeightTrainingPageAppBar extends StatelessWidget
     implements PreferredSizeWidget {
@@ -22,20 +22,27 @@ class WeightTrainingPageAppBar extends StatelessWidget
   Widget build(BuildContext context) {
     final uiMode = context.watch<UiModeViewModel>().uiMode;
     final weightTrainingViewModel = context.watch<WeightTrainingViewModel>();
+    final weightTrainingUiState = weightTrainingViewModel.weightTrainingUiState;
 
-    if (weightTrainingViewModel.isWorkoutFinished && uiMode == UiMode.edit) {
-      return _appBarInEditMode(context);
-    }
+    return weightTrainingUiState.run(
+      onLoading: () => const SizedBox(),
+      onSuccess: (success) {
+        final editableWeightTraining = success.editableWeightTraining;
+        final workoutStatus = editableWeightTraining.workoutStatus;
+        if (workoutStatus == WorkoutStatus.finished && uiMode == UiMode.edit) {
+          return _appBarInEditMode(context);
+        }
 
-    final startDateTime = weightTrainingViewModel.weightTrainingUiState.run(
-      onLoading: () => "",
-      onSuccess: (success) => success.editableWeightTraining.startDateTimeText,
-      onError: () => "",
-    );
-
-    return _appBarInNormalMode(
-      context,
-      startDateTime,
+        final title = "#${success.editableWeightTraining.number}";
+        final startDateTimeTitle = editableWeightTraining.startDateTimeText;
+        return _appBarInNormalMode(
+          context,
+          workoutStatus == WorkoutStatus.finished,
+          title,
+          startDateTimeTitle,
+        );
+      },
+      onError: () => const SizedBox(),
     );
   }
 
@@ -44,38 +51,31 @@ class WeightTrainingPageAppBar extends StatelessWidget
 
   Widget _appBarInNormalMode(
     BuildContext context,
-    String startDateTime,
+    bool isFinished,
+    String title,
+    String startDateTimeTitle,
   ) {
     return AppBar(
       title: Column(
         children: [
-          const WeightTrainingTitle(),
-          if (startDateTime.isNotEmpty) _subTitle(context, startDateTime),
+          Text(
+            title,
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+          if (startDateTimeTitle.isNotEmpty)
+            Text(
+              startDateTimeTitle,
+              style: Theme.of(context).textTheme.bodySmall,
+            )
         ],
       ),
       actions: [
-        WeightTrainingAppBarActionItem(
-          iconData: Icons.more_horiz,
-          onClick: onMoreItemClicked,
-        ),
+        if (isFinished)
+          WeightTrainingAppBarActionItem(
+            iconData: Icons.more_horiz,
+            onClick: onMoreItemClicked,
+          ),
       ],
-    );
-  }
-
-  Widget _subTitle(
-    BuildContext context,
-    String startDateTime,
-  ) {
-    return Container(
-      padding: const EdgeInsets.only(top: 2),
-      child: Text(
-        startDateTime,
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.outline,
-          fontWeight: FontWeight.w100,
-          fontSize: 12,
-        ),
-      ),
     );
   }
 

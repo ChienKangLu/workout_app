@@ -13,10 +13,9 @@
   "workoutCategoryRunningTitle": "跑步",
 
   "repetitionText": "{rep} 次",
+  "workoutStartMessage": "開始運動吧",
+  "workoutStartButtonTitle": "開始",
 
-  "actionItemStart": "開始運動",
-  "actionItemAddExercise": "新增項目",
-  "actionItemFinish": "運動結束",
   "actionItemEdit": "編輯",
   "actionItemRename": "重新命名",
   "actionItemDelete": "刪除",

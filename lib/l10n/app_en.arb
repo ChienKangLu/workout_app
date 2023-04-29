@@ -55,19 +55,15 @@
       }
     }
   },
+  "workoutStartMessage": "Let's start workout",
+  "@workoutStartMessage": {
+    "description": "Message for start workout"
+  },
+  "workoutStartButtonTitle": "Start",
+  "@workoutStartButtonTitle": {
+    "description": "Title of start workout button"
+  },
 
-  "actionItemStart": "Start",
-  "@actionItemStart": {
-    "description": "Text for start action item"
-  },
-  "actionItemAddExercise": "Add Exercise",
-  "@actionItemAddExercise": {
-    "description": "Text for add exercise action item"
-  },
-  "actionItemFinish": "Finish",
-  "@actionItemFinish": {
-    "description": "Text for finish action item"
-  },
   "actionItemEdit": "Edit",
   "@actionItemEdit": {
     "description": "Text for edit action item"
