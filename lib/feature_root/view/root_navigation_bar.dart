@@ -52,7 +52,7 @@ class _RootNavigationBarState extends State<RootNavigationBar> {
     required Widget child,
     required bool isNavigationVisible,
   }) {
-    final bottomPadding = MediaQuery.paddingOf(context).bottom;
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
     final height = WorkoutAppThemeData.bottomBarHeight + bottomPadding;
 
     return AnimatedContainer(

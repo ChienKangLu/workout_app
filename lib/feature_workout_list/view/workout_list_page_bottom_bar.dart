@@ -59,7 +59,7 @@ class _WorkoutListPageBottomBarState extends State<WorkoutListPageBottomBar> {
   }
 
   Widget _animatedContainer({required child, required uiMode}) {
-    final bottomPadding = MediaQuery.paddingOf(context).bottom;
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
     final height = WorkoutAppThemeData.bottomBarHeight + bottomPadding;
 
     return AnimatedContainer(
