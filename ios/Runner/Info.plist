@@ -21,6 +21,8 @@
 	</array>
 	<key>CFBundleName</key>
 	<string>workout_app</string>
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
