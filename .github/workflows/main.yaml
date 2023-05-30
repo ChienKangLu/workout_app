@@ -1,0 +1,120 @@
+name: Workout App action
+on: [push, workflow_dispatch]
+jobs:
+  build-ios-app:
+    runs-on: macos-latest
+    steps:
+      - name: Create build version
+        id: create-build-version
+        env:
+          MAIN_VERSION: 1.0.0
+          SNAPSHOT_VERSION: 0.0.0
+        run: | 
+          if [[ $GITHUB_REF_NAME == "master" ]]; then
+            VERSION_NAME=${{ env.MAIN_VERSION }}
+          else
+            VERSION_NAME=${{ env.SNAPSHOT_VERSION }}
+          fi
+
+          echo "VERSION_NAME=$VERSION_NAME" >> "$GITHUB_OUTPUT"
+      - name: Create build number
+        id: create-build-number
+        run: |
+          BUILD_NUMBER=$GITHUB_RUN_NUMBER
+
+          echo "BUILD_NUMBER=$BUILD_NUMBER" >> "$GITHUB_OUTPUT"
+      - name: Create & apply keychain
+        run: |
+          IOS_DISTRIBUTION_CERT_BASE64=${{ secrets.IOS_DISTRIBUTION_CERT_BASE64 }}
+          IOS_DISTRIBUTION_CERT_PASSWORD=${{ secrets.IOS_DISTRIBUTION_CERT_PASSWORD }}
+          KEYCHAIN_PASSWORD=${{ secrets.KEYCHAIN_PASSWORD }}
+          
+          CERTIFICATE_PATH=$RUNNER_TEMP/certificate.p12
+          KEYCHAIN_PATH=$RUNNER_TEMP/app.keychain-db
+          
+          # Construct file from base64
+          echo -n "$IOS_DISTRIBUTION_CERT_BASE64" | base64 --decode --output $CERTIFICATE_PATH
+          
+          # Create and unlock keychain
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          
+          # Import certificate to keychain
+          security import $CERTIFICATE_PATH -P "$IOS_DISTRIBUTION_CERT_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+      - name: Install provision profile
+        run: |
+          IOS_PROVISION_PROFILE_BASE64=${{ secrets.IOS_PROVISION_PROFILE_BASE64 }}
+          
+          PROVISION_PROFILE_PATH=$RUNNER_TEMP/temp.mobileprovision
+
+          # Construct file from base64
+          echo -n "$IOS_PROVISION_PROFILE_BASE64" | base64 --decode --output $PROVISION_PROFILE_PATH
+
+          # Get UUID from Provision profile
+          PROVISION_PROFILE_UUID=$(/usr/libexec/PlistBuddy -c "Print UUID" /dev/stdin <<< $(/usr/bin/security cms -D -i $PROVISION_PROFILE_PATH))
+
+          # Rename Provision profile with UUID
+          mv $PROVISION_PROFILE_PATH $RUNNER_TEMP/$PROVISION_PROFILE_UUID.mobileprovision
+          PROVISION_PROFILE_PATH=$RUNNER_TEMP/$PROVISION_PROFILE_UUID.mobileprovision
+
+          # Install Provision profile
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $PROVISION_PROFILE_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.7.12'
+          channel: 'stable'
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Build iOS app
+        working-directory: ./app
+        env:
+          ENV_IOS_DEVELOPMENT_TEAM: ${{ secrets.ENV_IOS_DEVELOPMENT_TEAM }}
+        run: |
+          IOS_EXPORT_OPTIONS_BASE64=${{ secrets.IOS_EXPORT_OPTIONS_BASE64 }}
+
+          IOS_EXPORT_OPTIONS_PATH=$RUNNER_TEMP/ExportOptions.plist
+
+          # Construct file from base64
+          echo -n "$IOS_EXPORT_OPTIONS_BASE64" | base64 --decode --output $IOS_EXPORT_OPTIONS_PATH
+
+          # Install Flutter dependency
+          flutter pub get
+
+          # Build IPA
+
+          flutter build ipa --release --export-options-plist=$IOS_EXPORT_OPTIONS_PATH --build-name ${{ steps.create-build-version.outputs.VERSION_NAME }} --build-number ${{ steps.create-build-number.outputs.BUILD_NUMBER }}
+      - name: Install APP Store auth key
+        if: ${{ github.ref_name == 'master' }}
+        working-directory: ./app
+        run: |
+          APP_STORE_AUTH_KEY_ID=${{ secrets.APP_STORE_AUTH_KEY_ID }}
+          APP_STORE_AUTH_KEY_BASE64=${{ secrets.APP_STORE_AUTH_KEY_BASE64 }}
+
+          APP_STORE_AUTH_KEY_PATH=./AuthKey_$APP_STORE_AUTH_KEY_ID.p8
+
+          # Construct file from base64
+          echo -n "$APP_STORE_AUTH_KEY_BASE64" | base64 --decode --output $APP_STORE_AUTH_KEY_PATH
+
+          # Install APP Store Auth key
+          mkdir -p ./private_keys
+          cp $APP_STORE_AUTH_KEY_PATH ./private_keys
+      - name: Validate iOS app
+        if: ${{ github.ref_name == 'master' }}
+        working-directory: ./app
+        run: |
+          xcrun altool --validate-app -f build/ios/ipa/workout_app.ipa -t ios --apiKey ${{ secrets.IOS_UPLOAD_APIKEY_ID }} --apiIssuer ${{ secrets.IOS_UPLOAD_APIKEY_ISSUER_ID }}
+      - name: Upload iOS app
+        if: ${{ github.ref_name == 'master' }}
+        working-directory: ./app
+        run: |
+          xcrun altool --upload-app -f build/ios/ipa/workout_app.ipa -t ios --apiKey ${{ secrets.IOS_UPLOAD_APIKEY_ID }} --apiIssuer ${{ secrets.IOS_UPLOAD_APIKEY_ISSUER_ID }}
+      - name: Clean up
+        if: ${{ always() }}
+        run: |
+          security delete-keychain $RUNNER_TEMP/app.keychain-db
+          rm -rf ~/Library/MobileDevice/Provisioning\ Profiles
+          rm -rf ./app/private_keys
