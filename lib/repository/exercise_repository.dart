@@ -1,3 +1,5 @@
+import 'package:workout_app/database/model/exercise_statistic_entity.dart';
+
 import '../database/dao/dao_provider_mixin.dart';
 import '../database/dao/dao_result.dart';
 import '../database/dao/exercise_dao.dart';
@@ -7,9 +9,11 @@ import '../database/model/exercise_entity.dart';
 import '../database/model/weight_training_set_entity.dart';
 import '../database/model/workout_detail_entity.dart';
 import '../model/exercise.dart';
+import '../model/exercise_statistic.dart';
 import '../model/result.dart';
 import '../model/workout.dart';
 import 'factory/exercise_factory.dart';
+import 'factory/exercise_statistic_factory.dart';
 import 'factory/workout_type_entity_factory.dart';
 
 class ExerciseRepository with DaoProviderMixin {
@@ -169,5 +173,14 @@ class ExerciseRepository with DaoProviderMixin {
     );
 
     return daoResult.asResult();
+  }
+
+  Future<Result<ExerciseStatistic>> getExerciseStatistic(int exerciseId) async {
+    final DaoResult<ExerciseStatisticEntity> daoResult =
+        await weightTrainingSetDao.getStatistic(exerciseId);
+
+    return daoResult.asResult(
+      convert: (data) => ExerciseStatisticFactory.createExerciseStatistic(data),
+    );
   }
 }

@@ -76,6 +76,10 @@
   "@actionItemDelete": {
     "description": "Text for delete action item"
   },
+  "actionItemInfo": "Info",
+  "@actionItemInfo": {
+    "description": "Text for info action item"
+  },
 
   "createExerciseDialogTitle": "Create Exercise",
   "@createExerciseDialogTitle": {

@@ -19,6 +19,7 @@
   "actionItemEdit": "編輯",
   "actionItemRename": "重新命名",
   "actionItemDelete": "刪除",
+  "actionItemInfo": "資訊",
 
   "createExerciseDialogTitle": "新增項目",
   "editExerciseDialogTitle": "編輯項目",

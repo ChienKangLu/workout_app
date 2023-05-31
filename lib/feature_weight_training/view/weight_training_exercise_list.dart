@@ -9,13 +9,13 @@ class WeightTrainingExerciseList extends StatelessWidget {
     required this.editableExercises,
     required this.onAddSet,
     required this.onEditSet,
-    required this.onRemoveExercise,
+    required this.onMoreButtonClicked,
   }) : super(key: key);
 
   final List<EditableExercise> editableExercises;
   final void Function(EditableExercise) onAddSet;
   final void Function(EditableExerciseSet) onEditSet;
-  final void Function(int) onRemoveExercise;
+  final void Function(int) onMoreButtonClicked;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class WeightTrainingExerciseList extends StatelessWidget {
               editableExercise: exercise,
               onAddSet: onAddSet,
               onEditSet: onEditSet,
-              onRemoveExercise: onRemoveExercise,
+              onMoreButtonClicked: onMoreButtonClicked,
             ),
           )
           .toList(),

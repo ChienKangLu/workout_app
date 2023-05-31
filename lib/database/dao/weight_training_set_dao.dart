@@ -1,3 +1,5 @@
+import '../../util/log_util.dart';
+import '../model/exercise_statistic_entity.dart';
 import '../model/weight_training_set_entity.dart';
 import '../schema.dart';
 import 'dao_filter.dart';
@@ -51,6 +53,42 @@ class WeightTrainingSetDao
         endDateTime: entity.endDateTime,
       ),
     );
+  }
+
+  Future<DaoResult<ExerciseStatisticEntity>> getStatistic(
+    int exerciseId,
+  ) async {
+    try {
+      final maps = await database.rawQuery("""
+      SELECT statistic.exercise_id, ${ExerciseTable.name}.${ExerciseTable.columnExerciseName}, max FROM 
+        (
+          SELECT 
+            ${WeightTrainingSetTable.columnExerciseId}, 
+            MAX(${WeightTrainingSetTable.columnBaseWeight}+${WeightTrainingSetTable.columnSideWeight} * 2) as ${ExerciseStatisticEntity.columnMax} 
+          FROM ${WeightTrainingSetTable.name} 
+          WHERE ${WeightTrainingSetTable.columnExerciseId} = $exerciseId 
+          GROUP BY ${WeightTrainingSetTable.columnExerciseId}
+        ) as statistic 
+        LEFT JOIN ${ExerciseTable.name} 
+        ON statistic.exercise_id = ${ExerciseTable.name}.${ExerciseTable.columnExerciseId};
+      """);
+
+      if (maps.isEmpty) {
+        return DaoError(Exception());
+        // return DaoSuccess(
+        //   ExerciseStatisticEntity(
+        //     name: "",
+        //     exerciseId: exerciseId,
+        //     max: 0,
+        //   ),
+        // );
+      }
+
+      return DaoSuccess(ExerciseStatisticEntity.fromMap(maps.first));
+    } on Exception catch (e) {
+      Log.e(tag, "Cannot getStatistic with exercise_id '$exerciseId'", e);
+      return DaoError(e);
+    }
   }
 
   Future<int> _getLastSetNum(

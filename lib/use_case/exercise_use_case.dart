@@ -1,4 +1,5 @@
 import '../model/exercise.dart';
+import '../model/exercise_statistic.dart';
 import '../model/result.dart';
 import '../model/workout.dart';
 import '../repository/exercise_repository.dart';
@@ -55,5 +56,20 @@ class ExerciseUseCase {
     }
 
     return true;
+  }
+
+  Future<ExerciseStatistic?> getExerciseStatistic(int exerciseId) async {
+    final Result<ExerciseStatistic> result =
+        await _exerciseRepository.getExerciseStatistic(exerciseId);
+    if (result is Error<ExerciseStatistic>) {
+      Log.e(
+        _tag,
+        "Error happens while get exercise statistic",
+        result.exception,
+      );
+      return null;
+    }
+
+    return (result as Success<ExerciseStatistic>).data;
   }
 }
