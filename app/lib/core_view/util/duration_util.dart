@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../util/localization_util.dart';
-
 class DurationUtil {
   static String displayText(BuildContext context, Duration duration) {
     final hours = duration.inHours.remainder(24).toString().padLeft(2, "0");
