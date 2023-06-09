@@ -13,13 +13,13 @@ class WeightTrainingExercise extends StatelessWidget {
     required this.editableExercise,
     required this.onAddSet,
     required this.onEditSet,
-    required this.onRemoveExercise,
+    required this.onMoreButtonClicked,
   }) : super(key: key);
 
   final EditableExercise editableExercise;
   final void Function(EditableExercise) onAddSet;
   final void Function(EditableExerciseSet) onEditSet;
-  final void Function(int) onRemoveExercise;
+  final void Function(int) onMoreButtonClicked;
 
   @override
   Widget build(BuildContext context) {
@@ -45,9 +45,9 @@ class WeightTrainingExercise extends StatelessWidget {
                     ),
                     if (uiMode == UiMode.edit)
                       IconButton(
-                        icon: const Icon(Icons.delete),
+                        icon: const Icon(Icons.more_horiz),
                         onPressed: () =>
-                            onRemoveExercise(editableExercise.exerciseId),
+                            onMoreButtonClicked(editableExercise.exerciseId),
                       ),
                   ],
                 ),

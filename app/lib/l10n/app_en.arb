@@ -76,6 +76,10 @@
   "@actionItemDelete": {
     "description": "Text for delete action item"
   },
+  "actionItemStatistic": "Statistic",
+  "@actionItemStatistic": {
+    "description": "Text for statistic action item"
+  },
 
   "createExerciseDialogTitle": "Create Exercise",
   "@createExerciseDialogTitle": {
@@ -180,5 +184,14 @@
   "settingWorkoutEditExerciseTitle": "Edit Exercises",
   "@settingWorkoutEditExerciseTitle": {
     "description": "Title for setting exercise"
+  },
+
+  "maxWeightChartTitle": "Max weight per month (kg)",
+  "@maxWeightChartTitle": {
+    "description": "Title for max weight chart"
+  },
+  "maxWeightChartEmptyDescription": "No Weight Data",
+  "@maxWeightChartEmptyDescription": {
+    "description": "Title for empty weight data description"
   }
 }

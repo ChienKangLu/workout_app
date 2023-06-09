@@ -19,3 +19,50 @@ class DateTimeDisplayHelper {
     return format.format(dateTime);
   }
 }
+
+extension IntExtension on int {
+  String toMonthString() {
+    final String text;
+    switch (this) {
+      case 1:
+        text = 'Jan';
+        break;
+      case 2:
+        text = 'Feb';
+        break;
+      case 3:
+        text = 'Mar';
+        break;
+      case 4:
+        text = 'Apr';
+        break;
+      case 5:
+        text = 'May';
+        break;
+      case 6:
+        text = 'Jun';
+        break;
+      case 7:
+        text = 'Jul';
+        break;
+      case 8:
+        text = 'Aug';
+        break;
+      case 9:
+        text = 'Sep';
+        break;
+      case 10:
+        text = 'Oct';
+        break;
+      case 11:
+        text = 'Nov';
+        break;
+      case 12:
+        text = 'Dec';
+        break;
+      default:
+        text = '';
+    }
+    return text;
+  }
+}

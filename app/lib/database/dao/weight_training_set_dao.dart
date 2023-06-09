@@ -1,3 +1,5 @@
+import '../../util/log_util.dart';
+import '../model/exercise_statistic_entity.dart';
 import '../model/weight_training_set_entity.dart';
 import '../schema.dart';
 import 'dao_filter.dart';
@@ -51,6 +53,51 @@ class WeightTrainingSetDao
         endDateTime: entity.endDateTime,
       ),
     );
+  }
+
+  Future<DaoResult<ExerciseStatisticEntity>> getStatistic(
+    int exerciseId,
+  ) async {
+    try {
+      final monthlyMaxWeightEntities =
+          await getMonthlyMaxWeightEntities(exerciseId);
+      return DaoSuccess(ExerciseStatisticEntity(
+        monthlyMaxWeightEntities: monthlyMaxWeightEntities,
+      ));
+    } on Exception catch (e) {
+      Log.e(tag, "Cannot getStatistic with exercise_id '$exerciseId'", e);
+      return DaoError(e);
+    }
+  }
+
+  Future<List<MonthlyMaxWeightEntity>> getMonthlyMaxWeightEntities(
+    int exerciseId,
+  ) async {
+    try {
+      final maps = await database.rawQuery("""
+      SELECT 
+        max(${WeightTrainingSetTable.columnBaseWeight} + 2 * ${WeightTrainingSetTable.columnSideWeight}) as ${MonthlyMaxWeightEntity.columnTotalWeight},
+        ${WeightTrainingSetTable.columnSetEndDateTime},
+        CAST(strftime('%Y', ${WeightTrainingSetTable.columnSetEndDateTime} / 1000, 'unixepoch', 'localtime') AS INTEGER) as ${MonthlyMaxWeightEntity.columnYear},
+        CAST(ltrim(strftime('%m', ${WeightTrainingSetTable.columnSetEndDateTime} / 1000, 'unixepoch', 'localtime'), "0") AS INTEGER) as ${MonthlyMaxWeightEntity.columnMonth}
+      FROM ${WeightTrainingSetTable.name} 
+      WHERE ${WeightTrainingSetTable.columnExerciseId} = $exerciseId
+      GROUP BY ${MonthlyMaxWeightEntity.columnYear}, ${MonthlyMaxWeightEntity.columnMonth}
+      """);
+
+      final results = <MonthlyMaxWeightEntity>[];
+      for (final map in maps) {
+        results.add(MonthlyMaxWeightEntity.fromMap(map));
+      }
+
+      return results;
+    } on Exception catch (e) {
+      Log.e(
+          tag,
+          "Cannot getMaxWeightMonthlyHistory with exercise_id '$exerciseId'",
+          e);
+      return [];
+    }
   }
 
   Future<int> _getLastSetNum(
