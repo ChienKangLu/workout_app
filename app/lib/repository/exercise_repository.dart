@@ -4,15 +4,35 @@ import '../database/dao/exercise_dao.dart';
 import '../database/dao/weight_training_set_dao.dart';
 import '../database/dao/workout_detail_dao.dart';
 import '../database/model/exercise_entity.dart';
+import '../database/model/exercise_statistic_entity.dart';
 import '../database/model/weight_training_set_entity.dart';
 import '../database/model/workout_detail_entity.dart';
 import '../model/exercise.dart';
+import '../model/exercise_statistic.dart';
 import '../model/result.dart';
 import '../model/workout.dart';
 import 'factory/exercise_factory.dart';
+import 'factory/exercise_statistic_factory.dart';
 import 'factory/workout_type_entity_factory.dart';
 
 class ExerciseRepository with DaoProviderMixin {
+  Future<Result<Exercise?>> getExercise(int exerciseId) async {
+    final DaoResult<List<ExerciseEntity>> daoResult =
+        await exerciseDao.findByFilter(
+      ExerciseEntityFilter(id: exerciseId),
+    );
+
+    return daoResult.asResult(
+      convert: (data) {
+        if (data.isEmpty) {
+          return null;
+        }
+
+        return  ExerciseFactory.createExercise(data.first);
+      }
+    );
+  }
+
   Future<Result<List<Exercise>>> getExercises(WorkoutType type) async {
     final workoutTypeEntity = WorkoutTypeEntityFactory.fromType(type);
     final DaoResult<List<ExerciseEntity>> daoResult =
@@ -169,5 +189,14 @@ class ExerciseRepository with DaoProviderMixin {
     );
 
     return daoResult.asResult();
+  }
+
+  Future<Result<ExerciseStatistic>> getStatistic(int exerciseId) async {
+    final DaoResult<ExerciseStatisticEntity> daoResult =
+        await weightTrainingSetDao.getStatistic(exerciseId);
+
+    return daoResult.asResult(
+      convert: (data) => ExerciseStatisticFactory.createExerciseStatistic(data),
+    );
   }
 }

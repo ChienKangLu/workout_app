@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../core_view/action_bottom_sheet.dart';
 import '../core_view/ui_mode.dart';
 import '../core_view/ui_mode_view_model.dart';
 import '../core_view/util/sheet_util.dart';
+import '../feature_exercise_statistic/exercise_statistic_page.dart';
+import '../util/localization_util.dart';
 import 'setting_exercise_view_model.dart';
 import 'ui_state/exercise_option_list_ui_state.dart';
 import 'view/create_exercise_dialog.dart';
 import 'view/edit_exercise_dialog.dart';
 import 'view/exercise_option_list.dart';
-import 'view/setting_action_sheet.dart';
 import 'view/setting_exercise_page_app_bar.dart';
 
 class SettingExercisePage extends StatefulWidget {
@@ -98,10 +100,35 @@ class _SettingExercisePageState extends State<SettingExercisePage> {
   void _onMoreItemClick(ExerciseOption exerciseOption) {
     SheetUtil.showSheet(
       context: context,
-      builder: (context) => SettingActionSheet(
-        onRenameItemClicked: () => _onRenameItemClicked(exerciseOption),
-        onDeleteItemClicked: () => _onDeleteItemClicked(exerciseOption),
+      builder: (context) => ActionBottomSheet(
+        actionItems: [
+          ActionItem(
+            title: LocalizationUtil.localize(context).actionItemStatistic,
+            onItemClicked: () => _onStatisticButtonClicked(exerciseOption.exerciseId,),
+          ),
+          ActionItem(
+            title: LocalizationUtil.localize(context).actionItemRename,
+            onItemClicked: () => _onRenameItemClicked(exerciseOption),
+          ),
+          ActionItem(
+            title: LocalizationUtil.localize(context).actionItemDelete,
+            onItemClicked: () => _onDeleteItemClicked(exerciseOption),
+          ),
+        ],
       ),
+    );
+  }
+
+  void _onStatisticButtonClicked(int exerciseId) async {
+    Navigator.of(context).pop();
+    _openExerciseStatisticPage(exerciseId);
+  }
+
+  void _openExerciseStatisticPage(int exerciseId) async {
+    await Navigator.pushNamed(
+      context,
+      ExerciseStatisticPage.routeName,
+      arguments: exerciseId,
     );
   }
 

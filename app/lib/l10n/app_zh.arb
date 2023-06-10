@@ -19,6 +19,7 @@
   "actionItemEdit": "編輯",
   "actionItemRename": "重新命名",
   "actionItemDelete": "刪除",
+  "actionItemStatistic": "統計",
 
   "createExerciseDialogTitle": "新增項目",
   "editExerciseDialogTitle": "編輯項目",
@@ -44,5 +45,8 @@
   "sideWeightTitle": "單邊重量",
 
   "settingPageTitle": "設定",
-  "settingWorkoutTitle": "運動"
+  "settingWorkoutTitle": "運動",
+
+  "maxWeightChartTitle": "每月最大重量（kg）",
+  "maxWeightChartEmptyDescription": "無重量資料"
 }

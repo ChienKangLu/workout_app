@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../core_view/action_bottom_sheet.dart';
 import '../core_view/confirm_dialog.dart';
 import '../core_view/ui_mode.dart';
 import '../core_view/ui_mode_view_model.dart';
 import '../core_view/util/sheet_util.dart';
 import '../core_view/workout_status.dart';
+import '../feature_exercise_statistic/exercise_statistic_page.dart';
 import '../feature_setting_exercise/view/create_exercise_dialog.dart';
 import '../themes/workout_app_theme_data.dart';
 import '../util/localization_util.dart';
@@ -13,7 +15,6 @@ import '../util/weight_unit_convertor.dart';
 import 'ui_state/weight_training_ui_state.dart';
 import 'view/edit_set_sheet.dart';
 import 'view/exercise_option_dialog.dart';
-import 'view/weight_training_action_sheet.dart';
 import 'view/weight_training_control_panel.dart';
 import 'view/weight_training_exercise_list.dart';
 import 'view/weight_training_page_app_bar.dart';
@@ -81,9 +82,12 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
   void _onMoreItemClicked() {
     SheetUtil.showSheet(
       context: context,
-      builder: (context) => WeightTrainingActionSheet(
-        onEditItemClicked: _onEditItemClicked,
-      ),
+      builder: (context) => ActionBottomSheet(actionItems: [
+        ActionItem(
+          title: LocalizationUtil.localize(context).actionItemEdit,
+          onItemClicked: _onEditItemClicked,
+        ),
+      ]),
     );
   }
 
@@ -205,6 +209,7 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
   }
 
   void _onRemoveExercise(int exerciseId) async {
+    Navigator.of(context).pop();
     final shouldRemoveExercise = await showDialog<bool>(
       context: context,
       builder: (context) => ConfirmDialog(
@@ -222,6 +227,35 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
     }
 
     _model.removeExerciseFromWorkout(exerciseId);
+  }
+
+  void _onStatisticButtonClicked(int exerciseId) async {
+    Navigator.of(context).pop();
+    _openExerciseStatisticPage(exerciseId);
+  }
+
+  void onExerciseListMoreButtonClicked(int exerciseId) {
+    SheetUtil.showSheet(
+      context: context,
+      builder: (context) => ActionBottomSheet(actionItems: [
+        ActionItem(
+          title: LocalizationUtil.localize(context).actionItemStatistic,
+          onItemClicked: () => _onStatisticButtonClicked(exerciseId),
+        ),
+        ActionItem(
+          title: LocalizationUtil.localize(context).actionItemDelete,
+          onItemClicked: () => _onRemoveExercise(exerciseId),
+        ),
+      ]),
+    );
+  }
+
+  void _openExerciseStatisticPage(int exerciseId) async {
+    await Navigator.pushNamed(
+      context,
+      ExerciseStatisticPage.routeName,
+      arguments: exerciseId,
+    );
   }
 
   @override
@@ -277,7 +311,7 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
                           editableWeightTraining.editableExercises,
                       onAddSet: _onAddSet,
                       onEditSet: _onEditSet,
-                      onRemoveExercise: _onRemoveExercise,
+                      onMoreButtonClicked: onExerciseListMoreButtonClicked,
                     ),
                     const SizedBox(height: 16),
                   ],

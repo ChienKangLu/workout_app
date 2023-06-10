@@ -7,7 +7,7 @@ class ListItem extends StatelessWidget {
     this.trailing,
     required this.text,
     this.color,
-    required this.onTap,
+    this.onTap,
     this.onLongPress,
   }) : super(key: key);
 
@@ -15,7 +15,7 @@ class ListItem extends StatelessWidget {
   final Widget? trailing;
   final String text;
   final Color? color;
-  final void Function() onTap;
+  final void Function()? onTap;
   final void Function()? onLongPress;
 
   @override
