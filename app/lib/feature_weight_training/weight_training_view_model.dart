@@ -159,14 +159,21 @@ class WeightTrainingViewModel extends ViewModel {
     }
   }
 
-  Future<void> createExercise(String name) async {
-    final result = await _exerciseUseCase.createExercise(name);
-    if (result == false) {
-      return;
+  Future<int?> createExercise(
+    String name, {
+    bool updateState = false,
+  }) async {
+    final exerciseId = await _exerciseUseCase.createExercise(name);
+    if (exerciseId == null) {
+      return null;
     }
 
-    await _updateExerciseOptionListUiState();
-    stateChange();
+    if (updateState) {
+      await _updateExerciseOptionListUiState();
+      stateChange();
+    }
+
+    return exerciseId;
   }
 
   Future<void> addExercise(int exerciseId) async {
@@ -180,8 +187,8 @@ class WeightTrainingViewModel extends ViewModel {
   }
 
   Future<void> removeExerciseFromWorkout(int exerciseId) async {
-    final result =
-        await _exerciseRepository.removeExerciseFromWorkout(workoutId, exerciseId);
+    final result = await _exerciseRepository.removeExerciseFromWorkout(
+        workoutId, exerciseId);
     if (result is Error) {
       return;
     }

@@ -38,14 +38,14 @@ class ExerciseUseCase {
     return (result as Success<List<Exercise>>).data;
   }
 
-  Future<bool> createExercise(String name) async {
+  Future<int?> createExercise(String name) async {
     final result = await _exerciseRepository.createExercise(
         WorkoutType.weightTraining, name);
     if (result is Error) {
-      return false;
+      return null;
     }
 
-    return true;
+    return (result as Success<int>).data;
   }
 
   Future<bool> removeExercises(List<int> exerciseIds) async {
