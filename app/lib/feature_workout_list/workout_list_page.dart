@@ -129,8 +129,11 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
   }
 
   void _onAddItemClicked() async {
-    await _model.createWorkout(WorkoutCategory.weightTraining);
-    await _reload();
+    const category = WorkoutCategory.weightTraining;
+    final workoutId = await _model.createWorkout(category);
+    if (workoutId != null) {
+      _openPage(category, workoutId);
+    }
   }
 
   @override
