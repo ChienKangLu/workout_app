@@ -137,7 +137,10 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
       return;
     }
 
-    await _model.createExercise(exerciseName);
+    final exerciseId = await _model.createExercise(exerciseName);
+    if (exerciseId != null) {
+      await _model.addExercise(exerciseId);
+    }
   }
 
   void _onExerciseSelected(int exerciseTypeId) async {

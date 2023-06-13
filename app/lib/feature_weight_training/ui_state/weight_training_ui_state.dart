@@ -95,7 +95,7 @@ class EditableExerciseSet {
   EditableExerciseSet({
     required this.exerciseId,
     required this.number,
-    required this.weight,
+    required this.displayWeight,
     required this.weightUnit,
     required this.repetition,
     required this.set,
@@ -103,7 +103,7 @@ class EditableExerciseSet {
 
   final int exerciseId;
   final int number;
-  final String weight;
+  final String displayWeight;
   final WeightUnit weightUnit;
   final int repetition;
   final WeightTrainingExerciseSet set;

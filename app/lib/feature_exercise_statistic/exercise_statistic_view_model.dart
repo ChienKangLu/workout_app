@@ -47,7 +47,7 @@ class ExerciseStatisticViewModel extends ViewModel {
             .map(
               (monthlyMaxWeight) => MonthlyMaxWeightData(
                 totalWeight:
-                    NumberUtil.toPrecision(monthlyMaxWeight.totalWeight, 1),
+                    NumberUtil.toPrecision(monthlyMaxWeight.totalWeight, 2),
                 endDateTime: monthlyMaxWeight.endDateTime,
                 year: monthlyMaxWeight.year,
                 month: monthlyMaxWeight.month,

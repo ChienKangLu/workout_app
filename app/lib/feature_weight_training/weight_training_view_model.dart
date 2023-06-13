@@ -1,10 +1,10 @@
 import 'package:collection/collection.dart';
+import '../core_view/util/weight_display_helper.dart';
 
 import '../core_view/util/date_time_display_helper.dart';
 import '../core_view/view_model.dart';
 import '../core_view/workout_category.dart';
 import '../core_view/workout_status.dart';
-import '../model/exercise.dart';
 import '../model/result.dart';
 import '../model/workout.dart';
 import '../repository/exercise_repository.dart';
@@ -69,7 +69,7 @@ class WeightTrainingViewModel extends ViewModel {
                       (index, set) => EditableExerciseSet(
                         exerciseId: exercise.exerciseId,
                         number: index + 1,
-                        weight: _totalWeight(set).toStringAsFixed(1),
+                        displayWeight: set.displayTotalWeight(),
                         weightUnit: set.unit,
                         repetition: set.repetition,
                         set: set,
@@ -159,14 +159,21 @@ class WeightTrainingViewModel extends ViewModel {
     }
   }
 
-  Future<void> createExercise(String name) async {
-    final result = await _exerciseUseCase.createExercise(name);
-    if (result == false) {
-      return;
+  Future<int?> createExercise(
+    String name, {
+    bool updateState = false,
+  }) async {
+    final exerciseId = await _exerciseUseCase.createExercise(name);
+    if (exerciseId == null) {
+      return null;
     }
 
-    await _updateExerciseOptionListUiState();
-    stateChange();
+    if (updateState) {
+      await _updateExerciseOptionListUiState();
+      stateChange();
+    }
+
+    return exerciseId;
   }
 
   Future<void> addExercise(int exerciseId) async {
@@ -180,8 +187,8 @@ class WeightTrainingViewModel extends ViewModel {
   }
 
   Future<void> removeExerciseFromWorkout(int exerciseId) async {
-    final result =
-        await _exerciseRepository.removeExerciseFromWorkout(workoutId, exerciseId);
+    final result = await _exerciseRepository.removeExerciseFromWorkout(
+        workoutId, exerciseId);
     if (result is Error) {
       return;
     }
@@ -250,9 +257,6 @@ class WeightTrainingViewModel extends ViewModel {
     await _updateWeightTrainingUiState();
     stateChange();
   }
-
-  double _totalWeight(WeightTrainingExerciseSet set) =>
-      set.baseWeight + set.sideWeight * 2;
 
   Duration _duration(WeightTraining weightTraining) {
     final startTime = weightTraining.startDateTime;

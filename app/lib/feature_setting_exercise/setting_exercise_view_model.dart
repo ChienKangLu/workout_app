@@ -50,7 +50,7 @@ class SettingExerciseViewModel extends ViewModel
 
   Future<void> createExercise(String name) async {
     final result = await _exerciseUseCase.createExercise(name);
-    if (result == false) {
+    if (result == null) {
       return;
     }
 

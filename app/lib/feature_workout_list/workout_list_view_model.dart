@@ -101,12 +101,12 @@ class WorkoutListViewModel extends ViewModel {
     reload();
   }
 
-  Future<bool> createWorkout(WorkoutCategory category) async {
+  Future<int?> createWorkout(WorkoutCategory category) async {
     final result = await _workoutRepository.createWorkout(category.type);
     if (result is Error) {
-      return false;
+      return null;
     }
 
-    return true;
+    return (result as Success<int>).data;
   }
 }
