@@ -127,8 +127,8 @@ class _MaxWeightChartState extends State<MaxWeightChart> {
     return LineChartData(
       minX: 0,
       maxX: _dataLength.toDouble(),
-      minY: _minWeight - _range / 2,
-      maxY: _maxWeight + _range / 2,
+      minY: _getMinY(),
+      maxY: _getMaxY(),
       titlesData: FlTitlesData(
         rightTitles: AxisTitles(
           sideTitles: SideTitles(showTitles: false),
@@ -186,6 +186,22 @@ class _MaxWeightChartState extends State<MaxWeightChart> {
         ),
       ),
     );
+  }
+
+  double _getMinY() {
+    if (_minWeight == _maxWeight) {
+      return _minWeight - 1;
+    }
+
+    return _minWeight - _range / 2;
+  }
+
+  double _getMaxY() {
+    if (_minWeight == _maxWeight) {
+      return _maxWeight + 1;
+    }
+
+    return _maxWeight + _range / 2;
   }
 
   Widget _bottomTitleWidgets(double value, TitleMeta meta) {
