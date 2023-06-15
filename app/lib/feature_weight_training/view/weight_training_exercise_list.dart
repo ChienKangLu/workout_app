@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core_view/ui_mode.dart';
 import '../ui_state/weight_training_ui_state.dart';
 import 'weight_training_exercise.dart';
 
@@ -15,7 +16,7 @@ class WeightTrainingExerciseList extends StatelessWidget {
   final List<EditableExercise> editableExercises;
   final void Function(EditableExercise) onAddSet;
   final void Function(EditableExerciseSet) onEditSet;
-  final void Function(int) onMoreButtonClicked;
+  final void Function(UiMode, int) onMoreButtonClicked;
 
   @override
   Widget build(BuildContext context) {
