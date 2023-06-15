@@ -190,7 +190,7 @@
   "@maxWeightChartTitle": {
     "description": "Title for max weight chart"
   },
-  "maxWeightChartEmptyDescription": "No Weight Data",
+  "maxWeightChartEmptyDescription": "No Data",
   "@maxWeightChartEmptyDescription": {
     "description": "Title for empty weight data description"
   }

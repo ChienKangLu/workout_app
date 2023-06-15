@@ -90,15 +90,16 @@ class _MaxWeightChartState extends State<MaxWeightChart> {
   Widget _emptyView() {
     return AspectRatio(
       aspectRatio: 1.85,
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Theme.of(context).colorScheme.onSurface),
-          borderRadius: WorkoutAppThemeData.exerciseThumbnailBorderRadius,
-        ),
-        child: Center(
-          child: Text(
-            LocalizationUtil.localize(context).maxWeightChartEmptyDescription,
-          ),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.bar_chart, size: 96),
+            Text(
+              LocalizationUtil.localize(context).maxWeightChartEmptyDescription,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ],
         ),
       ),
     );
