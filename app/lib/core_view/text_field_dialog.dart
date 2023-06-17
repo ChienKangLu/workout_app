@@ -7,10 +7,12 @@ class TextFieldDialog extends StatefulWidget {
   const TextFieldDialog({
     Key? key,
     required this.title,
+    this.text = "",
     required this.hint,
   }) : super(key: key);
 
   final String title;
+  final String text;
   final String hint;
 
   @override
@@ -22,7 +24,14 @@ class _TextFieldDialogState extends State<TextFieldDialog> {
   final _textController = TextEditingController();
 
   String get _title => widget.title;
+  String get _text => widget.text;
   String get _hint => widget.hint;
+
+  @override
+  void initState() {
+    _textController.text = _text;
+    super.initState();
+  }
 
   @override
   void dispose() {

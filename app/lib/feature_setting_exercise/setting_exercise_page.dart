@@ -139,7 +139,9 @@ class _SettingExercisePageState extends State<SettingExercisePage> {
       context: context,
       builder: (context) => ChangeNotifierProvider.value(
         value: _model,
-        child: const EditExerciseDialog(),
+        child: EditExerciseDialog(
+          text: exerciseOption.name,
+        ),
       ),
     );
 
