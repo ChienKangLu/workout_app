@@ -90,15 +90,16 @@ class _MaxWeightChartState extends State<MaxWeightChart> {
   Widget _emptyView() {
     return AspectRatio(
       aspectRatio: 1.85,
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Theme.of(context).colorScheme.onSurface),
-          borderRadius: WorkoutAppThemeData.exerciseThumbnailBorderRadius,
-        ),
-        child: Center(
-          child: Text(
-            LocalizationUtil.localize(context).maxWeightChartEmptyDescription,
-          ),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.bar_chart, size: 96),
+            Text(
+              LocalizationUtil.localize(context).maxWeightChartEmptyDescription,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ],
         ),
       ),
     );
@@ -127,8 +128,8 @@ class _MaxWeightChartState extends State<MaxWeightChart> {
     return LineChartData(
       minX: 0,
       maxX: _dataLength.toDouble(),
-      minY: _minWeight - _range / 2,
-      maxY: _maxWeight + _range / 2,
+      minY: _getMinY(),
+      maxY: _getMaxY(),
       titlesData: FlTitlesData(
         rightTitles: AxisTitles(
           sideTitles: SideTitles(showTitles: false),
@@ -186,6 +187,22 @@ class _MaxWeightChartState extends State<MaxWeightChart> {
         ),
       ),
     );
+  }
+
+  double _getMinY() {
+    if (_minWeight == _maxWeight) {
+      return _minWeight - 1;
+    }
+
+    return _minWeight - _range / 2;
+  }
+
+  double _getMaxY() {
+    if (_minWeight == _maxWeight) {
+      return _maxWeight + 1;
+    }
+
+    return _maxWeight + _range / 2;
   }
 
   Widget _bottomTitleWidgets(double value, TitleMeta meta) {

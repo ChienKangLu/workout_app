@@ -19,6 +19,10 @@
   "@workoutStatusInProgress": {
     "description": "Text for workout item which is in progress"
   },
+  "workoutListEmptyDescription": "Tap the + button to enjoy your workout",
+  "@workoutListEmptyDescription": {
+    "description": "Title for empty workout description"
+  },
   "navigationHomeTitle": "Home",
   "@navigationHomeTitle": {
     "description": "Text for navigation home"
@@ -190,7 +194,7 @@
   "@maxWeightChartTitle": {
     "description": "Title for max weight chart"
   },
-  "maxWeightChartEmptyDescription": "No Weight Data",
+  "maxWeightChartEmptyDescription": "No Data",
   "@maxWeightChartEmptyDescription": {
     "description": "Title for empty weight data description"
   }

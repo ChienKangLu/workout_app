@@ -237,7 +237,7 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
     _openExerciseStatisticPage(exerciseId);
   }
 
-  void onExerciseListMoreButtonClicked(int exerciseId) {
+  void onExerciseListMoreButtonClicked(UiMode uiMode, int exerciseId) {
     SheetUtil.showSheet(
       context: context,
       builder: (context) => ActionBottomSheet(actionItems: [
@@ -245,10 +245,11 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
           title: LocalizationUtil.localize(context).actionItemStatistic,
           onItemClicked: () => _onStatisticButtonClicked(exerciseId),
         ),
-        ActionItem(
-          title: LocalizationUtil.localize(context).actionItemDelete,
-          onItemClicked: () => _onRemoveExercise(exerciseId),
-        ),
+        if (uiMode == UiMode.edit)
+          ActionItem(
+            title: LocalizationUtil.localize(context).actionItemDelete,
+            onItemClicked: () => _onRemoveExercise(exerciseId),
+          ),
       ]),
     );
   }
