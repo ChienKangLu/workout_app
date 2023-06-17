@@ -5,6 +5,7 @@ import '../../core_view/ui_mode.dart';
 import '../../core_view/ui_mode_view_model.dart';
 import '../../core_view/workout_status.dart';
 import '../../themes/workout_app_theme_data.dart';
+import '../../util/assets.dart';
 import '../../util/localization_util.dart';
 import '../ui_state/workout_list_ui_state.dart';
 import 'exercise_thumbnail_list.dart';
@@ -21,11 +22,13 @@ class WorkoutList extends StatelessWidget {
   final void Function(ReadableWorkout) onItemClick;
   final void Function(ReadableWorkout) onItemLongClick;
 
+  bool get _isEmpty => workoutListState.readableWorkouts.isEmpty;
+
   @override
   Widget build(BuildContext context) {
     return _listContainer(
       context,
-      child: _listView(context),
+      child: _isEmpty ? _emptyView(context) : _listView(context),
     );
   }
 
@@ -33,6 +36,25 @@ class WorkoutList extends StatelessWidget {
     return Container(
       color: Theme.of(context).colorScheme.background,
       child: child,
+    );
+  }
+
+  Widget _emptyView(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset(
+            Assets.kettlebells,
+            width: 150,
+          ),
+          const SizedBox(height: 10),
+          Text(
+            LocalizationUtil.localize(context).workoutListEmptyDescription,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ],
+      ),
     );
   }
 
@@ -50,7 +72,10 @@ class WorkoutList extends StatelessWidget {
               onItemLongClick: () => onItemLongClick(readableWorkout),
             ),
             if (index != workoutListState.readableWorkouts.length - 1)
-              Divider(height: 1, color: Theme.of(context).colorScheme.surfaceVariant,)
+              Divider(
+                height: 1,
+                color: Theme.of(context).colorScheme.surfaceVariant,
+              )
           ],
         );
       },

@@ -4,6 +4,7 @@
   "emptyWorkoutText": "無運動",
   "workoutStatusCreated": "開始運動吧",
   "workoutStatusInProgress": "運動中",
+  "workoutListEmptyDescription": "點擊[+]按鈕建立運動",
   "navigationHomeTitle": "首頁",
   "navigationWaterTitle": "水",
   "navigationFoodTitle": "食物",

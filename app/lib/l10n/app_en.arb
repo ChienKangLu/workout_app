@@ -19,6 +19,10 @@
   "@workoutStatusInProgress": {
     "description": "Text for workout item which is in progress"
   },
+  "workoutListEmptyDescription": "Tap the + button to enjoy your workout",
+  "@workoutListEmptyDescription": {
+    "description": "Title for empty workout description"
+  },
   "navigationHomeTitle": "Home",
   "@navigationHomeTitle": {
     "description": "Text for navigation home"
