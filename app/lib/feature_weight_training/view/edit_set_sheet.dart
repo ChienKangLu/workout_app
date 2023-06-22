@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core_view/util/weight_display_helper.dart';
 import '../../model/unit.dart';
 import '../../util/localization_util.dart';
+import '../../util/weight_unit_convertor.dart';
 
 abstract class EditSetData {}
 
@@ -50,21 +51,24 @@ class _EditSetSheetState extends State<EditSetSheet> {
   late final TextEditingController _baseWeightController;
   late final TextEditingController _sideWeightController;
 
-  final weightUnits = [WeightUnit.kilogram, WeightUnit.pound];
-  WeightUnit baseWeightUnit = WeightUnit.kilogram;
-  WeightUnit sideWeightUnit = WeightUnit.kilogram;
+  final _weightUnits = [WeightUnit.kilogram, WeightUnit.pound];
+  WeightUnit _baseWeightUnit = WeightUnit.kilogram;
+  WeightUnit _sideWeightUnit = WeightUnit.kilogram;
 
-  String get title => widget.title;
-  bool get allowRemove => widget.removeAllowed;
-  int? get repetition => widget.repetition;
-  double? get baseWeight => widget.baseWeight;
-  double? get sideWeight => widget.sideWeight;
+  String get _title => widget.title;
+  bool get _allowRemove => widget.removeAllowed;
+  int? get _repetition => widget.repetition;
+  double? get _baseWeight => widget.baseWeight;
+  double? get _sideWeight => widget.sideWeight;
 
   @override
   void initState() {
-    _repetitionController = TextEditingController(text: repetition?.toString());
-    _baseWeightController = TextEditingController(text: baseWeight?.toString());
-    _sideWeightController = TextEditingController(text: sideWeight?.toString());
+    _repetitionController =
+        TextEditingController(text: _repetition?.toString());
+    _baseWeightController =
+        TextEditingController(text: _baseWeight?.toString());
+    _sideWeightController =
+        TextEditingController(text: _sideWeight?.toString());
 
     super.initState();
   }
@@ -93,8 +97,8 @@ class _EditSetSheetState extends State<EditSetSheet> {
         repetition,
         baseWeight,
         sideWeight,
-        baseWeightUnit,
-        sideWeightUnit,
+        _baseWeightUnit,
+        _sideWeightUnit,
       ),
     );
   }
@@ -104,6 +108,34 @@ class _EditSetSheetState extends State<EditSetSheet> {
       context,
       RemoveSetData(),
     );
+  }
+
+  void _unitConvert(
+    TextEditingController controller,
+    WeightUnit unit,
+    WeightUnit newUnit,
+    void Function(WeightUnit newUnit) updateUnit,
+  ) {
+    final text = controller.text;
+    if (text.isEmpty || unit == newUnit) {
+      return;
+    }
+
+    final weight = double.parse(text);
+
+    setState(() {
+      updateUnit(newUnit);
+    });
+
+    final convertedWeight = WeightUnitConvertor.convert(
+      weight,
+      newUnit == WeightUnit.kilogram ? WeightUnit.pound : WeightUnit.kilogram,
+      to: newUnit == WeightUnit.kilogram
+          ? WeightUnit.kilogram
+          : WeightUnit.pound,
+    );
+
+    controller.text = convertedWeight.toString();
   }
 
   @override
@@ -144,11 +176,11 @@ class _EditSetSheetState extends State<EditSetSheet> {
         children: [
           Expanded(
             child: Text(
-              title,
+              _title,
               style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
-          if (allowRemove)
+          if (_allowRemove)
             TextButton(
               onPressed: _onRemoveButtonClicked,
               child: Text(
@@ -180,10 +212,17 @@ class _EditSetSheetState extends State<EditSetSheet> {
       controller: _baseWeightController,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       labelText: LocalizationUtil.localize(context).baseWeightTitle,
-      unit: baseWeightUnit,
-      onPressed: (index) => setState(() {
-        baseWeightUnit = weightUnits[index];
-      }),
+      unit: _baseWeightUnit,
+      onPressed: (index) {
+        _unitConvert(
+          _baseWeightController,
+          _baseWeightUnit,
+          _weightUnits[index],
+          (newUnit) {
+            _baseWeightUnit = newUnit;
+          },
+        );
+      },
     );
   }
 
@@ -192,10 +231,17 @@ class _EditSetSheetState extends State<EditSetSheet> {
       controller: _sideWeightController,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       labelText: LocalizationUtil.localize(context).sideWeightTitle,
-      unit: sideWeightUnit,
-      onPressed: (index) => setState(() {
-        sideWeightUnit = weightUnits[index];
-      }),
+      unit: _sideWeightUnit,
+      onPressed: (index) {
+        _unitConvert(
+          _sideWeightController,
+          _sideWeightUnit,
+          _weightUnits[index],
+          (newUnit) {
+            _sideWeightUnit = newUnit;
+          },
+        );
+      },
     );
   }
 
@@ -265,10 +311,10 @@ class _EditSetSheetState extends State<EditSetSheet> {
         onPressed: onPressed,
         children: [
           Text(
-            weightUnits[0].displayString(context),
+            _weightUnits[0].displayString(context),
           ),
           Text(
-            weightUnits[1].displayString(context),
+            _weightUnits[1].displayString(context),
           ),
         ],
       ),
