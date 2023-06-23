@@ -4,12 +4,15 @@ class DateTimeDisplayHelper {
   static final DateFormat dateTimeFormatter = DateFormat("MMM dd, y 'at' h:mm a");
   static final DateFormat dayFormatter = DateFormat("MMM");
   static final DateFormat dateFormatter = DateFormat("dd");
+  static final DateFormat timeFormatter = DateFormat("hh:mm a");
 
   static String dateTime(DateTime? dateTime) => _format(dateTime, dateTimeFormatter);
 
   static String day(DateTime? dateTime) => _format(dateTime, dayFormatter);
 
   static String date(DateTime? dateTime) => _format(dateTime, dateFormatter);
+
+  static String time(DateTime? dateTime) => _format(dateTime, timeFormatter);
 
   static String _format(DateTime? dateTime, DateFormat format) {
     if (dateTime == null) {
