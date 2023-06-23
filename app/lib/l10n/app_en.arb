@@ -189,6 +189,18 @@
   "@settingWorkoutEditExerciseTitle": {
     "description": "Title for setting exercise"
   },
+  "settingWaterTitle": "Water",
+  "@settingWaterTitle": {
+    "description": "Title for setting water"
+  },
+  "settingWaterGoalTitle": "Daily goal",
+  "@settingWaterGoalTitle": {
+    "description": "Title for setting water goal"
+  },
+  "settingWaterGoalEmptyText": "not set yet",
+  "@settingWaterGoalEmptyText": {
+    "description": "Title for empty setting water goal"
+  },
 
   "maxWeightChartTitle": "Max weight per month (kg)",
   "@maxWeightChartTitle": {
@@ -197,5 +209,54 @@
   "maxWeightChartEmptyDescription": "No Data",
   "@maxWeightChartEmptyDescription": {
     "description": "Title for empty weight data description"
+  },
+
+  "waterProgressTodayTitle": "Today",
+  "@waterProgressTodayTitle": {
+    "description": "Title for water of today"
+  },
+  "waterProgressTabTitle": "Progress",
+  "@waterProgressTabTitle": {
+    "description": "Title for water progress"
+  },
+  "waterLogTabTitle": "Log",
+  "@waterLogTabTitle": {
+    "description": "Title for water log"
+  },
+  "waterSelectionOtherTitle": "Other",
+  "@waterSelectionOtherTitle": {
+    "description": "Title for other selection"
+  },
+  "waterGoalDialogTitle": "Set Goal",
+  "@waterGoalDialogTitle": {
+    "description": "Title for water goal dialog"
+  },
+  "waterGoalTextFieldHint": "goal (ml)",
+  "@waterGoalTextFieldHint": {
+    "description": "Hint for water goal"
+  },
+  "waterInitDescription": "Let's start tracking your water",
+  "@waterInitDescription": {
+    "description": "Title for init water goal"
+  },
+  "waterSetButtonTitle": "Set Goal",
+  "@waterSetButtonTitle": {
+    "description": "Title for set water goal"
+  },
+  "waterDialogTitle": "Enter water",
+  "@waterDialogTitle": {
+    "description": "Title for water dialog"
+  },
+  "waterDialogTextFieldHint": "volume (ml)",
+  "@waterDialogTextFieldHint": {
+    "description": "Hint for water dialog"
+  },
+  "editWaterDialogTitle": "Edit water",
+  "@editWaterDialogTitle": {
+    "description": "Title for edit water dialog"
+  },
+  "editWaterDialogTextFieldHint": "volume (ml)",
+  "@editWaterDialogTextFieldHint": {
+    "description": "Hint for edit water dialog"
   }
 }

@@ -9,11 +9,13 @@ class TextFieldDialog extends StatefulWidget {
     required this.title,
     this.text = "",
     required this.hint,
+    this.keyboardType,
   }) : super(key: key);
 
   final String title;
   final String text;
   final String hint;
+  final TextInputType? keyboardType;
 
   @override
   State<TextFieldDialog> createState() => _TextFieldDialogState();
@@ -26,6 +28,7 @@ class _TextFieldDialogState extends State<TextFieldDialog> {
   String get _title => widget.title;
   String get _text => widget.text;
   String get _hint => widget.hint;
+  TextInputType? get _keyboardType => widget.keyboardType;
 
   @override
   void initState() {
@@ -66,6 +69,7 @@ class _TextFieldDialogState extends State<TextFieldDialog> {
               child: SizedBox(
                 height: 48,
                 child: TextFormField(
+                  keyboardType: _keyboardType,
                   controller: _textController,
                   decoration: InputDecoration(
                     labelText: _hint,

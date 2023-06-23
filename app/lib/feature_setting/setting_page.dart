@@ -4,6 +4,7 @@ import '../feature_setting_exercise/setting_exercise_page.dart';
 import '../util/localization_util.dart';
 import 'view/setting_group_view.dart';
 import 'view/setting_list_tile.dart';
+import 'view/water_setting_group.dart';
 
 class SettingPage extends StatefulWidget {
   static const routeName = "/setting_page";
@@ -43,6 +44,7 @@ class _SettingPageState extends State<SettingPage> {
             ),
           ],
         ),
+        const WaterSettingGroup(),
       ],
     );
   }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../themes/workout_app_theme_data.dart';
-import 'setting_list_tile.dart';
 
 class SettingGroup extends StatelessWidget {
   const SettingGroup({
@@ -11,7 +10,7 @@ class SettingGroup extends StatelessWidget {
   }) : super(key: key);
 
   final String title;
-  final List<SettingListTitle> settingList;
+  final List<Widget> settingList;
 
   @override
   Widget build(BuildContext context) {

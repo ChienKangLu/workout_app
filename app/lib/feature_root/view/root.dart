@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../feature_water/water_page.dart';
 import '../../feature_workout_list/workout_list_page.dart';
 import '../../util/localization_util.dart';
 import '../destination.dart';
@@ -27,7 +28,7 @@ class _RootState extends State<Root> {
     Destination(
       (context) => LocalizationUtil.localize(context).navigationWaterTitle,
       Icons.water_drop_rounded,
-      const Center(child: Text("TODO: Water")),
+      const WaterPage(),
     ),
     Destination(
       (context) => LocalizationUtil.localize(context).navigationFoodTitle,

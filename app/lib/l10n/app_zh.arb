@@ -47,7 +47,20 @@
 
   "settingPageTitle": "設定",
   "settingWorkoutTitle": "運動",
+  "settingWorkoutEditExerciseTitle": "項目",
+  "settingWaterTitle": "水量",
+  "settingWaterTargetTitle": "每日目標",
+  "settingWaterTargetEmptyText": "尚未設定",
 
   "maxWeightChartTitle": "每月最大重量（kg）",
-  "maxWeightChartEmptyDescription": "無資料"
+  "maxWeightChartEmptyDescription": "無資料",
+
+  "waterProgressTodayTitle": "今天",
+  "waterProgressTabTitle": "進度",
+  "waterDetailTabTitle": "紀錄",
+  "waterSelectionOtherTitle": "其他",
+  "waterTargetDialogTitle": "設定目標",
+  "waterTargetTextFieldHint": "水量 (ml)",
+  "waterInitDescription": "開始追蹤喝水進度",
+  "waterSetButtonTitle": "設定目標"
 }

@@ -3,6 +3,8 @@ import 'package:sqflite/sqflite.dart';
 import 'dao/composed_workout_dao.dart';
 import 'dao/exercise_dao.dart';
 import 'dao/running_set_dao.dart';
+import 'dao/water_goal_dao.dart';
+import 'dao/water_log_dao.dart';
 import 'dao/weight_training_set_dao.dart';
 import 'dao/workout_dao.dart';
 import 'dao/workout_detail_dao.dart';
@@ -21,6 +23,8 @@ class WorkoutDatabase {
   final weightTrainingSetDao = WeightTrainingSetDao();
   final runningSetDao = RunningSetDao();
   final composedWorkoutDao = ComposedWorkoutDao();
+  final waterGoalDao = WaterGoalDao();
+  final waterLogDao = WaterLogDao();
 
   late final _initializer = DatabaseInitializer();
   late final _mockDataInitializer = MockDataInitializer();
@@ -40,6 +44,8 @@ class WorkoutDatabase {
     await weightTrainingSetDao.init(_database);
     await runningSetDao.init(_database);
     await composedWorkoutDao.init(_database);
+    await waterGoalDao.init(_database);
+    await waterLogDao.init(_database);
 
     if (_initializer.isFirstCreation && isMockupEnabled) {
       await _mockDataInitializer.initTestData();
