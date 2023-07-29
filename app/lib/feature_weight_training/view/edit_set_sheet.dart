@@ -110,29 +110,39 @@ class _EditSetSheetState extends State<EditSetSheet> {
     );
   }
 
-  void _unitConvert(
+  void _onUnitButtonClicked(
     TextEditingController controller,
     WeightUnit unit,
     WeightUnit newUnit,
     void Function(WeightUnit newUnit) updateUnit,
   ) {
-    final text = controller.text;
-    if (text.isEmpty || unit == newUnit) {
+    if (unit == newUnit) {
       return;
     }
-
-    final weight = double.parse(text);
 
     setState(() {
       updateUnit(newUnit);
     });
 
+    if (_allowRemove) {
+      _convertWeightByUnit(controller, newUnit);
+    }
+  }
+
+  void _convertWeightByUnit(
+    TextEditingController controller,
+    WeightUnit unit,
+  ) {
+    final text = controller.text;
+    final weight = double.tryParse(text);
+    if (weight == null) {
+      return;
+    }
+
     final convertedWeight = WeightUnitConvertor.convert(
       weight,
-      newUnit == WeightUnit.kilogram ? WeightUnit.pound : WeightUnit.kilogram,
-      to: newUnit == WeightUnit.kilogram
-          ? WeightUnit.kilogram
-          : WeightUnit.pound,
+      unit == WeightUnit.kilogram ? WeightUnit.pound : WeightUnit.kilogram,
+      to: unit == WeightUnit.kilogram ? WeightUnit.kilogram : WeightUnit.pound,
     );
 
     controller.text = convertedWeight.toString();
@@ -214,7 +224,7 @@ class _EditSetSheetState extends State<EditSetSheet> {
       labelText: LocalizationUtil.localize(context).baseWeightTitle,
       unit: _baseWeightUnit,
       onPressed: (index) {
-        _unitConvert(
+        _onUnitButtonClicked(
           _baseWeightController,
           _baseWeightUnit,
           _weightUnits[index],
@@ -233,7 +243,7 @@ class _EditSetSheetState extends State<EditSetSheet> {
       labelText: LocalizationUtil.localize(context).sideWeightTitle,
       unit: _sideWeightUnit,
       onPressed: (index) {
-        _unitConvert(
+        _onUnitButtonClicked(
           _sideWeightController,
           _sideWeightUnit,
           _weightUnits[index],
