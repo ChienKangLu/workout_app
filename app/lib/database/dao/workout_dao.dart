@@ -1,150 +1,31 @@
-import 'package:sqflite/sqflite.dart';
-
-import '../../util/log_util.dart';
 import '../model/workout_entity.dart';
-import '../model/workout_type_entity.dart';
 import '../schema.dart';
-import 'base_dao.dart';
-import 'dao_filter.dart';
-import 'dao_result.dart';
+import 'simple_dao.dart';
 
-class WorkoutDao extends BaseDao<WorkoutEntity, WorkoutEntityFilter> {
+class WorkoutDao extends SimpleDao<WorkoutEntity, WorkoutEntityFilter> {
   static const _tag = "WorkoutDao";
-  static const _initWorkoutTypeNum = 0;
 
   @override
-  Future<DaoResult<List<WorkoutEntity>>> findAll() {
-    return findByFilter(null);
-  }
+  String get tag => _tag;
 
   @override
-  Future<DaoResult<List<WorkoutEntity>>> findByFilter(
-    WorkoutEntityFilter? filter,
-  ) async {
-    try {
-      final maps = await database.query(
-        WorkoutTable.name,
-        where: filter?.toWhereClause(),
-      );
-      final results = <WorkoutEntity>[];
-      for (final map in maps) {
-        results.add(WorkoutEntity.fromMap(map));
-      }
-      return DaoSuccess(results);
-    } on Exception catch (e) {
-      Log.e(_tag, "Cannot findByFilter with filter '$filter'", e);
-      return DaoError(e);
-    }
-  }
+  String get tableName => WorkoutTable.name;
 
   @override
-  Future<DaoResult<int>> add(WorkoutEntity entity) async {
-    try {
-      final lastWorkoutTypeNum =
-          await _getLastWorkoutTypeNum(entity.workoutTypeEntity);
-
-      final int workoutTypeNum;
-      if (lastWorkoutTypeNum == -1) {
-        workoutTypeNum = _initWorkoutTypeNum;
-      } else {
-        workoutTypeNum = lastWorkoutTypeNum + 1;
-      }
-
-      final entityMap = entity.toMap();
-      entityMap[WorkoutTable.columnWorkoutTypeNum] = workoutTypeNum;
-
-      final id = await database.insert(
-        WorkoutTable.name,
-        entityMap,
-        conflictAlgorithm: ConflictAlgorithm.ignore,
-      );
-
-      return DaoSuccess(id);
-    } on Exception catch (e) {
-      Log.e(_tag, "Cannot add entity '$entity'", e);
-      return DaoError(e);
-    }
-  }
+  WorkoutEntity createEntityFromMap(Map<String, dynamic> map) =>
+      WorkoutEntity.fromMap(map);
 
   @override
-  Future<DaoResult<bool>> update(WorkoutEntity entity) async {
-    try {
-      final count = await database.update(
-        WorkoutTable.name,
-        entity.toMap(),
-        where: '${WorkoutTable.columnWorkoutId} = ?',
-        whereArgs: [entity.workoutId],
-      );
-
-      if (count != 1) {
-        Log.w(_tag, "update more than one entry");
-      }
-
-      final result = count == 1;
-
-      return DaoSuccess(result);
-    } on Exception catch (e) {
-      Log.e(_tag, "Cannot update entity '$entity'", e);
-      return DaoError(e);
-    }
-  }
-
-  Future<int> _getLastWorkoutTypeNum(
-    WorkoutTypeEntity workoutTypeEntity,
-  ) async {
-    final lastWorkoutTypeNumResults = await database.query(
-      WorkoutTable.name,
-      columns: [WorkoutTable.columnWorkoutTypeNum],
-      where: "${WorkoutTable.columnWorkoutTypeId} = ?",
-      whereArgs: [workoutTypeEntity.id],
-      orderBy: "${WorkoutTable.columnWorkoutTypeNum} DESC",
-      limit: 1,
-    );
-
-    if (lastWorkoutTypeNumResults.isEmpty) {
-      return -1;
-    }
-
-    return lastWorkoutTypeNumResults[0][WorkoutTable.columnWorkoutTypeNum]
-        as int;
-  }
-
-  @override
-  Future<DaoResult<bool>> delete(WorkoutEntityFilter filter) async {
-    try {
-      final count = await database.delete(
-        WorkoutTable.name,
-        where: filter.toWhereClause(),
-      );
-      Log.d(_tag, "Delete $count rows from '${WorkoutTable.name}'");
-
-      return DaoSuccess(true);
-    } on Exception catch (e) {
-      Log.e(_tag, "Cannot findByFilter with filter '$filter'", e);
-      return DaoError(e);
-    }
-  }
+  WorkoutEntityFilter createUpdateFilter(WorkoutEntity entity) =>
+      WorkoutEntityFilter(id: entity.workoutId);
 }
 
-class WorkoutEntityFilter implements DaoFilter {
+class WorkoutEntityFilter extends SimpleEntityFilter {
   WorkoutEntityFilter({
-    required this.workoutIds,
+    super.ids,
+    super.id,
   });
 
-  final List<int> workoutIds;
-
   @override
-  String? toWhereClause() {
-    final where = <String>[];
-    if (workoutIds.isNotEmpty) {
-      final args = workoutIds.join(",");
-      where.add("${WorkoutTable.columnWorkoutId} in ($args)");
-    }
-
-    if (where.isEmpty) {
-      return null;
-    }
-
-    return where.join(" AND ");
-  }
+  String get columnId => WorkoutTable.columnWorkoutId;
 }

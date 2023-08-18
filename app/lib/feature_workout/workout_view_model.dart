@@ -1,9 +1,8 @@
 import 'package:collection/collection.dart';
-import '../core_view/util/weight_display_helper.dart';
 
 import '../core_view/util/date_time_display_helper.dart';
+import '../core_view/util/weight_display_helper.dart';
 import '../core_view/view_model.dart';
-import '../core_view/workout_category.dart';
 import '../core_view/workout_status.dart';
 import '../model/result.dart';
 import '../model/workout.dart';
@@ -13,12 +12,12 @@ import '../repository/workout_repository.dart';
 import '../use_case/exercise_use_case.dart';
 import '../util/log_util.dart';
 import 'ui_state/exercise_option_list_ui_state.dart';
-import 'ui_state/weight_training_ui_state.dart';
+import 'ui_state/workout_ui_state.dart';
 
-class WeightTrainingViewModel extends ViewModel {
-  static const _tag = "WeightTrainingViewModel";
+class WorkoutViewModel extends ViewModel {
+  static const _tag = "WorkoutViewModel";
 
-  WeightTrainingViewModel({
+  WorkoutViewModel({
     required this.workoutId,
   });
 
@@ -29,9 +28,8 @@ class WeightTrainingViewModel extends ViewModel {
       RepositoryManager.instance.exerciseRepository;
   final ExerciseUseCase _exerciseUseCase = ExerciseUseCase();
 
-  WeightTrainingUiState _weightTrainingUiState =
-      WeightTrainingUiState.loading();
-  WeightTrainingUiState get weightTrainingUiState => _weightTrainingUiState;
+  WorkoutUiState _workoutUiState = WorkoutUiState.loading();
+  WorkoutUiState get workoutUiState => _workoutUiState;
 
   ExerciseOptionListUiState _exerciseOptionListUiState =
       ExerciseOptionListUiState.loading();
@@ -40,26 +38,24 @@ class WeightTrainingViewModel extends ViewModel {
 
   @override
   Future<void> init() async {
-    await _updateWeightTrainingUiState();
+    await _updateWorkoutUiState();
     await _updateExerciseOptionListUiState();
     stateChange();
   }
 
-  Future<void> _updateWeightTrainingUiState() async {
-    final weightTraining = await _getWeightTraining();
-    if (weightTraining == null) {
-      _weightTrainingUiState = WeightTrainingUiState.error();
+  Future<void> _updateWorkoutUiState() async {
+    final workout = await _getWorkout();
+    if (workout == null) {
+      _workoutUiState = WorkoutUiState.error();
       return;
     }
 
-    _weightTrainingUiState = WeightTrainingUiState.success(
-      EditableWeightTraining(
-        number: weightTraining.typeNum + 1,
-        category: WorkoutCategory.fromType(weightTraining.type),
+    _workoutUiState = WorkoutUiState.success(
+      EditableWorkout(
         startDateTimeText:
-            DateTimeDisplayHelper.dateTime(weightTraining.startDateTime),
-        duration: _duration(weightTraining),
-        editableExercises: weightTraining.exercises
+            DateTimeDisplayHelper.dateTime(workout.startDateTime),
+        duration: _duration(workout),
+        editableExercises: workout.exercises
             .map(
               (exercise) => EditableExercise(
                 name: exercise.name,
@@ -80,10 +76,10 @@ class WeightTrainingViewModel extends ViewModel {
             )
             .toList(),
         workoutStatus: WorkoutStatus.fromDateTime(
-          weightTraining.startDateTime,
-          weightTraining.endDateTime,
+          workout.startDateTime,
+          workout.endDateTime,
         ),
-        weightTraining: weightTraining,
+        workout: workout,
       ),
     );
   }
@@ -107,7 +103,7 @@ class WeightTrainingViewModel extends ViewModel {
     );
   }
 
-  Future<WeightTraining?> _getWeightTraining() async {
+  Future<Workout?> _getWorkout() async {
     final Result<List<Workout>> result = await _workoutRepository.getWorkouts(
       workoutIds: [workoutId],
     );
@@ -124,37 +120,25 @@ class WeightTrainingViewModel extends ViewModel {
       return null;
     }
 
-    final workout = workouts.first;
-    if (workout is! WeightTraining) {
-      Log.e(_tag, "Workout with id '$workoutId' is not WeightTraining");
-      return null;
-    }
-
-    return workout;
+    return workouts.first;
   }
 
-  Future<void> startWorkout(
-    EditableWeightTraining editableWeightTraining,
-  ) async {
-    final weightTraining = editableWeightTraining.weightTraining
-      ..startDateTime = DateTime.now();
+  Future<void> startWorkout(EditableWorkout editableWorkout) async {
+    final workout = editableWorkout.workout..startDateTime = DateTime.now();
 
-    final result = await _workoutRepository.updateWorkout(weightTraining);
+    final result = await _workoutRepository.updateWorkout(workout);
     if (result is Success) {
-      await _updateWeightTrainingUiState();
+      await _updateWorkoutUiState();
       stateChange();
     }
   }
 
-  Future<void> finishWorkout(
-    EditableWeightTraining editableWeightTraining,
-  ) async {
-    final weightTraining = editableWeightTraining.weightTraining
-      ..endDateTime = DateTime.now();
+  Future<void> finishWorkout(EditableWorkout editableWorkout) async {
+    final workout = editableWorkout.workout..endDateTime = DateTime.now();
 
-    final result = await _workoutRepository.updateWorkout(weightTraining);
+    final result = await _workoutRepository.updateWorkout(workout);
     if (result is Success) {
-      await _updateWeightTrainingUiState();
+      await _updateWorkoutUiState();
       stateChange();
     }
   }
@@ -182,7 +166,7 @@ class WeightTrainingViewModel extends ViewModel {
       return;
     }
 
-    await _updateWeightTrainingUiState();
+    await _updateWorkoutUiState();
     stateChange();
   }
 
@@ -193,7 +177,7 @@ class WeightTrainingViewModel extends ViewModel {
       return;
     }
 
-    await _updateWeightTrainingUiState();
+    await _updateWorkoutUiState();
     stateChange();
   }
 
@@ -203,7 +187,7 @@ class WeightTrainingViewModel extends ViewModel {
     required double sideWeight,
     required int repetition,
   }) async {
-    final result = await _exerciseRepository.addWeightTrainingSet(
+    final result = await _exerciseRepository.addExerciseSet(
       workoutId: workoutId,
       exerciseId: exerciseId,
       baseWeight: baseWeight,
@@ -214,7 +198,7 @@ class WeightTrainingViewModel extends ViewModel {
       return;
     }
 
-    await _updateWeightTrainingUiState();
+    await _updateWorkoutUiState();
     stateChange();
   }
 
@@ -225,7 +209,7 @@ class WeightTrainingViewModel extends ViewModel {
     required double sideWeight,
     required int repetition,
   }) async {
-    final result = await _exerciseRepository.updateWeightTrainingSet(
+    final result = await _exerciseRepository.updateExerciseSet(
       workoutId: workoutId,
       exerciseId: exerciseId,
       setNum: setNum,
@@ -237,7 +221,7 @@ class WeightTrainingViewModel extends ViewModel {
       return;
     }
 
-    await _updateWeightTrainingUiState();
+    await _updateWorkoutUiState();
     stateChange();
   }
 
@@ -245,7 +229,7 @@ class WeightTrainingViewModel extends ViewModel {
     required int exerciseId,
     required int setNum,
   }) async {
-    final result = await _exerciseRepository.removeWeightTrainingSet(
+    final result = await _exerciseRepository.removeExerciseSet(
       workoutId: workoutId,
       exerciseId: exerciseId,
       setNum: setNum,
@@ -254,13 +238,13 @@ class WeightTrainingViewModel extends ViewModel {
       return;
     }
 
-    await _updateWeightTrainingUiState();
+    await _updateWorkoutUiState();
     stateChange();
   }
 
-  Duration _duration(WeightTraining weightTraining) {
-    final startTime = weightTraining.startDateTime;
-    final endTime = weightTraining.endDateTime;
+  Duration _duration(Workout workout) {
+    final startTime = workout.startDateTime;
+    final endTime = workout.endDateTime;
     if (startTime == null || endTime == null) {
       return const Duration(hours: 0);
     }

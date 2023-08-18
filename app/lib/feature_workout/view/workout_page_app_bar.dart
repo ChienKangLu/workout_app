@@ -4,16 +4,18 @@ import 'package:provider/provider.dart';
 import '../../core_view/ui_mode.dart';
 import '../../core_view/ui_mode_view_model.dart';
 import '../../core_view/workout_status.dart';
-import '../weight_training_view_model.dart';
-import 'weight_training_more_action_item.dart';
+import '../workout_view_model.dart';
+import 'app_bar_action_item.dart';
 
-class WeightTrainingPageAppBar extends StatelessWidget
-    implements PreferredSizeWidget {
-  const WeightTrainingPageAppBar({
+class WorkoutPageAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const WorkoutPageAppBar({
     Key? key,
+    required this.number,
     required this.onMoreItemClicked,
     required this.onCloseButtonClicked,
   }) : super(key: key);
+
+  final int number;
 
   final void Function() onMoreItemClicked;
   final void Function() onCloseButtonClicked;
@@ -21,20 +23,20 @@ class WeightTrainingPageAppBar extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     final uiMode = context.watch<UiModeViewModel>().uiMode;
-    final weightTrainingViewModel = context.watch<WeightTrainingViewModel>();
-    final weightTrainingUiState = weightTrainingViewModel.weightTrainingUiState;
+    final workoutViewModel = context.watch<WorkoutViewModel>();
+    final workoutUiState = workoutViewModel.workoutUiState;
 
-    return weightTrainingUiState.run(
+    return workoutUiState.run(
       onLoading: () => const SizedBox(),
       onSuccess: (success) {
-        final editableWeightTraining = success.editableWeightTraining;
-        final workoutStatus = editableWeightTraining.workoutStatus;
+        final editableWorkout = success.editableWorkout;
+        final workoutStatus = editableWorkout.workoutStatus;
         if (workoutStatus == WorkoutStatus.finished && uiMode == UiMode.edit) {
           return _appBarInEditMode(context);
         }
 
-        final title = "#${success.editableWeightTraining.number}";
-        final startDateTimeTitle = editableWeightTraining.startDateTimeText;
+        final title = "#$number";
+        final startDateTimeTitle = editableWorkout.startDateTimeText;
         return _appBarInNormalMode(
           context,
           workoutStatus == WorkoutStatus.finished,
@@ -71,7 +73,7 @@ class WeightTrainingPageAppBar extends StatelessWidget
       ),
       actions: [
         if (isFinished)
-          WeightTrainingAppBarActionItem(
+          AppBarActionItem(
             iconData: Icons.more_horiz,
             onClick: onMoreItemClicked,
           ),

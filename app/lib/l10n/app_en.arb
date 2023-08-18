@@ -36,19 +36,6 @@
     "description": "Text for navigation food"
   },
 
-  "workoutAddPageTitle": "Workout Categories",
-  "@workoutAddPageTitle": {
-    "description": "The title of workout add page"
-  },
-  "workoutCategoryWeightTrainingTitle": "Weight Training",
-  "@workoutCategoryWeightTrainingTitle": {
-    "description": "The title of weight training category"
-  },
-  "workoutCategoryRunningTitle": "Running",
-  "@workoutCategoryRunningTitle": {
-    "description": "The title of running category"
-  },
-
   "repetitionText": "{rep} rep",
   "@repetitionText": {
     "description": "Text for repetition",

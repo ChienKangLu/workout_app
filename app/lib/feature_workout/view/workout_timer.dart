@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../../core_view/util/duration_util.dart';
 
-class WeightTrainingTimer extends StatefulWidget {
-  const WeightTrainingTimer._({
+class WorkoutTimer extends StatefulWidget {
+  const WorkoutTimer._({
     Key? key,
     required this.isTicking,
     this.dateTime,
     this.duration,
   }) : super(key: key);
 
-  const WeightTrainingTimer.ticking({
+  const WorkoutTimer.ticking({
     Key? key,
     required DateTime? dateTime,
   }) : this._(
@@ -19,7 +19,7 @@ class WeightTrainingTimer extends StatefulWidget {
           dateTime: dateTime,
         );
 
-  const WeightTrainingTimer.finished({
+  const WorkoutTimer.finished({
     Key? key,
     required Duration duration,
   }) : this._(
@@ -33,10 +33,10 @@ class WeightTrainingTimer extends StatefulWidget {
   final Duration? duration;
 
   @override
-  State<WeightTrainingTimer> createState() => _WeightTrainingTimerState();
+  State<WorkoutTimer> createState() => _WorkoutTimerState();
 }
 
-class _WeightTrainingTimerState extends State<WeightTrainingTimer>
+class _WorkoutTimerState extends State<WorkoutTimer>
     with SingleTickerProviderStateMixin {
   late final AnimationController controller;
 

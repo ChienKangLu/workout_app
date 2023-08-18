@@ -32,7 +32,7 @@ class MonthlyMaxWeightEntity extends BaseEntity {
   MonthlyMaxWeightEntity.fromMap(Map<String, dynamic> map)
       : this(
           totalWeight: map[columnTotalWeight],
-          endDateTime: map[WeightTrainingSetTable.columnSetEndDateTime],
+          endDateTime: map[ExerciseSetTable.columnSetEndDateTime],
           year: map[columnYear],
           month: map[columnMonth],
         );
@@ -41,7 +41,7 @@ class MonthlyMaxWeightEntity extends BaseEntity {
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{};
     map[columnTotalWeight] = totalWeight;
-    map[WeightTrainingSetTable.columnSetEndDateTime] = endDateTime;
+    map[ExerciseSetTable.columnSetEndDateTime] = endDateTime;
     map[columnYear] = year;
     map[columnMonth] = month;
     return map;

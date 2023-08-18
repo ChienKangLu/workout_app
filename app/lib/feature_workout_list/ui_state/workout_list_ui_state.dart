@@ -1,4 +1,3 @@
-import '../../core_view/workout_category.dart';
 import '../../core_view/workout_status.dart';
 
 abstract class WorkoutListUiState {
@@ -58,7 +57,6 @@ class ReadableWorkout {
   ReadableWorkout({
     required this.workoutId,
     required this.number,
-    required this.category,
     required this.day,
     required this.date,
     required this.exerciseThumbnails,
@@ -67,7 +65,6 @@ class ReadableWorkout {
 
   final int workoutId;
   final int number;
-  final WorkoutCategory category;
   final String day;
   final String date;
   final List<ExerciseThumbnail> exerciseThumbnails;

@@ -10,8 +10,7 @@ class MockDataInitializer with DaoProviderMixin {
     await _initWorkoutTable();
     await _initExerciseTable();
     await _initWorkoutDetailTable();
-    await _initWeightTrainingSetTable();
-    await _initRunningSetTable();
+    await _initExerciseSetTable();
   }
 
   Future<void> _initWorkoutTable() async {
@@ -33,7 +32,8 @@ class MockDataInitializer with DaoProviderMixin {
   }
 
   Future<void> _initWorkoutDetailTable() async {
-    for (final workoutDetailEntity in MockDataProvider.instance.workoutDetailEntities) {
+    for (final workoutDetailEntity
+        in MockDataProvider.instance.workoutDetailEntities) {
       await workoutDetailDao.add(workoutDetailEntity);
     }
 
@@ -41,22 +41,14 @@ class MockDataInitializer with DaoProviderMixin {
     _logResult(result, "workout_detail");
   }
 
-  Future<void> _initWeightTrainingSetTable() async {
-    for (final weightTrainingSetEntity in MockDataProvider.instance.weightTrainingSetEntities) {
-      await weightTrainingSetDao.add(weightTrainingSetEntity);
+  Future<void> _initExerciseSetTable() async {
+    for (final exerciseSetEntity
+        in MockDataProvider.instance.exerciseSetEntities) {
+      await exerciseSetDao.add(exerciseSetEntity);
     }
 
-    final result = await weightTrainingSetDao.findAll();
-    _logResult(result, "weight_training_set");
-  }
-
-  Future<void> _initRunningSetTable() async {
-    for (final runningSetEntity in MockDataProvider.instance.runningSetEntities) {
-      await runningSetDao.add(runningSetEntity);
-    }
-
-    final result = await runningSetDao.findAll();
-    _logResult(result, "running_set");
+    final result = await exerciseSetDao.findAll();
+    _logResult(result, "exercise_set");
   }
 
   _logResult(DaoResult result, String tableName) {

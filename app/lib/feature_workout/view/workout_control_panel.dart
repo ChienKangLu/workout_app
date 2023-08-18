@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core_view/workout_status.dart';
-import '../weight_training_view_model.dart';
-import 'weight_training_timer.dart';
+import '../workout_view_model.dart';
+import 'workout_timer.dart';
 
-class WeightTrainingControlPanel extends StatefulWidget {
-  const WeightTrainingControlPanel({
+class WorkoutControlPanel extends StatefulWidget {
+  const WorkoutControlPanel({
     Key? key,
     this.onPauseButtonClicked,
     this.onStopButtonClicked,
@@ -20,12 +20,12 @@ class WeightTrainingControlPanel extends StatefulWidget {
   final void Function()? onAddButtonClicked;
 
   @override
-  State<WeightTrainingControlPanel> createState() =>
-      _WeightTrainingControlPanelState();
+  State<WorkoutControlPanel> createState() =>
+      _WorkoutControlPanelState();
 }
 
-class _WeightTrainingControlPanelState
-    extends State<WeightTrainingControlPanel> {
+class _WorkoutControlPanelState
+    extends State<WorkoutControlPanel> {
   void Function()? get _onPauseButtonClicked => widget.onPauseButtonClicked;
   void Function()? get onStopButtonClicked => widget.onStopButtonClicked;
   void Function()? get onTimerButtonClicked => widget.onTimerButtonClicked;
@@ -33,28 +33,28 @@ class _WeightTrainingControlPanelState
 
   @override
   Widget build(BuildContext context) {
-    final weightTrainingViewModel = context.watch<WeightTrainingViewModel>();
-    final weightTrainingUiState = weightTrainingViewModel.weightTrainingUiState;
+    final workoutViewModel = context.watch<WorkoutViewModel>();
+    final workoutUiState = workoutViewModel.workoutUiState;
 
-    return weightTrainingUiState.run(
+    return workoutUiState.run(
       onLoading: () => const SizedBox(),
       onSuccess: (success) {
-        final editableWeightTraining = success.editableWeightTraining;
-        final workoutStatus = editableWeightTraining.workoutStatus;
+        final editableWorkout = success.editableWorkout;
+        final workoutStatus = editableWorkout.workoutStatus;
 
         final isInProgress = workoutStatus == WorkoutStatus.inProgress;
         final duration = workoutStatus == WorkoutStatus.finished
-            ? editableWeightTraining.duration
+            ? editableWorkout.duration
             : null;
         final isTicking = duration == null;
         final startDateTime =
-            editableWeightTraining.weightTraining.startDateTime;
+            editableWorkout.workout.startDateTime;
 
         final timer = isTicking
-            ? WeightTrainingTimer.ticking(
+            ? WorkoutTimer.ticking(
                 dateTime: startDateTime,
               )
-            : WeightTrainingTimer.finished(
+            : WorkoutTimer.finished(
                 duration: duration,
               );
 

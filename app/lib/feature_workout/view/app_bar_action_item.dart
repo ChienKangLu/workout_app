@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../weight_training_view_model.dart';
+import '../workout_view_model.dart';
 
-class WeightTrainingAppBarActionItem extends StatelessWidget {
-  const WeightTrainingAppBarActionItem({
+class AppBarActionItem extends StatelessWidget {
+  const AppBarActionItem({
     Key? key,
     required this.iconData,
     required this.onClick,
@@ -15,10 +15,9 @@ class WeightTrainingAppBarActionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final weightTrainingUiState =
-        context.watch<WeightTrainingViewModel>().weightTrainingUiState;
+    final workoutUiState = context.watch<WorkoutViewModel>().workoutUiState;
 
-    return weightTrainingUiState.run(
+    return workoutUiState.run(
       onLoading: () => _iconButton(false),
       onSuccess: (success) => _iconButton(true),
       onError: () => _iconButton(false),

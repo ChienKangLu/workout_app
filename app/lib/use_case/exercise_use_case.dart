@@ -1,7 +1,6 @@
 import '../model/exercise.dart';
 import '../model/exercise_statistic.dart';
 import '../model/result.dart';
-import '../model/workout.dart';
 import '../repository/exercise_repository.dart';
 import '../repository/repository_manager.dart';
 import '../util/log_util.dart';
@@ -29,7 +28,7 @@ class ExerciseUseCase {
 
   Future<List<Exercise>?> getExercises() async {
     final Result<List<Exercise>> result =
-        await _exerciseRepository.getExercises(WorkoutType.weightTraining);
+        await _exerciseRepository.getExercises();
     if (result is Error<List<Exercise>>) {
       Log.e(_tag, "Error happens while get exercises", result.exception);
       return null;
@@ -39,8 +38,7 @@ class ExerciseUseCase {
   }
 
   Future<int?> createExercise(String name) async {
-    final result = await _exerciseRepository.createExercise(
-        WorkoutType.weightTraining, name);
+    final result = await _exerciseRepository.createExercise(name);
     if (result is Error) {
       return null;
     }
@@ -63,7 +61,6 @@ class ExerciseUseCase {
   }) async {
     final result = await _exerciseRepository.updateExercise(
       exerciseId: exerciseId,
-      workoutType: WorkoutType.weightTraining,
       name: name,
     );
     if (result is Error) {

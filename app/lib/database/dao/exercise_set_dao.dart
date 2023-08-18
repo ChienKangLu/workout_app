@@ -1,37 +1,36 @@
 import '../../util/log_util.dart';
 import '../model/exercise_statistic_entity.dart';
-import '../model/weight_training_set_entity.dart';
+import '../model/exercise_set_entity.dart';
 import '../schema.dart';
 import 'dao_filter.dart';
 import 'dao_result.dart';
 import 'simple_dao.dart';
 
-class WeightTrainingSetDao
-    extends SimpleDao<WeightTrainingSetEntity, WeightTrainingSetEntityFilter> {
-  static const _tag = "WeightTrainingSetDao";
+class ExerciseSetDao
+    extends SimpleDao<ExerciseSetEntity, ExerciseSetEntityFilter> {
+  static const _tag = "ExerciseSetDao";
   static const _initSetNum = 1;
 
   @override
   String get tag => _tag;
 
   @override
-  String get tableName => WeightTrainingSetTable.name;
+  String get tableName => ExerciseSetTable.name;
 
   @override
-  WeightTrainingSetEntity createEntityFromMap(Map<String, dynamic> map) =>
-      WeightTrainingSetEntity.fromMap(map);
+  ExerciseSetEntity createEntityFromMap(Map<String, dynamic> map) =>
+      ExerciseSetEntity.fromMap(map);
 
   @override
-  WeightTrainingSetEntityFilter createUpdateFilter(
-          WeightTrainingSetEntity entity) =>
-      WeightTrainingSetEntityFilter(
+  ExerciseSetEntityFilter createUpdateFilter(ExerciseSetEntity entity) =>
+      ExerciseSetEntityFilter(
         workoutId: entity.workoutId,
         exerciseId: entity.exerciseId,
         setNum: entity.setNum,
       );
 
   @override
-  Future<DaoResult<int>> add(WeightTrainingSetEntity entity) async {
+  Future<DaoResult<int>> add(ExerciseSetEntity entity) async {
     final lastSetNum =
         await _getLastSetNum(entity.workoutId, entity.exerciseId);
 
@@ -43,7 +42,7 @@ class WeightTrainingSetDao
     }
 
     return super.add(
-      WeightTrainingSetEntity(
+      ExerciseSetEntity(
         workoutId: entity.workoutId,
         exerciseId: entity.exerciseId,
         setNum: setNum,
@@ -76,12 +75,12 @@ class WeightTrainingSetDao
     try {
       final maps = await database.rawQuery("""
       SELECT 
-        max(${WeightTrainingSetTable.columnBaseWeight} + 2 * ${WeightTrainingSetTable.columnSideWeight}) as ${MonthlyMaxWeightEntity.columnTotalWeight},
-        ${WeightTrainingSetTable.columnSetEndDateTime},
-        CAST(strftime('%Y', ${WeightTrainingSetTable.columnSetEndDateTime} / 1000, 'unixepoch', 'localtime') AS INTEGER) as ${MonthlyMaxWeightEntity.columnYear},
-        CAST(ltrim(strftime('%m', ${WeightTrainingSetTable.columnSetEndDateTime} / 1000, 'unixepoch', 'localtime'), "0") AS INTEGER) as ${MonthlyMaxWeightEntity.columnMonth}
-      FROM ${WeightTrainingSetTable.name} 
-      WHERE ${WeightTrainingSetTable.columnExerciseId} = $exerciseId
+        max(${ExerciseSetTable.columnBaseWeight} + 2 * ${ExerciseSetTable.columnSideWeight}) as ${MonthlyMaxWeightEntity.columnTotalWeight},
+        ${ExerciseSetTable.columnSetEndDateTime},
+        CAST(strftime('%Y', ${ExerciseSetTable.columnSetEndDateTime} / 1000, 'unixepoch', 'localtime') AS INTEGER) as ${MonthlyMaxWeightEntity.columnYear},
+        CAST(ltrim(strftime('%m', ${ExerciseSetTable.columnSetEndDateTime} / 1000, 'unixepoch', 'localtime'), "0") AS INTEGER) as ${MonthlyMaxWeightEntity.columnMonth}
+      FROM ${ExerciseSetTable.name} 
+      WHERE ${ExerciseSetTable.columnExerciseId} = $exerciseId
       GROUP BY ${MonthlyMaxWeightEntity.columnYear}, ${MonthlyMaxWeightEntity.columnMonth}
       """);
 
@@ -105,12 +104,12 @@ class WeightTrainingSetDao
     int exerciseId,
   ) async {
     final lastSetNumResults = await database.query(
-      WeightTrainingSetTable.name,
-      columns: [WeightTrainingSetTable.columnSetNum],
+      ExerciseSetTable.name,
+      columns: [ExerciseSetTable.columnSetNum],
       where:
-          "${WeightTrainingSetTable.columnWorkoutId} = ? AND ${WeightTrainingSetTable.columnExerciseId} = ?",
+          "${ExerciseSetTable.columnWorkoutId} = ? AND ${ExerciseSetTable.columnExerciseId} = ?",
       whereArgs: [workoutId, exerciseId],
-      orderBy: "${WeightTrainingSetTable.columnSetNum} DESC",
+      orderBy: "${ExerciseSetTable.columnSetNum} DESC",
       limit: 1,
     );
 
@@ -118,12 +117,12 @@ class WeightTrainingSetDao
       return -1;
     }
 
-    return lastSetNumResults[0][WeightTrainingSetTable.columnSetNum] as int;
+    return lastSetNumResults[0][ExerciseSetTable.columnSetNum] as int;
   }
 }
 
-class WeightTrainingSetEntityFilter implements DaoFilter {
-  WeightTrainingSetEntityFilter({
+class ExerciseSetEntityFilter implements DaoFilter {
+  ExerciseSetEntityFilter({
     this.workoutIds = const [],
     this.workoutId,
     this.exerciseIds = const [],
@@ -142,20 +141,20 @@ class WeightTrainingSetEntityFilter implements DaoFilter {
     final where = <String>[];
     if (workoutIds.isNotEmpty) {
       final args = workoutIds.join(",");
-      where.add("${WeightTrainingSetTable.columnWorkoutId} in ($args)");
+      where.add("${ExerciseSetTable.columnWorkoutId} in ($args)");
     }
     if (workoutId != null) {
-      where.add("${WeightTrainingSetTable.columnWorkoutId} = $workoutId");
+      where.add("${ExerciseSetTable.columnWorkoutId} = $workoutId");
     }
     if (exerciseIds.isNotEmpty) {
       final args = exerciseIds.join(",");
-      where.add("${WeightTrainingSetTable.columnExerciseId} in ($args)");
+      where.add("${ExerciseSetTable.columnExerciseId} in ($args)");
     }
     if (exerciseId != null) {
-      where.add("${WeightTrainingSetTable.columnExerciseId} = $exerciseId");
+      where.add("${ExerciseSetTable.columnExerciseId} = $exerciseId");
     }
     if (setNum != null) {
-      where.add("${WeightTrainingSetTable.columnSetNum} = $setNum");
+      where.add("${ExerciseSetTable.columnSetNum} = $setNum");
     }
 
     if (where.isEmpty) {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../ui_state/weight_training_ui_state.dart';
-import 'weight_training_exercise_set.dart';
+import '../ui_state/workout_ui_state.dart';
+import 'exercise_set_view.dart';
 
-class WeightTrainingExerciseSetList extends StatelessWidget {
-  const WeightTrainingExerciseSetList({
+class ExerciseSetListView extends StatelessWidget {
+  const ExerciseSetListView({
     Key? key,
     required this.editableExerciseSets,
     required this.onEditSet,
@@ -21,7 +21,7 @@ class WeightTrainingExerciseSetList extends StatelessWidget {
       shrinkWrap: true,
       itemCount: editableExerciseSets.length,
       itemBuilder: (content, index) {
-        return WeightTrainingExerciseSet(
+        return ExerciseSetView(
           editableExerciseSet: editableExerciseSets[index],
           onEditSet: onEditSet,
         );

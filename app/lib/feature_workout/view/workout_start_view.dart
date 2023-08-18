@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../util/localization_util.dart';
 
-class WeightTrainingStartView extends StatelessWidget {
-  const WeightTrainingStartView({
+class WorkoutStartView extends StatelessWidget {
+  const WorkoutStartView({
     Key? key,
     required this.onStartButtonClicked,
   }) : super(key: key);

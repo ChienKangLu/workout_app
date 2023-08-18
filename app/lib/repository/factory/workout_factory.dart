@@ -2,7 +2,6 @@ import '../../database/model/embedded_object/workout_with_exercises_and_sets_ent
 import '../../model/workout.dart';
 import 'exercise_factory.dart';
 import 'exercise_set_factory.dart';
-import 'workout_type_factory.dart';
 
 class WorkoutFactory {
   static List<Workout> createWorkouts(
@@ -13,29 +12,12 @@ class WorkoutFactory {
         in workoutWithExercisesAndSetsEntities) {
       final workoutEntity = workoutWithExercisesAndSetsEntity.workoutEntity;
       final workoutId = workoutEntity.workoutId;
-      final workoutTypeEntity = workoutEntity.workoutTypeEntity;
-      final workoutTypeNum = workoutEntity.workoutTypeNum;
       final createDateTime = workoutEntity.createDateTime;
 
-      final workoutType = WorkoutTypeFactory.fromEntity(workoutTypeEntity);
-
-      final Workout workout;
-      switch (workoutType) {
-        case WorkoutType.weightTraining:
-          workout = WeightTraining(
-            workoutId: workoutId,
-            typeNum: workoutTypeNum,
-            createDateTime: DateTime.fromMillisecondsSinceEpoch(createDateTime),
-          );
-          break;
-        case WorkoutType.running:
-          workout = Running(
-            workoutId: workoutId,
-            typeNum: workoutTypeNum,
-            createDateTime: DateTime.fromMillisecondsSinceEpoch(createDateTime),
-          );
-          break;
-      }
+      final workout = Workout(
+        workoutId: workoutId,
+        createDateTime: DateTime.fromMillisecondsSinceEpoch(createDateTime),
+      );
 
       workouts.add(workout);
 

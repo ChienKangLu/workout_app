@@ -2,10 +2,9 @@ import 'package:sqflite/sqflite.dart';
 
 import 'dao/composed_workout_dao.dart';
 import 'dao/exercise_dao.dart';
-import 'dao/running_set_dao.dart';
 import 'dao/water_goal_dao.dart';
 import 'dao/water_log_dao.dart';
-import 'dao/weight_training_set_dao.dart';
+import 'dao/exercise_set_dao.dart';
 import 'dao/workout_dao.dart';
 import 'dao/workout_detail_dao.dart';
 import 'database_initializer.dart';
@@ -20,8 +19,7 @@ class WorkoutDatabase {
   final workoutDao = WorkoutDao();
   final exerciseDao = ExerciseDao();
   final workoutDetailDao = WorkoutDetailDao();
-  final weightTrainingSetDao = WeightTrainingSetDao();
-  final runningSetDao = RunningSetDao();
+  final exerciseSetDao = ExerciseSetDao();
   final composedWorkoutDao = ComposedWorkoutDao();
   final waterGoalDao = WaterGoalDao();
   final waterLogDao = WaterLogDao();
@@ -41,8 +39,7 @@ class WorkoutDatabase {
     await workoutDao.init(_database);
     await exerciseDao.init(_database);
     await workoutDetailDao.init(_database);
-    await weightTrainingSetDao.init(_database);
-    await runningSetDao.init(_database);
+    await exerciseSetDao.init(_database);
     await composedWorkoutDao.init(_database);
     await waterGoalDao.init(_database);
     await waterLogDao.init(_database);

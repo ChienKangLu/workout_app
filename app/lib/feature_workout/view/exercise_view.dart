@@ -4,11 +4,11 @@ import 'package:provider/provider.dart';
 import '../../core_view/ui_mode.dart';
 import '../../core_view/ui_mode_view_model.dart';
 import '../../themes/workout_app_theme_data.dart';
-import '../ui_state/weight_training_ui_state.dart';
-import 'weight_training_exercise_set_list.dart';
+import '../ui_state/workout_ui_state.dart';
+import 'exercise_set_list_view.dart';
 
-class WeightTrainingExercise extends StatelessWidget {
-  const WeightTrainingExercise({
+class ExerciseView extends StatelessWidget {
+  const ExerciseView({
     Key? key,
     required this.editableExercise,
     required this.onAddSet,
@@ -61,7 +61,7 @@ class WeightTrainingExercise extends StatelessWidget {
               ),
           ],
         ),
-        WeightTrainingExerciseSetList(
+        ExerciseSetListView(
           editableExerciseSets: editableExercise.editableExerciseSets,
           onEditSet: onEditSet,
         ),
