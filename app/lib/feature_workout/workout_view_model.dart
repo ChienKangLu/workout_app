@@ -152,8 +152,9 @@ class WorkoutViewModel extends ViewModel {
       return null;
     }
 
+    await _updateExerciseOptionListUiState();
+
     if (updateState) {
-      await _updateExerciseOptionListUiState();
       stateChange();
     }
 
