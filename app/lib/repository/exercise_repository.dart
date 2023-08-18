@@ -1,19 +1,17 @@
 import '../database/dao/dao_provider_mixin.dart';
 import '../database/dao/dao_result.dart';
 import '../database/dao/exercise_dao.dart';
-import '../database/dao/weight_training_set_dao.dart';
+import '../database/dao/exercise_set_dao.dart';
 import '../database/dao/workout_detail_dao.dart';
 import '../database/model/exercise_entity.dart';
 import '../database/model/exercise_statistic_entity.dart';
-import '../database/model/weight_training_set_entity.dart';
+import '../database/model/exercise_set_entity.dart';
 import '../database/model/workout_detail_entity.dart';
 import '../model/exercise.dart';
 import '../model/exercise_statistic.dart';
 import '../model/result.dart';
-import '../model/workout.dart';
 import 'factory/exercise_factory.dart';
 import 'factory/exercise_statistic_factory.dart';
-import 'factory/workout_type_entity_factory.dart';
 
 class ExerciseRepository with DaoProviderMixin {
   Future<Result<Exercise?>> getExercise(int exerciseId) async {
@@ -22,25 +20,18 @@ class ExerciseRepository with DaoProviderMixin {
       ExerciseEntityFilter(id: exerciseId),
     );
 
-    return daoResult.asResult(
-      convert: (data) {
-        if (data.isEmpty) {
-          return null;
-        }
-
-        return  ExerciseFactory.createExercise(data.first);
+    return daoResult.asResult(convert: (data) {
+      if (data.isEmpty) {
+        return null;
       }
-    );
+
+      return ExerciseFactory.createExercise(data.first);
+    });
   }
 
-  Future<Result<List<Exercise>>> getExercises(WorkoutType type) async {
-    final workoutTypeEntity = WorkoutTypeEntityFactory.fromType(type);
+  Future<Result<List<Exercise>>> getExercises() async {
     final DaoResult<List<ExerciseEntity>> daoResult =
-        await exerciseDao.findByFilter(
-      ExerciseEntityFilter(
-        workoutTypeEntity: workoutTypeEntity,
-      ),
-    );
+        await exerciseDao.findByFilter(null);
 
     return daoResult.asResult(
       convert: (data) => data
@@ -51,12 +42,10 @@ class ExerciseRepository with DaoProviderMixin {
     );
   }
 
-  Future<Result<int>> createExercise(WorkoutType type, String name) async {
-    final workoutTypeEntity = WorkoutTypeEntityFactory.fromType(type);
+  Future<Result<int>> createExercise(String name) async {
     final DaoResult<int> daoResult = await exerciseDao.add(
       ExerciseEntity.create(
         name: name,
-        workoutType: workoutTypeEntity,
       ),
     );
 
@@ -75,9 +64,11 @@ class ExerciseRepository with DaoProviderMixin {
   }
 
   Future<Result<bool>> removeExerciseFromWorkout(
-      int workoutId, int exerciseId) async {
+    int workoutId,
+    int exerciseId,
+  ) async {
     DaoResult<bool> daoResult;
-    daoResult = await weightTrainingSetDao.delete(WeightTrainingSetEntityFilter(
+    daoResult = await exerciseSetDao.delete(ExerciseSetEntityFilter(
       workoutId: workoutId,
       exerciseId: exerciseId,
     ));
@@ -96,7 +87,7 @@ class ExerciseRepository with DaoProviderMixin {
 
   Future<Result<bool>> removeExercises(List<int> exerciseIds) async {
     DaoResult<bool> daoResult;
-    daoResult = await weightTrainingSetDao.delete(WeightTrainingSetEntityFilter(
+    daoResult = await exerciseSetDao.delete(ExerciseSetEntityFilter(
       exerciseIds: exerciseIds,
     ));
 
@@ -119,13 +110,11 @@ class ExerciseRepository with DaoProviderMixin {
 
   Future<Result<bool>> updateExercise({
     required int exerciseId,
-    required WorkoutType workoutType,
     required String name,
   }) async {
     final DaoResult<bool> daoResult = await exerciseDao.update(
       ExerciseEntity.update(
         exerciseId: exerciseId,
-        workoutType: WorkoutTypeEntityFactory.fromType(workoutType),
         name: name,
       ),
     );
@@ -133,7 +122,7 @@ class ExerciseRepository with DaoProviderMixin {
     return daoResult.asResult();
   }
 
-  Future<Result<int>> addWeightTrainingSet({
+  Future<Result<int>> addExerciseSet({
     required int workoutId,
     required int exerciseId,
     required double baseWeight,
@@ -141,7 +130,7 @@ class ExerciseRepository with DaoProviderMixin {
     required int repetition,
   }) async {
     final DaoResult<int> daoResult =
-        await weightTrainingSetDao.add(WeightTrainingSetEntity.create(
+        await exerciseSetDao.add(ExerciseSetEntity.create(
       workoutId: workoutId,
       exerciseId: exerciseId,
       baseWeight: baseWeight,
@@ -153,7 +142,7 @@ class ExerciseRepository with DaoProviderMixin {
     return daoResult.asResult();
   }
 
-  Future<Result<bool>> updateWeightTrainingSet({
+  Future<Result<bool>> updateExerciseSet({
     required int workoutId,
     required int exerciseId,
     required int setNum,
@@ -161,8 +150,8 @@ class ExerciseRepository with DaoProviderMixin {
     required double sideWeight,
     required int repetition,
   }) async {
-    final DaoResult<bool> daoResult = await weightTrainingSetDao.update(
-      WeightTrainingSetEntity.update(
+    final DaoResult<bool> daoResult = await exerciseSetDao.update(
+      ExerciseSetEntity.update(
         workoutId: workoutId,
         exerciseId: exerciseId,
         setNum: setNum,
@@ -175,13 +164,13 @@ class ExerciseRepository with DaoProviderMixin {
     return daoResult.asResult();
   }
 
-  Future<Result<bool>> removeWeightTrainingSet({
+  Future<Result<bool>> removeExerciseSet({
     required int workoutId,
     required int exerciseId,
     required int setNum,
   }) async {
-    final DaoResult<bool> daoResult = await weightTrainingSetDao.delete(
-      WeightTrainingSetEntityFilter(
+    final DaoResult<bool> daoResult = await exerciseSetDao.delete(
+      ExerciseSetEntityFilter(
         workoutId: workoutId,
         exerciseId: exerciseId,
         setNum: setNum,
@@ -193,7 +182,7 @@ class ExerciseRepository with DaoProviderMixin {
 
   Future<Result<ExerciseStatistic>> getStatistic(int exerciseId) async {
     final DaoResult<ExerciseStatisticEntity> daoResult =
-        await weightTrainingSetDao.getStatistic(exerciseId);
+        await exerciseSetDao.getStatistic(exerciseId);
 
     return daoResult.asResult(
       convert: (data) => ExerciseStatisticFactory.createExerciseStatistic(data),

@@ -4,7 +4,7 @@ import 'feature_exercise_statistic/exercise_statistic_page.dart';
 import 'feature_root/view/root.dart';
 import 'feature_setting/setting_page.dart';
 import 'feature_setting_exercise/setting_exercise_page.dart';
-import 'feature_weight_training/weight_training_page.dart';
+import 'feature_workout/workout_page.dart';
 
 typedef PathWidgetBuilder = Widget Function(BuildContext, Object?);
 
@@ -24,9 +24,9 @@ class RouteConfiguration {
       builder: (context, arguments) => const Root(),
     ),
     Path(
-      name: WeightTrainingPage.routeName,
-      builder: (context, arguments) => WeightTrainingPage(
-        workoutId: arguments as int,
+      name: WorkoutPage.routeName,
+      builder: (context, arguments) => WorkoutPage(
+        workoutPageArguments: arguments as WorkoutPageArguments,
       ),
     ),
     Path(

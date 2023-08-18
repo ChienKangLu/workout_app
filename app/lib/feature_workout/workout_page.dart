@@ -12,36 +12,47 @@ import '../feature_setting_exercise/view/create_exercise_dialog.dart';
 import '../themes/workout_app_theme_data.dart';
 import '../util/localization_util.dart';
 import '../util/weight_unit_convertor.dart';
-import 'ui_state/weight_training_ui_state.dart';
+import 'ui_state/workout_ui_state.dart';
 import 'view/edit_set_sheet.dart';
 import 'view/exercise_option_dialog.dart';
-import 'view/weight_training_control_panel.dart';
-import 'view/weight_training_exercise_list.dart';
-import 'view/weight_training_page_app_bar.dart';
-import 'view/weight_training_start_view.dart';
-import 'weight_training_view_model.dart';
+import 'view/exercise_list_view.dart';
+import 'view/workout_page_app_bar.dart';
+import 'view/workout_start_view.dart';
+import 'view/workout_control_panel.dart';
+import 'workout_view_model.dart';
 
-class WeightTrainingPage extends StatefulWidget {
-  static const routeName = "/weight_training";
-
-  const WeightTrainingPage({Key? key, required this.workoutId})
-      : super(key: key);
+class WorkoutPageArguments {
+  WorkoutPageArguments({
+    required this.workoutId,
+    required this.number,
+  });
 
   final int workoutId;
-
-  @override
-  State<WeightTrainingPage> createState() => _WeightTrainingPageState();
+  final int number;
 }
 
-class _WeightTrainingPageState extends State<WeightTrainingPage> {
-  late final WeightTrainingViewModel _model;
+class WorkoutPage extends StatefulWidget {
+  static const routeName = "/workout";
+
+  const WorkoutPage({Key? key, required this.workoutPageArguments})
+      : super(key: key);
+
+  final WorkoutPageArguments workoutPageArguments;
+
+  @override
+  State<WorkoutPage> createState() => _WorkoutPageState();
+}
+
+class _WorkoutPageState extends State<WorkoutPage> {
+  late final WorkoutViewModel _model;
   late final UiModeViewModel _uiModeViewModel;
 
-  int get workoutId => widget.workoutId;
+  int get workoutId => widget.workoutPageArguments.workoutId;
+  int get number => widget.workoutPageArguments.number;
 
   @override
   void initState() {
-    _model = WeightTrainingViewModel(workoutId: workoutId);
+    _model = WorkoutViewModel(workoutId: workoutId);
     _uiModeViewModel = UiModeViewModel();
 
     initViewModels();
@@ -58,12 +69,12 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
   Future<void> initViewModels() async {
     await _model.init();
 
-    _model.weightTrainingUiState.run(
+    _model.workoutUiState.run(
       onLoading: () {
         // Do nothing
       },
       onSuccess: (success) {
-        final workoutStatus = success.editableWeightTraining.workoutStatus;
+        final workoutStatus = success.editableWorkout.workoutStatus;
         switch (workoutStatus) {
           case WorkoutStatus.created:
           case WorkoutStatus.inProgress:
@@ -100,18 +111,16 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
     _uiModeViewModel.switchTo(UiMode.normal);
   }
 
-  void _onStartButtonClicked(EditableWeightTraining editableWeightTraining) {
-    _model.startWorkout(editableWeightTraining);
+  void _onStartButtonClicked(EditableWorkout editableWorkout) {
+    _model.startWorkout(editableWorkout);
   }
 
-  void _onStopButtonClicked(EditableWeightTraining editableWeightTraining) {
-    _model.finishWorkout(editableWeightTraining);
+  void _onStopButtonClicked(EditableWorkout editableWorkout) {
+    _model.finishWorkout(editableWorkout);
     _uiModeViewModel.switchTo(UiMode.normal);
   }
 
-  void _onAddButtonClicked(
-    EditableWeightTraining editableWeightTraining,
-  ) async {
+  void _onAddButtonClicked(EditableWorkout editableWorkout) async {
     showDialog(
       context: context,
       builder: (context) => ChangeNotifierProvider.value(
@@ -270,29 +279,30 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
         ChangeNotifierProvider.value(value: _uiModeViewModel),
       ],
       child: Scaffold(
-        appBar: WeightTrainingPageAppBar(
+        appBar: WorkoutPageAppBar(
+          number: number,
           onMoreItemClicked: _onMoreItemClicked,
           onCloseButtonClicked: _onAppBarCloseButtonClicked,
         ),
-        body: _weightTrainingPageView(),
+        body: _workoutPageView(),
       ),
     );
   }
 
-  Widget _weightTrainingPageView() {
-    return Consumer<WeightTrainingViewModel>(
+  Widget _workoutPageView() {
+    return Consumer<WorkoutViewModel>(
       builder: (context, viewModel, child) {
-        final weightTrainingUiState = viewModel.weightTrainingUiState;
+        final workoutUiState = viewModel.workoutUiState;
 
-        return weightTrainingUiState.run(
+        return workoutUiState.run(
           onLoading: () => const SizedBox(),
           onSuccess: (success) {
-            final editableWeightTraining = success.editableWeightTraining;
-            final workoutStatus = editableWeightTraining.workoutStatus;
+            final editableWorkout = success.editableWorkout;
+            final workoutStatus = editableWorkout.workoutStatus;
             if (workoutStatus == WorkoutStatus.created) {
-              return WeightTrainingStartView(
+              return WorkoutStartView(
                 onStartButtonClicked: () =>
-                    _onStartButtonClicked(editableWeightTraining),
+                    _onStartButtonClicked(editableWorkout),
               );
             }
 
@@ -304,15 +314,15 @@ class _WeightTrainingPageState extends State<WeightTrainingPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 24),
-                    WeightTrainingControlPanel(
+                    WorkoutControlPanel(
                       onStopButtonClicked: () =>
-                          _onStopButtonClicked(editableWeightTraining),
+                          _onStopButtonClicked(editableWorkout),
                       onAddButtonClicked: () =>
-                          _onAddButtonClicked(editableWeightTraining),
+                          _onAddButtonClicked(editableWorkout),
                     ),
-                    WeightTrainingExerciseList(
+                    ExerciseListView(
                       editableExercises:
-                          editableWeightTraining.editableExercises,
+                          editableWorkout.editableExercises,
                       onAddSet: _onAddSet,
                       onEditSet: _onEditSet,
                       onMoreButtonClicked: onExerciseListMoreButtonClicked,

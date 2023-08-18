@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../core_view/ui_mode.dart';
-import '../ui_state/weight_training_ui_state.dart';
-import 'weight_training_exercise.dart';
+import '../ui_state/workout_ui_state.dart';
+import 'exercise_view.dart';
 
-class WeightTrainingExerciseList extends StatelessWidget {
-  const WeightTrainingExerciseList({
+class ExerciseListView extends StatelessWidget {
+  const ExerciseListView({
     Key? key,
     required this.editableExercises,
     required this.onAddSet,
@@ -23,7 +23,7 @@ class WeightTrainingExerciseList extends StatelessWidget {
     return Column(
       children: editableExercises
           .map(
-            (exercise) => WeightTrainingExercise(
+            (exercise) => ExerciseView(
               editableExercise: exercise,
               onAddSet: onAddSet,
               onEditSet: onEditSet,

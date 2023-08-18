@@ -16,7 +16,7 @@ extension WeightUnitExtension on WeightUnit {
   }
 }
 
-extension WeightTrainingSetExtension on WeightTrainingExerciseSet {
+extension ExerciseSetExtension on ExerciseSet {
   String displayTotalWeight({
     int digits = 2,
   }) {

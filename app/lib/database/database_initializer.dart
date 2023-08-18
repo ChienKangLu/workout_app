@@ -32,8 +32,7 @@ class DatabaseInitializer {
         ExerciseTable.create,
         WorkoutTable.create,
         WorkoutDetailTable.create,
-        WeightTrainingSetTable.create,
-        RunningSetTable.create,
+        ExerciseSetTable.create,
       ],
     ),
     MigrationStep(

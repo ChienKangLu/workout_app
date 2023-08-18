@@ -1,6 +1,7 @@
+import 'package:collection/collection.dart';
+
 import '../core_view/util/date_time_display_helper.dart';
 import '../core_view/view_model.dart';
-import '../core_view/workout_category.dart';
 import '../core_view/workout_status.dart';
 import '../model/result.dart';
 import '../model/workout.dart';
@@ -46,13 +47,13 @@ class WorkoutListViewModel extends ViewModel {
     }
 
     final workouts = (result as Success<List<Workout>>).data;
+    final total = workouts.length;
     _workoutListUiState = WorkoutListUiState.success(
       workouts
-          .map(
-            (workout) => ReadableWorkout(
+          .mapIndexed(
+            (index, workout) => ReadableWorkout(
               workoutId: workout.workoutId,
-              number: workout.typeNum + 1,
-              category: WorkoutCategory.fromType(workout.type),
+              number: total - index,
               day: DateTimeDisplayHelper.day(
                   workout.startDateTime ?? workout.createDateTime),
               date: DateTimeDisplayHelper.date(
@@ -101,8 +102,8 @@ class WorkoutListViewModel extends ViewModel {
     reload();
   }
 
-  Future<int?> createWorkout(WorkoutCategory category) async {
-    final result = await _workoutRepository.createWorkout(category.type);
+  Future<int?> createWorkout() async {
+    final result = await _workoutRepository.createWorkout();
     if (result is Error) {
       return null;
     }

@@ -1,9 +1,7 @@
 import '../model/exercise_entity.dart';
-import '../model/running_set_entity.dart';
-import '../model/weight_training_set_entity.dart';
+import '../model/exercise_set_entity.dart';
 import '../model/workout_detail_entity.dart';
 import '../model/workout_entity.dart';
-import '../model/workout_type_entity.dart';
 
 class MockDataProvider {
   MockDataProvider._();
@@ -17,19 +15,16 @@ class MockDataProvider {
   List<WorkoutEntity> get workoutEntities {
     _workoutEntities ??= [
       WorkoutEntity.create(
-        workoutTypeEntity: WorkoutTypeEntity.weightTraining,
         createDateTime: _firstDay.millisecondsSinceEpoch,
         startDateTime: _firstDay.millisecondsSinceEpoch,
         endDateTime: _firstDay.addHours(1).millisecondsSinceEpoch,
       ),
       WorkoutEntity.create(
-        workoutTypeEntity: WorkoutTypeEntity.running,
         createDateTime: _secondDay.millisecondsSinceEpoch,
         startDateTime: _secondDay.millisecondsSinceEpoch,
         endDateTime: _secondDay.addMinutes(15).millisecondsSinceEpoch,
       ),
       WorkoutEntity.create(
-        workoutTypeEntity: WorkoutTypeEntity.weightTraining,
         createDateTime: _thirdDay.millisecondsSinceEpoch,
         startDateTime: _thirdDay.millisecondsSinceEpoch,
         endDateTime: _thirdDay.addHours(1).millisecondsSinceEpoch,
@@ -43,19 +38,15 @@ class MockDataProvider {
     _exerciseEntities ??= [
       ExerciseEntity.create(
         name: "Squat",
-        workoutType: WorkoutTypeEntity.weightTraining,
       ),
       ExerciseEntity.create(
         name: "Bench Press",
-        workoutType: WorkoutTypeEntity.weightTraining,
       ),
       ExerciseEntity.create(
         name: "Deadlift",
-        workoutType: WorkoutTypeEntity.weightTraining,
       ),
       ExerciseEntity.create(
         name: "Jogging",
-        workoutType: WorkoutTypeEntity.running,
       ),
     ];
     return _exerciseEntities!;
@@ -98,8 +89,8 @@ class MockDataProvider {
     return _workoutDetailEntities!;
   }
 
-  static List<WeightTrainingSetEntity>? _weightTrainingSetEntities;
-  List<WeightTrainingSetEntity> get weightTrainingSetEntities {
+  static List<ExerciseSetEntity>? _exerciseSetEntities;
+  List<ExerciseSetEntity> get exerciseSetEntities {
     const firstWorkoutId = 1;
     const squatId = 1;
     const benchPressId = 2;
@@ -107,8 +98,8 @@ class MockDataProvider {
     const thirdWorkoutId = 3;
     const deadliftId = 3;
 
-    _weightTrainingSetEntities ??= [
-      WeightTrainingSetEntity.create(
+    _exerciseSetEntities ??= [
+      ExerciseSetEntity.create(
         workoutId: firstWorkoutId,
         exerciseId: squatId,
         baseWeight: 20,
@@ -116,49 +107,49 @@ class MockDataProvider {
         repetition: 5,
         endDateTime: _firstDay.addMinutes(2).millisecondsSinceEpoch,
       ),
-      WeightTrainingSetEntity.create(
+      ExerciseSetEntity.create(
           workoutId: firstWorkoutId,
           exerciseId: squatId,
           baseWeight: 20,
           sideWeight: 17.5,
           repetition: 5,
           endDateTime: _firstDay.addMinutes(4).millisecondsSinceEpoch),
-      WeightTrainingSetEntity.create(
+      ExerciseSetEntity.create(
           workoutId: firstWorkoutId,
           exerciseId: benchPressId,
           baseWeight: 20,
           sideWeight: 20,
           repetition: 5,
           endDateTime: _firstDay.addMinutes(6).millisecondsSinceEpoch),
-      WeightTrainingSetEntity.create(
+      ExerciseSetEntity.create(
           workoutId: thirdWorkoutId,
           exerciseId: deadliftId,
           baseWeight: 20,
           sideWeight: 10,
           repetition: 5,
           endDateTime: _thirdDay.addMinutes(2).millisecondsSinceEpoch),
-      WeightTrainingSetEntity.create(
+      ExerciseSetEntity.create(
           workoutId: thirdWorkoutId,
           exerciseId: deadliftId,
           baseWeight: 20,
           sideWeight: 15,
           repetition: 5,
           endDateTime: _thirdDay.addMinutes(4).millisecondsSinceEpoch),
-      WeightTrainingSetEntity.create(
+      ExerciseSetEntity.create(
           workoutId: thirdWorkoutId,
           exerciseId: deadliftId,
           baseWeight: 20,
           sideWeight: 20,
           repetition: 5,
           endDateTime: _thirdDay.addMinutes(6).millisecondsSinceEpoch),
-      WeightTrainingSetEntity.create(
+      ExerciseSetEntity.create(
           workoutId: thirdWorkoutId,
           exerciseId: deadliftId,
           baseWeight: 20,
           sideWeight: 25,
           repetition: 5,
           endDateTime: _thirdDay.addMinutes(10).millisecondsSinceEpoch),
-      WeightTrainingSetEntity.create(
+      ExerciseSetEntity.create(
           workoutId: thirdWorkoutId,
           exerciseId: deadliftId,
           baseWeight: 20,
@@ -166,39 +157,7 @@ class MockDataProvider {
           repetition: 5,
           endDateTime: _thirdDay.addMinutes(12).millisecondsSinceEpoch),
     ];
-    return _weightTrainingSetEntities!;
-  }
-
-  static List<RunningSetEntity>? _runningSetEntities;
-  List<RunningSetEntity> get runningSetEntities {
-    const secondWorkoutId = 2;
-    const joggingId = 4;
-
-    _runningSetEntities ??= [
-      RunningSetEntity(
-        workoutId: secondWorkoutId,
-        exerciseId: joggingId,
-        setNum: 1,
-        duration: const Duration(minutes: 2).inMilliseconds.toDouble(),
-        distance: 400,
-        endDateTime: _secondDay.addMinutes(2).millisecondsSinceEpoch,
-      ),
-      RunningSetEntity(
-          workoutId: secondWorkoutId,
-          exerciseId: joggingId,
-          setNum: 2,
-          duration: const Duration(minutes: 3).inMilliseconds.toDouble(),
-          distance: 400,
-          endDateTime: _secondDay.addMinutes(5).millisecondsSinceEpoch),
-      RunningSetEntity(
-          workoutId: secondWorkoutId,
-          exerciseId: joggingId,
-          setNum: 3,
-          duration: const Duration(minutes: 4).inMilliseconds.toDouble(),
-          distance: 400,
-          endDateTime: _secondDay.addMinutes(9).millisecondsSinceEpoch),
-    ];
-    return _runningSetEntities!;
+    return _exerciseSetEntities!;
   }
 }
 

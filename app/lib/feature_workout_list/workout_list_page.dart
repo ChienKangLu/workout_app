@@ -4,10 +4,9 @@ import 'package:provider/provider.dart';
 
 import '../core_view/ui_mode.dart';
 import '../core_view/ui_mode_view_model.dart';
-import '../core_view/workout_category.dart';
 import '../feature_root/root_view_model.dart';
 import '../feature_setting/setting_page.dart';
-import '../feature_weight_training/weight_training_page.dart';
+import '../feature_workout/workout_page.dart';
 import '../themes/workout_app_theme_data.dart';
 import '../util/log_util.dart';
 import '../util/localization_util.dart';
@@ -64,12 +63,10 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
 
   void _onItemClick(ReadableWorkout readableWorkout) async {
     final uiMode = _uiModeViewModel.uiMode;
-    final category = readableWorkout.category;
-    final workoutId = readableWorkout.workoutId;
 
     switch (uiMode) {
       case UiMode.normal:
-        _openPage(category, workoutId);
+        _openPage(readableWorkout.workoutId, readableWorkout.number);
         break;
       case UiMode.edit:
         _model.selectWorkout(readableWorkout);
@@ -83,20 +80,16 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
     }
   }
 
-  void _openPage(WorkoutCategory category, int workoutId) async {
-    switch (category) {
-      case WorkoutCategory.weightTraining:
-        await Navigator.pushNamed(
-          context,
-          WeightTrainingPage.routeName,
-          arguments: workoutId,
-        );
-        _reload();
-        break;
-      case WorkoutCategory.running:
-        Log.d(WorkoutListPage._tag, "TODO: page for running");
-        break;
-    }
+  void _openPage(int workoutId, int number) async {
+    await Navigator.pushNamed(
+      context,
+      WorkoutPage.routeName,
+      arguments: WorkoutPageArguments(
+        workoutId: workoutId,
+        number: number,
+      ),
+    );
+    _reload();
   }
 
   void _onItemLongClick(ReadableWorkout readableWorkout) {
@@ -129,10 +122,18 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
   }
 
   void _onAddItemClicked() async {
-    const category = WorkoutCategory.weightTraining;
-    final workoutId = await _model.createWorkout(category);
+    final total = _model.workoutListUiState.run(
+      onLoading: () => 0,
+      onSuccess: (success) => success.readableWorkouts.length,
+      onError: () => 0,
+    );
+
+    final workoutId = await _model.createWorkout();
     if (workoutId != null) {
-      _openPage(category, workoutId);
+      _openPage(
+        workoutId,
+        total + 1,
+      );
     }
   }
 

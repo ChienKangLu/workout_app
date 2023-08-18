@@ -9,10 +9,6 @@
   "navigationWaterTitle": "水",
   "navigationFoodTitle": "食物",
 
-  "workoutAddPageTitle": "運動類型",
-  "workoutCategoryWeightTrainingTitle": "重量訓練",
-  "workoutCategoryRunningTitle": "跑步",
-
   "repetitionText": "{rep} 次",
   "workoutStartMessage": "開始運動吧",
   "workoutStartButtonTitle": "開始",

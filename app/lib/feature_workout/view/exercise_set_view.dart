@@ -6,10 +6,10 @@ import '../../core_view/ui_mode_view_model.dart';
 import '../../core_view/util/weight_display_helper.dart';
 import '../../themes/workout_app_theme_data.dart';
 import '../../util/localization_util.dart';
-import '../ui_state/weight_training_ui_state.dart';
+import '../ui_state/workout_ui_state.dart';
 
-class WeightTrainingExerciseSet extends StatelessWidget {
-  const WeightTrainingExerciseSet({
+class ExerciseSetView extends StatelessWidget {
+  const ExerciseSetView({
     Key? key,
     required this.editableExerciseSet,
     required this.onEditSet,

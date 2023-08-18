@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../core_view/custom_dialog.dart';
 import '../../core_view/list_item.dart';
 import '../../util/localization_util.dart';
-import '../weight_training_view_model.dart';
+import '../workout_view_model.dart';
 
 class ExerciseOptionDialog extends StatelessWidget {
   const ExerciseOptionDialog({
@@ -19,7 +19,7 @@ class ExerciseOptionDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final exerciseOptionListUiState =
-        context.watch<WeightTrainingViewModel>().exerciseOptionListUiState;
+        context.watch<WorkoutViewModel>().exerciseOptionListUiState;
 
     return exerciseOptionListUiState.run(
       onLoading: () => const SizedBox(),
