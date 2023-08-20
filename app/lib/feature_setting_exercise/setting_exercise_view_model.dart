@@ -14,6 +14,7 @@ class SettingExerciseViewModel extends ViewModel
 
   @override
   Future<void> init() async {
+    await super.init();
     await _updateExerciseOptionListUiState();
     stateChange();
   }

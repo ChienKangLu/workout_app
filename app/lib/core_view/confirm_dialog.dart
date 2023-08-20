@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 
 import '../../core_view/custom_dialog.dart';
+import '../util/localization_util.dart';
 
 class ConfirmDialog extends StatefulWidget {
   const ConfirmDialog({
     Key? key,
     required this.title,
-    required this.positiveButtonTitle,
-    required this.negativeButtonTitle,
+    this.positiveButtonTitle,
+    this.negativeButtonTitle,
   }) : super(key: key);
 
   final String title;
-  final String positiveButtonTitle;
-  final String negativeButtonTitle;
+  final String? positiveButtonTitle;
+  final String? negativeButtonTitle;
 
   @override
   State<ConfirmDialog> createState() => _ConfirmDialogState();
@@ -20,8 +21,8 @@ class ConfirmDialog extends StatefulWidget {
 
 class _ConfirmDialogState extends State<ConfirmDialog> {
   String get _title => widget.title;
-  String get _positiveButtonTitle => widget.positiveButtonTitle;
-  String get _negativeButtonTitle => widget.negativeButtonTitle;
+  String? get _positiveButtonTitle => widget.positiveButtonTitle;
+  String? get _negativeButtonTitle => widget.negativeButtonTitle;
 
   @override
   void dispose() {
@@ -50,12 +51,20 @@ class _ConfirmDialogState extends State<ConfirmDialog> {
             children: [
               TextButton(
                 onPressed: () => onNegativeButtonClicked(context),
-                child: Text(_negativeButtonTitle),
+                child: Text(
+                  _negativeButtonTitle ??
+                      LocalizationUtil.localize(context)
+                          .confirmDialogNegativeBtn,
+                ),
               ),
               const SizedBox(width: 8),
               TextButton(
                 onPressed: () => onPositiveButtonClicked(context),
-                child: Text(_positiveButtonTitle),
+                child: Text(
+                  _positiveButtonTitle ??
+                      LocalizationUtil.localize(context)
+                          .confirmDialogPositiveBtn,
+                ),
               ),
               const SizedBox(width: 8),
             ],

@@ -8,7 +8,7 @@ import 'dao_filter.dart';
 abstract class BaseDao<T extends BaseEntity, F extends DaoFilter>
     implements Dao<T, F> {
   @protected
-  late final Database database;
+  late Database database;
 
   @override
   Future<void> init(Future<Database> database) async {

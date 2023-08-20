@@ -15,6 +15,18 @@ class WaterSettingViewModel extends ViewModel {
 
   @override
   Future<void> init() async {
+    await super.init();
+    await _updateWaterSettingUiState();
+    stateChange();
+  }
+
+  @override
+  Future<void> reload() async {
+    if (_waterSettingUiState is! WaterSettingLoadingUiState) {
+      _waterSettingUiState = WaterSettingUiState.loading();
+      stateChange();
+    }
+
     await _updateWaterSettingUiState();
     stateChange();
   }

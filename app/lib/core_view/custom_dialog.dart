@@ -29,9 +29,12 @@ class CustomDialog extends StatelessWidget {
         ConstrainedBox(
           constraints: const BoxConstraints(minHeight: 64),
           child: Center(
-            child: Text(
-              title,
-              style: Theme.of(context).textTheme.titleLarge,
+            child: Container(
+              margin: const EdgeInsets.all(15),
+              child: Text(
+                title,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
             ),
           ),
         ),

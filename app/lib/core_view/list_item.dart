@@ -20,7 +20,7 @@ class ListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final titleLargeStyle = Theme.of(context).textTheme.titleLarge;
+    final bodyLargeStyle = Theme.of(context).textTheme.bodyLarge;
 
     return Material(
       color: Colors.transparent,
@@ -37,7 +37,7 @@ class ListItem extends StatelessWidget {
                 Expanded(
                   child: Text(
                     text,
-                    style: titleLargeStyle?.copyWith(
+                    style: bodyLargeStyle?.copyWith(
                       color: color,
                     ),
                   ),

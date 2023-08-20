@@ -22,8 +22,6 @@
   "editExerciseDialogTitle": "編輯項目",
   "exerciseNameTextFieldHint": "項目名稱",
   "removeExerciseConfirmDialogTitle":  "您確定要移除此項目？",
-  "removeExerciseConfirmDialogPositiveBtn": "是",
-  "removeExerciseConfirmDialogNegativeBtn": "否",
 
   "dialogEmptyTextError": "請輸入文字",
   "dialogPositiveBtn": "確定",
@@ -49,6 +47,16 @@
   "settingWaterTitle": "水量",
   "settingWaterGoalTitle": "每日目標",
   "settingWaterGoalEmptyText": "尚未設定",
+  "settingBackupTitle": "備份及復原",
+  "settingGoogleDriveBackupTitle": "備份至Google雲端硬碟",
+  "backUpToGoogleDriveInProgressTitle": "備份至Google雲端硬碟...",
+  "backUpToGoogleDriveCompleteTitle": "備份成功！",
+  "settingGoogleDriveRestoreTitle": "從Google雲端硬碟復原資料",
+  "settingBackupFilePickerTitle": "選擇備份檔",
+  "settingEmptyBackupFileTitle": "沒有備份檔",
+  "restoreConfirmDialogTitle":  "您確定要使用 {fileName} 復原資料?",
+  "restoreFromGoogleDriveInProgressTitle": "正在從Google雲端硬碟復原資料...",
+  "restoreFromGoogleDriveCompleteTitle": "復原成功！",
 
   "maxWeightChartTitle": "每月最大重量（kg）",
   "maxWeightChartEmptyDescription": "無資料",
@@ -64,5 +72,8 @@
   "waterDialogTitle": "輸入水量",
   "waterDialogTextFieldHint": "水量 (ml)",
   "editWaterDialogTitle": "輸入水量",
-  "editWaterDialogTextFieldHint": "水量 (ml)"
+  "editWaterDialogTextFieldHint": "水量 (ml)",
+
+  "confirmDialogPositiveBtn": "是",
+  "confirmDialogNegativeBtn": "否"
 }

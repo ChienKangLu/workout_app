@@ -22,7 +22,7 @@ class MigrationStep {
 class DatabaseInitializer {
   static const _tag = "DatabaseInitializer";
   static const _version = 2;
-  static const _workoutDatabasePath = "workout_database.db";
+  static const _workoutDatabaseName = "workout_database.db";
 
   bool isFirstCreation = false;
 
@@ -43,12 +43,17 @@ class DatabaseInitializer {
     ),
   ];
 
+  late String _dbPath;
+  String get dbPath => _dbPath;
+
   Future<Database> open() async {
     Log.d(_tag, "open");
     WidgetsFlutterBinding.ensureInitialized();
 
+    _dbPath = join(await getDatabasesPath(), _workoutDatabaseName);
+
     return openDatabase(
-      join(await getDatabasesPath(), _workoutDatabasePath),
+      _dbPath,
       onConfigure: _onConfigure,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
