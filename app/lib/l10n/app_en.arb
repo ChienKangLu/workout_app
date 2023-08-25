@@ -88,14 +88,6 @@
   "@removeExerciseConfirmDialogTitle": {
     "description": "Title for remove exercise dialog"
   },
-  "removeExerciseConfirmDialogPositiveBtn": "Yes",
-  "@removeExerciseConfirmDialogPositiveBtn": {
-    "description": "Text for positive button in remove exercise dialog"
-  },
-  "removeExerciseConfirmDialogNegativeBtn": "No",
-  "@removeExerciseConfirmDialogNegativeBtn": {
-    "description": "Text for negative button in remove exercise dialog"
-  },
 
   "dialogEmptyTextError": "Please enter some text",
   "@dialogEmptyTextError": {
@@ -188,6 +180,52 @@
   "@settingWaterGoalEmptyText": {
     "description": "Title for empty setting water goal"
   },
+  "settingBackupTitle": "Backup and restore",
+  "@settingBackupTitle": {
+    "description": "Title for setting backup"
+  },
+  "settingGoogleDriveBackupTitle": "Back up to Google Drive",
+  "@settingGoogleDriveBackupTitle": {
+    "description": "Title for backing up to Google Drive"
+  },
+  "backUpToGoogleDriveInProgressTitle": "Back up to Google Drive...",
+  "@backUpToGoogleDriveInProgressTitle": {
+    "description": "Title for backing up to Google Drive in progress"
+  },
+  "backUpToGoogleDriveCompleteTitle": "Back up complete!",
+  "@backUpToGoogleDriveCompleteTitle": {
+    "description": "Title for backing up to Google Drive complete"
+  },
+  "settingGoogleDriveRestoreTitle": "Restore from Google Drive",
+  "@settingGoogleDriveRestoreTitle": {
+    "description": "Title for Google Drive restore"
+  },
+  "settingBackupFilePickerTitle": "Choose a Backup",
+  "@settingBackupFilePickerTitle": {
+    "description": "Title for backup file picker"
+  },
+  "settingEmptyBackupFileTitle": "No backup available",
+  "@settingEmptyBackupFileTitle": {
+    "description": "Title for empty backup file"
+  },
+  "restoreConfirmDialogTitle":  "Are you sure to restore from {fileName}?",
+  "@restoreConfirmDialogTitle": {
+    "description": "Title for restore dialog",
+    "placeholders": {
+      "fileName": {
+        "type": "String",
+        "example": "database.db"
+      }
+    }
+  },
+  "restoreFromGoogleDriveInProgressTitle": "Restore backup from\nGoogle Drive...",
+  "@restoreFromGoogleDriveInProgressTitle": {
+    "description": "Title for restoring backup from Google Drive in progress"
+  },
+  "restoreFromGoogleDriveCompleteTitle": "Restore complete!",
+  "@restoreFromGoogleDriveCompleteTitle": {
+    "description": "Title for restoring backup from Google Drive complete"
+  },
 
   "maxWeightChartTitle": "Max weight per month (kg)",
   "@maxWeightChartTitle": {
@@ -245,5 +283,13 @@
   "editWaterDialogTextFieldHint": "volume (ml)",
   "@editWaterDialogTextFieldHint": {
     "description": "Hint for edit water dialog"
+  },
+  "confirmDialogPositiveBtn": "Yes",
+  "@confirmDialogPositiveBtn": {
+    "description": "Text for positive button in confirm dialog"
+  },
+  "confirmDialogNegativeBtn": "No",
+  "@confirmDialogNegativeBtn": {
+    "description": "Text for negative button in confirm dialog"
   }
 }

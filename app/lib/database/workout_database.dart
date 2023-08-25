@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:sqflite/sqflite.dart';
 
 import 'dao/composed_workout_dao.dart';
@@ -33,9 +35,10 @@ class WorkoutDatabase {
     return _databaseInstance!;
   }
 
+  String get dbPath => _initializer.dbPath;
+
   Future<void> init() async {
     await _database;
-
     await workoutDao.init(_database);
     await exerciseDao.init(_database);
     await workoutDetailDao.init(_database);
@@ -47,5 +50,17 @@ class WorkoutDatabase {
     if (_initializer.isFirstCreation && isMockupEnabled) {
       await _mockDataInitializer.initTestData();
     }
+  }
+
+  Future<void> restoreBackup(File backup) async {
+    await _close();
+    await backup.copy(dbPath);
+    await init();
+  }
+
+  Future<void> _close() async {
+    final database = await _database;
+    await database.close();
+    _databaseInstance = null;
   }
 }

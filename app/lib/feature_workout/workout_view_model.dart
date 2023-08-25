@@ -38,6 +38,22 @@ class WorkoutViewModel extends ViewModel {
 
   @override
   Future<void> init() async {
+    await super.init();
+    await _updateWorkoutUiState();
+    await _updateExerciseOptionListUiState();
+    stateChange();
+  }
+
+  @override
+  Future<void> reload() async {
+    if (_workoutUiState is! WorkoutLoadingUiState) {
+      _workoutUiState = WorkoutUiState.loading();
+    }
+    if (_workoutUiState is! ExerciseOptionListLoadingUiState) {
+      _exerciseOptionListUiState = ExerciseOptionListUiState.loading();
+    }
+    stateChange();
+
     await _updateWorkoutUiState();
     await _updateExerciseOptionListUiState();
     stateChange();

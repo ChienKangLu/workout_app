@@ -24,6 +24,7 @@ class WorkoutListViewModel extends ViewModel {
 
   @override
   Future<void> init() async {
+    await super.init();
     await _updateWorkoutListState();
     stateChange();
   }

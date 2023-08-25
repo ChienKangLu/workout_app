@@ -22,6 +22,18 @@ class ExerciseStatisticViewModel extends ViewModel {
 
   @override
   Future<void> init() async {
+    await super.init();
+    await _updateExerciseStatisticUiState();
+    stateChange();
+  }
+
+  @override
+  Future<void> reload() async {
+    if (_exerciseStatisticUiState is! ExerciseStatisticLoadingUiState) {
+      _exerciseStatisticUiState = ExerciseStatisticUiState.loading();
+      stateChange();
+    }
+
     await _updateExerciseStatisticUiState();
     stateChange();
   }

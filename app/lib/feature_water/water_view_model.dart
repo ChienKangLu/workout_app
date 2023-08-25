@@ -18,6 +18,7 @@ class WaterViewModel extends ViewModel {
 
   @override
   Future<void> init() async {
+    await super.init();
     _waterGoalSubscription =
         _waterUseCase.observeWaterGoalChange(_onWaterGoalChange);
 

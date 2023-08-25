@@ -9,7 +9,7 @@ class RootViewModel extends ViewModel {
   }
 
   @override
-  Future<void> init() async {
+  Future<void> reload() async {
     // do nothing
   }
 }

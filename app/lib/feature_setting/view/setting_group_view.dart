@@ -17,14 +17,11 @@ class SettingGroup extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            SizedBox(width: WorkoutAppThemeData.pageMargin),
-            Text(
-              title,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          ],
+        ListTile(
+          title: Text(
+            title,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
         ),
         ...settingList,
       ],

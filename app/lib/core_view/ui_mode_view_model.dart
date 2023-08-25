@@ -7,7 +7,7 @@ class UiModeViewModel extends ViewModel {
   UiMode get uiMode => _uiMode;
 
   @override
-  Future<void> init() async {
+  Future<void> reload() async {
     // do nothing
   }
 

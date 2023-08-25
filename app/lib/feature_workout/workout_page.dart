@@ -227,10 +227,6 @@ class _WorkoutPageState extends State<WorkoutPage> {
       builder: (context) => ConfirmDialog(
         title:
             LocalizationUtil.localize(context).removeExerciseConfirmDialogTitle,
-        positiveButtonTitle: LocalizationUtil.localize(context)
-            .removeExerciseConfirmDialogPositiveBtn,
-        negativeButtonTitle: LocalizationUtil.localize(context)
-            .removeExerciseConfirmDialogNegativeBtn,
       ),
     );
 
@@ -321,8 +317,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                           _onAddButtonClicked(editableWorkout),
                     ),
                     ExerciseListView(
-                      editableExercises:
-                          editableWorkout.editableExercises,
+                      editableExercises: editableWorkout.editableExercises,
                       onAddSet: _onAddSet,
                       onEditSet: _onEditSet,
                       onMoreButtonClicked: onExerciseListMoreButtonClicked,
