@@ -1,8 +1,11 @@
 name: Workout App action
 on: [push, workflow_dispatch]
 jobs:
-  build-ios-app:
+  create-version:
     runs-on: macos-latest
+    outputs:
+      BUILD_VERSION: ${{ steps.create-build-version.outputs.BUILD_VERSION }}
+      BUILD_NUMBER: ${{ steps.create-build-number.outputs.BUILD_NUMBER }}
     steps:
       - name: Create build version
         id: create-build-version
@@ -11,18 +14,29 @@ jobs:
           SNAPSHOT_VERSION: 0.0.0
         run: | 
           if [[ $GITHUB_REF_NAME == "master" ]]; then
-            VERSION_NAME=${{ env.MAIN_VERSION }}
+            BUILD_VERSION=${{ env.MAIN_VERSION }}
           else
-            VERSION_NAME=${{ env.SNAPSHOT_VERSION }}
+            BUILD_VERSION=${{ env.SNAPSHOT_VERSION }}
           fi
 
-          echo "VERSION_NAME=$VERSION_NAME" >> "$GITHUB_OUTPUT"
+          echo "BUILD_VERSION=$BUILD_VERSION" >> "$GITHUB_OUTPUT"
       - name: Create build number
         id: create-build-number
         run: |
           BUILD_NUMBER=$GITHUB_RUN_NUMBER
 
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> "$GITHUB_OUTPUT"
+  ios-app:
+    runs-on: macos-latest
+    needs: [create-version]
+    env:
+      BUILD_VERSION: ${{ needs.create-version.outputs.BUILD_VERSION }}
+      BUILD_NUMBER: ${{ needs.create-version.outputs.BUILD_NUMBER }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install flutter
+        uses: ./.github/actions/stable-flutter-action
       - name: Create & apply keychain
         run: |
           IOS_DISTRIBUTION_CERT_BASE64=${{ secrets.IOS_DISTRIBUTION_CERT_BASE64 }}
@@ -62,13 +76,6 @@ jobs:
           # Install Provision profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PROVISION_PROFILE_PATH ~/Library/MobileDevice/Provisioning\ Profiles
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.10.3'
-          channel: 'stable'
-      - name: Checkout code
-        uses: actions/checkout@v3
       - name: Build iOS app
         working-directory: ./app
         env:
@@ -86,7 +93,7 @@ jobs:
 
           # Build IPA
 
-          flutter build ipa --release --export-options-plist=$IOS_EXPORT_OPTIONS_PATH --build-name ${{ steps.create-build-version.outputs.VERSION_NAME }} --build-number ${{ steps.create-build-number.outputs.BUILD_NUMBER }}
+          flutter build ipa --release --export-options-plist=$IOS_EXPORT_OPTIONS_PATH --build-name ${{ env.BUILD_VERSION }} --build-number ${{ env.BUILD_NUMBER }}
       - name: Install APP Store auth key
         if: ${{ github.ref_name == 'master' }}
         working-directory: ./app
@@ -118,3 +125,47 @@ jobs:
           security delete-keychain $RUNNER_TEMP/app.keychain-db
           rm -rf ~/Library/MobileDevice/Provisioning\ Profiles
           rm -rf ./app/private_keys
+  android-app:
+    runs-on: macos-latest
+    needs: [create-version]
+    env:
+      BUILD_VERSION: ${{ needs.create-version.outputs.BUILD_VERSION }}
+      BUILD_NUMBER: ${{ needs.create-version.outputs.BUILD_NUMBER }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+      - name: Install flutter
+        uses: ./.github/actions/stable-flutter-action
+      - name: Build app bundle
+        working-directory: ./app
+        run: |
+          flutter build appbundle --build-name="${{ env.BUILD_VERSION }}.${{ env.BUILD_NUMBER }}" --build-number=${{ env.BUILD_NUMBER }} --target-platform=android-arm,android-arm64
+      - name: Sign app bundle
+        if: ${{ github.ref_name == 'master' }}
+        working-directory: ./app
+        run: |
+          ANDROID_UPLOAD_KEY_STORE_PASSWORD=${{ secrets.ANDROID_UPLOAD_KEY_STORE_PASSWORD }}
+          ANDROID_UPLOAD_KEY_PASSWORD=${{ secrets.ANDROID_UPLOAD_KEY_PASSWORD }}
+          ANDROID_UPLOAD_KEY_STORE_BASE64=${{ secrets.ANDROID_UPLOAD_KEY_STORE_BASE64 }}
+
+          ANDROID_UPLOAD_KEY_STORE_PATH=./upload-keystore.jks
+
+          # Construct file from base64
+          echo -n "$ANDROID_UPLOAD_KEY_STORE_BASE64" | base64 --decode --output $ANDROID_UPLOAD_KEY_STORE_PATH
+
+          jarsigner -sigalg SHA256withRSA -keystore ./upload-keystore.jks -storepass $ANDROID_UPLOAD_KEY_STORE_PASSWORD -keypass $ANDROID_UPLOAD_KEY_PASSWORD -signedjar build/app/outputs/bundle/release/app-release-signed.aab build/app/outputs/bundle/release/app-release.aab upload
+      - name: Upload app bundle to Google Play Console
+        if: ${{ github.ref_name == 'master' }}
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.ANDROID_PUBLISH_SERVICE_ACCOUNT_JSON }}
+          packageName: com.leo.workoutapp.workout_app
+          releaseFiles: ./app/build/app/outputs/bundle/release/app-release-signed.aab
+          track: internal
+          status: completed
+          

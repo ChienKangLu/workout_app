@@ -1,0 +1,12 @@
+name: 'Stable Flutter action'
+description: 'Action to install flutter on stable channel with specified version'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install stable flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.10.3'
+        channel: 'stable'
+        cache: true
