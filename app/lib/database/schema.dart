@@ -106,6 +106,7 @@ class WaterGoalTable {
   )''';
 }
 
+/// Deactivate table
 class FoodTable {
   static const String name = "food";
   static const String columnFoodId = "food_id";
@@ -129,6 +130,7 @@ class FoodTable {
   )''';
 }
 
+/// Deactivate table
 class FoodLogTable {
   static const String name = "food_log";
   static const String columnFoodLogId = "food_log_id";

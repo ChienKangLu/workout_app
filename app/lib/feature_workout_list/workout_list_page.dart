@@ -173,14 +173,13 @@ class _WorkoutListPageState extends State<WorkoutListPage> {
         final workoutListUiState = viewModel.workoutListUiState;
 
         return workoutListUiState.run(
-          onLoading: () =>
-              Text(LocalizationUtil.localize(context).loadingWorkoutText),
+          onLoading: () => const SizedBox(),
           onSuccess: (successState) => WorkoutList(
             workoutListState: successState,
             onItemClick: _onItemClick,
             onItemLongClick: _onItemLongClick,
           ),
-          onError: () => const Text("Error"),
+          onError: () => const SizedBox(),
         );
       },
     );

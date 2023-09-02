@@ -9,7 +9,9 @@ class RootViewModel extends ViewModel {
   }
 
   @override
-  Future<void> reload() async {
+  Future<void> reload({
+    bool isLongOperation = false,
+  }) async {
     // do nothing
   }
 }

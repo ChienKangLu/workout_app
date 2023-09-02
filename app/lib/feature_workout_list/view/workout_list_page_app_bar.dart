@@ -38,6 +38,7 @@ class WorkoutListPageAppBar extends StatelessWidget
   Widget _appBarInNormalMode(BuildContext context) {
     return AppBar(
       title: Text(LocalizationUtil.localize(context).appTitle),
+      centerTitle: true,
       actions: [_settingButton(context)],
       toolbarHeight: 56,
     );
@@ -47,6 +48,7 @@ class WorkoutListPageAppBar extends StatelessWidget
     return AppBar(
       leading: _closeButton(context),
       title: Text(selectedWorkoutCount.toString()),
+      centerTitle: true,
       actions: [deleteButton(context)],
       toolbarHeight: 56,
     );

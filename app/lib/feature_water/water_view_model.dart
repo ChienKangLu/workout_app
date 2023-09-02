@@ -38,8 +38,11 @@ class WaterViewModel extends ViewModel {
   }
 
   @override
-  Future<void> reload() async {
-    if (_waterUiState is! WaterLoadingUiState) {
+  Future<void> reload({
+    bool isLongOperation = false,
+  }) async {
+    if (_waterUiState is! WaterLoadingUiState &&
+        isLongOperation) {
       _waterUiState = WaterUiState.loading();
       stateChange();
     }

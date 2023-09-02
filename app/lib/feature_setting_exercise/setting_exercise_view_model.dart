@@ -20,8 +20,11 @@ class SettingExerciseViewModel extends ViewModel
   }
 
   @override
-  Future<void> reload() async {
-    if (_exerciseOptionListUiState is! ExerciseOptionListLoadingUiState) {
+  Future<void> reload({
+    bool isLongOperation = false,
+  }) async {
+    if (_exerciseOptionListUiState is! ExerciseOptionListLoadingUiState &&
+        isLongOperation) {
       _exerciseOptionListUiState = ExerciseOptionListUiState.loading();
       stateChange();
     }

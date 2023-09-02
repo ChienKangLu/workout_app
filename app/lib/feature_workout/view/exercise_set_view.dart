@@ -30,7 +30,7 @@ class ExerciseSetView extends StatelessWidget {
         children: [
           Text(
             "${editableExerciseSet.number}.",
-            style: Theme.of(context).textTheme.titleLarge,
+            style: Theme.of(context).textTheme.labelLarge,
           ),
           SizedBox(width: WorkoutAppThemeData.exerciseSetDataMargin),
           Text(

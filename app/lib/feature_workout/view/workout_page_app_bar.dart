@@ -71,6 +71,7 @@ class WorkoutPageAppBar extends StatelessWidget implements PreferredSizeWidget {
             )
         ],
       ),
+      centerTitle: true,
       actions: [
         if (isFinished)
           AppBarActionItem(

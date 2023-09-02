@@ -3,10 +3,6 @@
   "@appTitle": {
     "description": "The title of the app"
   },
-  "loadingWorkoutText": "Loading workout...",
-  "@loading": {
-    "description": "Text for loading workout"
-  },
   "emptyWorkoutText": "No workout",
   "@emptyWorkoutText": {
     "description": "Text for no workout"
