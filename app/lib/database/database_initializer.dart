@@ -21,7 +21,7 @@ class MigrationStep {
 
 class DatabaseInitializer {
   static const _tag = "DatabaseInitializer";
-  static const _version = 2;
+  static const _version = 1;
   static const _workoutDatabaseName = "workout_database.db";
 
   bool isFirstCreation = false;
@@ -33,10 +33,6 @@ class DatabaseInitializer {
         WorkoutTable.create,
         WorkoutDetailTable.create,
         ExerciseSetTable.create,
-      ],
-    ),
-    MigrationStep(
-      scripts: [
         WaterLogTable.create,
         WaterGoalTable.create,
       ],

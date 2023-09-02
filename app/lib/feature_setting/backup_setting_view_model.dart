@@ -28,8 +28,11 @@ class BackupSettingViewModel extends ViewModel {
   }
 
   @override
-  Future<void> reload() async {
-    if (_backupSettingUiState is! BackupSettingLoadingUiState) {
+  Future<void> reload({
+    bool isLongOperation = false,
+  }) async {
+    if (_backupSettingUiState is! BackupSettingLoadingUiState &&
+        isLongOperation) {
       _backupSettingUiState = BackupSettingUiState.loading();
       stateChange();
     }

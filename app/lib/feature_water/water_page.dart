@@ -53,6 +53,7 @@ class _WaterPageState extends State<WaterPage> {
         appBar: AppBar(
           title:
               Text(LocalizationUtil.localize(context).waterProgressTodayTitle),
+          centerTitle: true,
           bottom: TabBar(
             tabs: [
               Tab(

@@ -45,8 +45,11 @@ class WorkoutViewModel extends ViewModel {
   }
 
   @override
-  Future<void> reload() async {
-    if (_workoutUiState is! WorkoutLoadingUiState) {
+  Future<void> reload({
+    bool isLongOperation = false,
+  }) async {
+    if (_workoutUiState is! WorkoutLoadingUiState &&
+        isLongOperation) {
       _workoutUiState = WorkoutUiState.loading();
     }
     if (_workoutUiState is! ExerciseOptionListLoadingUiState) {

@@ -1,6 +1,5 @@
 {
   "appTitle": "運動",
-  "loadingWorkoutText": "載入運動...",
   "emptyWorkoutText": "無運動",
   "workoutStatusCreated": "開始運動吧",
   "workoutStatusInProgress": "運動中",

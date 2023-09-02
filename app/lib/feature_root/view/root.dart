@@ -30,11 +30,6 @@ class _RootState extends State<Root> {
       Icons.water_drop_rounded,
       const WaterPage(),
     ),
-    Destination(
-      (context) => LocalizationUtil.localize(context).navigationFoodTitle,
-      Icons.local_fire_department,
-      const Center(child: Text("TODO: Food")),
-    ),
   ];
 
   int _selectedIndex = 0;

@@ -4,7 +4,6 @@ import '../repository/database_repository.dart';
 import '../repository/repository_manager.dart';
 
 abstract class ViewModel extends ChangeNotifier implements DatabaseObserver {
-
   /// Lifecycle method to init [ViewMode].
   @mustCallSuper
   Future<void> init() async {
@@ -12,7 +11,9 @@ abstract class ViewModel extends ChangeNotifier implements DatabaseObserver {
   }
 
   /// Lifecycle method to reload [ViewMode].
-  Future<void> reload();
+  Future<void> reload({
+    bool isLongOperation = false,
+  });
 
   /// Lifecycle method to release resources.
   @mustCallSuper

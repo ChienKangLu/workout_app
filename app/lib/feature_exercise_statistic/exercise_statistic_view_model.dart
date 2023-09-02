@@ -28,8 +28,11 @@ class ExerciseStatisticViewModel extends ViewModel {
   }
 
   @override
-  Future<void> reload() async {
-    if (_exerciseStatisticUiState is! ExerciseStatisticLoadingUiState) {
+  Future<void> reload({
+    bool isLongOperation = false,
+  }) async {
+    if (_exerciseStatisticUiState is! ExerciseStatisticLoadingUiState &&
+        isLongOperation) {
       _exerciseStatisticUiState = ExerciseStatisticUiState.loading();
       stateChange();
     }
