@@ -85,7 +85,7 @@ class GoogleDrivePort {
 
       return files.toPortFiles();
     } catch (e) {
-      Log.e(_tag, "Cannot get file list from folder ${folder}, error = $e");
+      Log.e(_tag, "Cannot get file list from folder $folder, error = $e");
       return [];
     }
   }

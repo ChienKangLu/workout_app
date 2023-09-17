@@ -2,8 +2,9 @@ import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+import '../../core_view/empty_view.dart';
 import '../../core_view/util/date_time_display_helper.dart';
-import '../../themes/workout_app_theme_data.dart';
+import '../../util/assets.dart';
 import '../../util/localization_util.dart';
 import '../ui_state/exercise_statistic_ui_state.dart';
 
@@ -49,7 +50,15 @@ class _MaxWeightChartState extends State<MaxWeightChart> {
       return Column(
         children: [
           _title(),
-          _emptyView(),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 300),
+            child: EmptyView(
+              assetName: Assets.chartEmpty,
+              header:
+                  LocalizationUtil.localize(context).maxWeightChartEmptyHeader,
+              body: LocalizationUtil.localize(context).maxWeightChartEmptyBody,
+            ),
+          ),
         ],
       );
     }
@@ -84,24 +93,6 @@ class _MaxWeightChartState extends State<MaxWeightChart> {
     return Text(
       LocalizationUtil.localize(context).maxWeightChartTitle,
       style: Theme.of(context).textTheme.titleMedium,
-    );
-  }
-
-  Widget _emptyView() {
-    return AspectRatio(
-      aspectRatio: 1.85,
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.bar_chart, size: 96),
-            Text(
-              LocalizationUtil.localize(context).maxWeightChartEmptyDescription,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-          ],
-        ),
-      ),
     );
   }
 

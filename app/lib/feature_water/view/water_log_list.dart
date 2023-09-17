@@ -43,17 +43,18 @@ class WaterLogItem extends StatelessWidget {
     final volume = data.volume;
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: WorkoutAppThemeData.pageMargin),
+      margin: const EdgeInsets.symmetric(
+          horizontal: WorkoutAppThemeData.pageMargin),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Text(
             data.time,
-            style: Theme.of(context).textTheme.labelLarge,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           Text(
             "${data.volume.toInt().toString()}ml",
-            style: Theme.of(context).textTheme.labelLarge,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           IconButton(
             icon: const Icon(Icons.more_horiz),

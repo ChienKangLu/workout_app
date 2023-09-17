@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../core_view/custom_dialog.dart';
+import '../../core_view/empty_view.dart';
 import '../../core_view/list_item.dart';
+import '../../util/assets.dart';
 import '../../util/localization_util.dart';
 import '../backup_setting_view_model.dart';
 import '../ui_state/file_picker_ui_state.dart';
@@ -39,21 +41,10 @@ class _FilePickerDialogState extends State<FilePickerDialog> {
           title:
               LocalizationUtil.localize(context).settingBackupFilePickerTitle,
           child: fileItems.isEmpty
-              ? Column(
-                  children: [
-                    const Spacer(flex: 1),
-                    const Icon(
-                      Icons.file_copy,
-                      size: 100,
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      LocalizationUtil.localize(context)
-                          .settingEmptyBackupFileTitle,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    const Spacer(flex: 3),
-                  ],
+              ? EmptyView(
+                  assetName: Assets.backupEmpty,
+                  header: LocalizationUtil.localize(context).backupEmptyHeader,
+                  body: LocalizationUtil.localize(context).backupEmptyBody,
                 )
               : ListView.builder(
                   itemCount: fileItems.length,

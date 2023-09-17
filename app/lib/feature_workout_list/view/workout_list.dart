@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core_view/empty_view.dart';
 import '../../core_view/ui_mode.dart';
 import '../../core_view/ui_mode_view_model.dart';
 import '../../core_view/workout_status.dart';
@@ -28,7 +29,11 @@ class WorkoutList extends StatelessWidget {
   Widget build(BuildContext context) {
     return _listContainer(
       context,
-      child: _isEmpty ? _emptyView(context) : _listView(context),
+      child: _isEmpty ? EmptyView(
+        assetName: Assets.workoutListEmpty,
+        header: LocalizationUtil.localize(context).workoutListEmptyHeader,
+        body: LocalizationUtil.localize(context).workoutListEmptyBody,
+      ) : _listView(context),
     );
   }
 
@@ -36,25 +41,6 @@ class WorkoutList extends StatelessWidget {
     return Container(
       color: Theme.of(context).colorScheme.background,
       child: child,
-    );
-  }
-
-  Widget _emptyView(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Image.asset(
-            Assets.kettlebells,
-            width: 150,
-          ),
-          const SizedBox(height: 10),
-          Text(
-            LocalizationUtil.localize(context).workoutListEmptyDescription,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-        ],
-      ),
     );
   }
 

@@ -23,26 +23,26 @@ class ExerciseSetView extends StatelessWidget {
     final uiMode = context.watch<UiModeViewModel>().uiMode;
 
     return ConstrainedBox(
-      constraints: BoxConstraints.tightFor(
+      constraints: const BoxConstraints.tightFor(
         height: WorkoutAppThemeData.exerciseSetHeight,
       ),
       child: Row(
         children: [
           Text(
             "${editableExerciseSet.number}.",
-            style: Theme.of(context).textTheme.labelLarge,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
-          SizedBox(width: WorkoutAppThemeData.exerciseSetDataMargin),
+          const SizedBox(width: WorkoutAppThemeData.exerciseSetDataMargin),
           Text(
             "${editableExerciseSet.displayWeight} ${editableExerciseSet.weightUnit.displayString(context)}",
-            style: Theme.of(context).textTheme.labelLarge,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
-          SizedBox(width: WorkoutAppThemeData.exerciseSetDataMargin),
+          const SizedBox(width: WorkoutAppThemeData.exerciseSetDataMargin),
           Expanded(
             child: Text(
               LocalizationUtil.localize(context)
                   .repetitionText(editableExerciseSet.repetition),
-              style: Theme.of(context).textTheme.labelLarge,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
           ),
           if (uiMode == UiMode.edit)

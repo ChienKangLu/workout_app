@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../core_view/action_bottom_sheet.dart';
 import '../core_view/confirm_dialog.dart';
+import '../core_view/empty_view.dart';
 import '../core_view/ui_mode.dart';
 import '../core_view/ui_mode_view_model.dart';
 import '../core_view/util/sheet_util.dart';
@@ -10,6 +11,7 @@ import '../core_view/workout_status.dart';
 import '../feature_exercise_statistic/exercise_statistic_page.dart';
 import '../feature_setting_exercise/view/create_exercise_dialog.dart';
 import '../themes/workout_app_theme_data.dart';
+import '../util/assets.dart';
 import '../util/localization_util.dart';
 import '../util/weight_unit_convertor.dart';
 import 'ui_state/workout_ui_state.dart';
@@ -17,7 +19,6 @@ import 'view/edit_set_sheet.dart';
 import 'view/exercise_option_dialog.dart';
 import 'view/exercise_list_view.dart';
 import 'view/workout_page_app_bar.dart';
-import 'view/workout_start_view.dart';
 import 'view/workout_control_panel.dart';
 import 'workout_view_model.dart';
 
@@ -296,15 +297,23 @@ class _WorkoutPageState extends State<WorkoutPage> {
             final editableWorkout = success.editableWorkout;
             final workoutStatus = editableWorkout.workoutStatus;
             if (workoutStatus == WorkoutStatus.created) {
-              return WorkoutStartView(
-                onStartButtonClicked: () =>
-                    _onStartButtonClicked(editableWorkout),
+              return EmptyView(
+                alignment: EmptyViewAlignment.top,
+                assetName: Assets.workoutCreated,
+                header: LocalizationUtil.localize(context).workoutStartHeader,
+                body: LocalizationUtil.localize(context).workoutStartBody,
+                buttonTitle:
+                    LocalizationUtil.localize(context).workoutStartButton,
+                onAction: () {
+                  _onStartButtonClicked(editableWorkout);
+                },
               );
             }
 
             return Container(
-              margin: EdgeInsets.symmetric(
-                  horizontal: WorkoutAppThemeData.pageMargin),
+              margin: const EdgeInsets.symmetric(
+                horizontal: WorkoutAppThemeData.pageMargin,
+              ),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -316,12 +325,28 @@ class _WorkoutPageState extends State<WorkoutPage> {
                       onAddButtonClicked: () =>
                           _onAddButtonClicked(editableWorkout),
                     ),
-                    ExerciseListView(
-                      editableExercises: editableWorkout.editableExercises,
-                      onAddSet: _onAddSet,
-                      onEditSet: _onEditSet,
-                      onMoreButtonClicked: onExerciseListMoreButtonClicked,
-                    ),
+                    editableWorkout.editableExercises.isEmpty
+                        ? ConstrainedBox(
+                            constraints: const BoxConstraints(maxHeight: 400),
+                            child: EmptyView(
+                              alignment: EmptyViewAlignment.top,
+                              assetName: Assets.exerciseEmpty,
+                              header: LocalizationUtil.localize(context)
+                                  .exerciseEmptyHeader,
+                              body: workoutStatus != WorkoutStatus.finished
+                                  ? LocalizationUtil.localize(context)
+                                      .exerciseEmptyBody
+                                  : null,
+                            ),
+                          )
+                        : ExerciseListView(
+                            editableExercises:
+                                editableWorkout.editableExercises,
+                            onAddSet: _onAddSet,
+                            onEditSet: _onEditSet,
+                            onMoreButtonClicked:
+                                onExerciseListMoreButtonClicked,
+                          ),
                     const SizedBox(height: 16),
                   ],
                 ),

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../core_view/empty_view.dart';
 import '../feature_setting/view/water_goal_dialog.dart';
+import '../util/assets.dart';
+import '../util/localization_util.dart';
 import 'view/water_dialog.dart';
-import 'view/water_init_goal_view.dart';
 import 'view/water_indicator.dart';
 import 'view/water_shortcut_list.dart';
 import 'water_view_model.dart';
@@ -60,8 +62,12 @@ class _WaterProgressPageState extends State<WaterProgressPage> {
         final waterData = success.waterData;
         final goal = waterData.goal;
         if (goal == null) {
-          return WaterInitGoalView(
-            onGoalButtonClicked: _onGoalButtonClicked,
+          return EmptyView(
+            assetName: Assets.waterProgressInit,
+            header: LocalizationUtil.localize(context).waterProgressInitHeader,
+            body: LocalizationUtil.localize(context).waterProgressInitBody,
+            buttonTitle: LocalizationUtil.localize(context).waterGoalButton,
+            onAction: _onGoalButtonClicked,
           );
         }
 

@@ -62,11 +62,11 @@ class WaterShortcutItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: WorkoutAppThemeData.pageMargin),
+      margin: const EdgeInsets.only(left: WorkoutAppThemeData.pageMargin),
       child: FilledButton.tonal(
         child: Text(
           text,
-          style: Theme.of(context).textTheme.labelLarge,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         onPressed: () => onItemTap(volume),
       ),

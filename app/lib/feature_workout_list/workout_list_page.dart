@@ -8,8 +8,6 @@ import '../feature_root/root_view_model.dart';
 import '../feature_setting/setting_page.dart';
 import '../feature_workout/workout_page.dart';
 import '../themes/workout_app_theme_data.dart';
-import '../util/log_util.dart';
-import '../util/localization_util.dart';
 import 'ui_state/workout_list_ui_state.dart';
 import 'view/workout_list.dart';
 import 'view/workout_list_page_app_bar.dart';

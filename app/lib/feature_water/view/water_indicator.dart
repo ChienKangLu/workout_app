@@ -51,16 +51,16 @@ class _WaterIndicatorState extends State<WaterIndicator> {
             children: [
               Text(
                 "${_value.toInt()}",
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                style: Theme.of(context).textTheme.displayMedium?.copyWith(
                       color: _indicatorColor,
-                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
                     ),
               ),
               Text(
                 "/ ${_goal.toInt()}ml",
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       color: _trackColor,
-                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
               ),
             ],

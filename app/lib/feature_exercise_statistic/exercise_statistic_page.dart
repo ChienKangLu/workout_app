@@ -70,7 +70,7 @@ class _ExerciseStatisticPageState extends State<ExerciseStatisticPage> {
                 exerciseReport.monthlyMaxWeightChartData;
 
             return Container(
-              margin: EdgeInsets.symmetric(
+              margin: const EdgeInsets.symmetric(
                   horizontal: WorkoutAppThemeData.pageMargin),
               child: ListView(
                 children: [

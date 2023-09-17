@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../core_view/empty_view.dart';
 import '../../core_view/list_item.dart';
 import '../../core_view/ui_mode.dart';
 import '../../core_view/ui_mode_view_model.dart';
+import '../../util/assets.dart';
 import '../../util/localization_util.dart';
 import '../setting_exercise_view_model.dart';
 import '../ui_state/exercise_option_list_ui_state.dart';
@@ -33,6 +35,20 @@ class ExerciseOptionList extends StatelessWidget {
       onLoading: () => const SizedBox(),
       onSuccess: (success) {
         final exerciseOptions = success.exerciseOptions;
+        if (exerciseOptions.isEmpty) {
+          return EmptyView(
+            assetName: Assets.exerciseListEmpty,
+            header: LocalizationUtil.localize(context)
+                .exerciseListEmptyHeader,
+            body: LocalizationUtil.localize(context)
+                .exerciseListEmptyBody,
+            buttonTitle: LocalizationUtil.localize(context)
+                .createExerciseButton,
+            onAction: () {
+              onNewExercise();
+            },
+          );
+        }
 
         return ListView.builder(
           itemCount: exerciseOptions.length + 1,
