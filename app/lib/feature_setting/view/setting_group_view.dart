@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../themes/workout_app_theme_data.dart';
-
 class SettingGroup extends StatelessWidget {
   const SettingGroup({
     Key? key,

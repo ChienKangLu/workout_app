@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../core_view/action_bottom_sheet.dart';
+import '../core_view/empty_view.dart';
 import '../core_view/util/sheet_util.dart';
+import '../util/assets.dart';
 import '../util/localization_util.dart';
 import 'view/edit_water_dialog.dart';
 import 'view/water_log_list.dart';
@@ -72,6 +74,18 @@ class _WaterLogPageState extends State<WaterLogPage> {
       onLoading: () => const SizedBox(),
       onSuccess: (success) {
         final waterData = success.waterData;
+        final waterLogDataList = waterData.waterLogDataList;
+        if (waterLogDataList.isEmpty) {
+          return EmptyView(
+            assetName: Assets.waterLogEmpty,
+            header: LocalizationUtil.localize(context).waterLogEmptyHeader,
+            body: LocalizationUtil.localize(context).waterLogEmptyBody,
+            buttonTitle: LocalizationUtil.localize(context).waterDrinkButton,
+            onAction: () {
+              DefaultTabController.of(context).animateTo(0);
+            },
+          );
+        }
 
         return WaterLogList(
           waterLogDataList: waterData.waterLogDataList,

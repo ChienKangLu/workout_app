@@ -15,9 +15,13 @@
   "@workoutStatusInProgress": {
     "description": "Text for workout item which is in progress"
   },
-  "workoutListEmptyDescription": "Tap the + button to enjoy your workout",
-  "@workoutListEmptyDescription": {
-    "description": "Title for empty workout description"
+  "workoutListEmptyHeader": "Get started",
+  "@workoutListEmptyHeader": {
+    "description": "Header for empty workout list"
+  },
+  "workoutListEmptyBody": "Tap the + button to create your first workout",
+  "@workoutListEmptyBody": {
+    "description": "Body for empty workout list"
   },
   "navigationHomeTitle": "Home",
   "@navigationHomeTitle": {
@@ -42,13 +46,37 @@
       }
     }
   },
-  "workoutStartMessage": "Let's start workout",
-  "@workoutStartMessage": {
-    "description": "Message for start workout"
+  "workoutStartHeader": "Are you ready?",
+  "@workoutStartHeader": {
+    "description": "Header for start workout"
   },
-  "workoutStartButtonTitle": "Start",
-  "@workoutStartButtonTitle": {
-    "description": "Title of start workout button"
+  "workoutStartBody": "Click button to start workout",
+  "@workoutStartBody": {
+    "description": "Body for start workout"
+  },
+  "workoutStartButton": "Start",
+  "@workoutStartButton": {
+    "description": "Title for start workout"
+  },
+  "exerciseEmptyHeader": "No exercises",
+  "@exerciseEmptyHeader": {
+    "description": "Header for empty exercise"
+  },
+  "exerciseEmptyBody": "Tap above + button to add exercise",
+  "@exerciseEmptyBody": {
+    "description": "Body for empty exercise"
+  },
+  "exerciseListEmptyHeader": "No exercises",
+  "@exerciseListEmptyHeader": {
+    "description": "Header for empty exercise list"
+  },
+  "exerciseListEmptyBody": "Tap button to create your exercise",
+  "@exerciseListEmptyBody": {
+    "description": "Body for empty exercise list"
+  },
+  "createExerciseButton": "Create",
+  "@createExerciseButton": {
+    "description": "Title for create exercise"
   },
 
   "actionItemEdit": "Edit",
@@ -200,9 +228,13 @@
   "@settingBackupFilePickerTitle": {
     "description": "Title for backup file picker"
   },
-  "settingEmptyBackupFileTitle": "No backup available",
-  "@settingEmptyBackupFileTitle": {
-    "description": "Title for empty backup file"
+  "backupEmptyHeader": "No backup",
+  "@backupEmptyHeader": {
+    "description": "Header for empty backup"
+  },
+  "backupEmptyBody": "There is no backup found in your Google Drive",
+  "@backupEmptyBody": {
+    "description": "Body for empty backup"
   },
   "restoreConfirmDialogTitle":  "Are you sure to restore from {fileName}?",
   "@restoreConfirmDialogTitle": {
@@ -227,9 +259,13 @@
   "@maxWeightChartTitle": {
     "description": "Title for max weight chart"
   },
-  "maxWeightChartEmptyDescription": "No Data",
-  "@maxWeightChartEmptyDescription": {
-    "description": "Title for empty weight data description"
+  "maxWeightChartEmptyHeader": "No Data",
+  "@maxWeightChartEmptyHeader": {
+    "description": "Title for empty chart"
+  },
+  "maxWeightChartEmptyBody": "There is no set data in the exercise to count",
+  "@maxWeightChartEmptyBody": {
+    "description": "Body for empty chart"
   },
 
   "waterProgressTodayTitle": "Today",
@@ -256,13 +292,17 @@
   "@waterGoalTextFieldHint": {
     "description": "Hint for water goal"
   },
-  "waterInitDescription": "Let's start tracking your water",
-  "@waterInitDescription": {
-    "description": "Title for init water goal"
+  "waterProgressInitHeader": "Track water",
+  "@waterProgressInitHeader": {
+    "description": "Header for water progress initialization"
   },
-  "waterSetButtonTitle": "Set Goal",
-  "@waterSetButtonTitle": {
-    "description": "Title for set water goal"
+  "waterProgressInitBody": "Click button to set up your daily water goal",
+  "@waterProgressInitBody": {
+    "description": "Body for water progress initialization"
+  },
+  "waterGoalButton": "Set goal",
+  "@waterSetButton": {
+    "description": "Title for water goal button"
   },
   "waterDialogTitle": "Enter water",
   "@waterDialogTitle": {
@@ -280,6 +320,19 @@
   "@editWaterDialogTextFieldHint": {
     "description": "Hint for edit water dialog"
   },
+  "waterLogEmptyHeader": "No log",
+  "@waterLogEmptyHeader": {
+    "description": "Header for empty water log"
+  },
+  "waterLogEmptyBody": "It's time to drink some water",
+  "@waterLogEmptyBody": {
+    "description": "Body for empty water log"
+  },
+  "waterDrinkButton": "Drink",
+  "@waterDrinkButton": {
+    "description": "Title for water drink button"
+  },
+
   "confirmDialogPositiveBtn": "Yes",
   "@confirmDialogPositiveBtn": {
     "description": "Text for positive button in confirm dialog"

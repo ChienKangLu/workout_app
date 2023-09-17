@@ -9,7 +9,6 @@ class WorkoutAppThemeData {
       useMaterial3: true,
       colorScheme: colorScheme,
       fontFamily: 'Roboto Condensed',
-      textTheme: _textTheme,
     );
   }
 
@@ -77,37 +76,26 @@ class WorkoutAppThemeData {
     surfaceTint: Color(0xFFADC6FF),
   );
 
-  static const _bold = FontWeight.w700;
+  static const bottomBarHeight = 80.0;
 
-  static const _textTheme = TextTheme(
-    titleLarge: TextStyle(
-      fontSize: 20.0,
-      fontWeight: _bold,
-    ),
-    labelLarge: TextStyle(
-      fontSize: 20.0,
-    ),
-  );
+  static const pageMargin = 16.0;
 
-  static double get bottomBarHeight => 80;
-
-  static double get pageMargin => 16;
-
-  static double get exerciseThumbnailHeight => 50.0;
-  static EdgeInsets get exerciseThumbnailMargin =>
-      const EdgeInsets.fromLTRB(0, 5, 10, 5);
-  static EdgeInsets get exerciseThumbnailPadding => const EdgeInsets.all(5);
+  static const exerciseThumbnailHeight = 50.0;
+  static const exerciseThumbnailMargin = EdgeInsets.fromLTRB(0, 5, 10, 5);
+  static const exerciseThumbnailPadding = EdgeInsets.all(5);
   static BorderRadius get exerciseThumbnailBorderRadius =>
       BorderRadius.circular(12.0);
 
-  static double get exerciseTitleHeight => 48.0;
-  static double get exerciseSetHeight => 48.0;
-  static double get exerciseSetDataMargin => 20.0;
+  static const exerciseTitleHeight = 48.0;
+  static const exerciseSetHeight = 48.0;
+  static const exerciseSetDataMargin = 20.0;
 
-  static EdgeInsets get workoutPickerTitleMargin =>
-      const EdgeInsets.fromLTRB(0, 80, 0, 0);
-  static EdgeInsets get workoutPickerMargin =>
-      const EdgeInsets.symmetric(vertical: 10);
+  static const workoutPickerTitleMargin = EdgeInsets.fromLTRB(0, 80, 0, 0);
+  static const workoutPickerMargin = EdgeInsets.symmetric(vertical: 10);
 
-  static Duration animationDuration = const Duration(milliseconds: 300);
+  static const animationDuration = Duration(milliseconds: 300);
+
+  static const tabHeight = 46.0;
+
+  static const opacityDisabled = 0.4;
 }

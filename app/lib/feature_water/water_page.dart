@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../util/localization_util.dart';
-import 'water_log_page.dart';
-import 'water_progress_page.dart';
+import 'view/water_tab_bar.dart';
+import 'view/water_tab_bar_view.dart';
 import 'water_view_model.dart';
 
 class WaterPage extends StatefulWidget {
@@ -54,21 +54,9 @@ class _WaterPageState extends State<WaterPage> {
           title:
               Text(LocalizationUtil.localize(context).waterProgressTodayTitle),
           centerTitle: true,
-          bottom: TabBar(
-            tabs: [
-              Tab(
-                text: LocalizationUtil.localize(context).waterProgressTabTitle,
-              ),
-              Tab(text: LocalizationUtil.localize(context).waterLogTabTitle),
-            ],
-          ),
+          bottom: const WaterTabBar(),
         ),
-        body: const TabBarView(
-          children: [
-            WaterProgressPage(),
-            WaterLogPage(),
-          ],
-        ),
+        body: const WaterTabBarView(),
       ),
     );
   }

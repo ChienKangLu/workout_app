@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../util/localization_util.dart';
-
 class LoadingDialog extends StatefulWidget {
   const LoadingDialog({
     super.key,
