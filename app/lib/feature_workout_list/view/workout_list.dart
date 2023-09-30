@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../core_view/empty_view.dart';
 import '../../core_view/ui_mode.dart';
 import '../../core_view/ui_mode_view_model.dart';
-import '../../core_view/workout_status.dart';
+import '../../model/workout_status.dart';
 import '../../themes/workout_app_theme_data.dart';
 import '../../util/assets.dart';
 import '../../util/localization_util.dart';

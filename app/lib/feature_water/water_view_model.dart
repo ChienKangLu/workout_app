@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '../core_view/util/date_time_display_helper.dart';
+import '../util/date_time_util.dart';
 import '../core_view/view_model.dart';
 import '../use_case/water_use_case.dart';
 import 'ui_state/water_ui_state.dart';
@@ -66,7 +66,7 @@ class WaterViewModel extends ViewModel {
             .map(
               (waterLog) => WaterLogData(
                 id: waterLog.id,
-                time: DateTimeDisplayHelper.time(waterLog.dateTime),
+                time: DateTimeUtil.timeString(waterLog.dateTime),
                 volume: waterLog.volume,
               ),
             )

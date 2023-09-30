@@ -1,4 +1,4 @@
-import '../../core_view/workout_status.dart';
+import '../../model/workout_status.dart';
 import '../../model/exercise.dart';
 import '../../model/unit.dart';
 import '../../model/workout.dart';

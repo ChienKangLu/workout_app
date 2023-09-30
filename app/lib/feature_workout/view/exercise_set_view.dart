@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../core_view/ui_mode.dart';
 import '../../core_view/ui_mode_view_model.dart';
-import '../../core_view/util/weight_display_helper.dart';
+import '../../core_view/util/display_string_util.dart';
 import '../../themes/workout_app_theme_data.dart';
 import '../../util/localization_util.dart';
 import '../ui_state/workout_ui_state.dart';
@@ -34,7 +34,7 @@ class ExerciseSetView extends StatelessWidget {
           ),
           const SizedBox(width: WorkoutAppThemeData.exerciseSetDataMargin),
           Text(
-            "${editableExerciseSet.displayWeight} ${editableExerciseSet.weightUnit.displayString(context)}",
+            "${editableExerciseSet.displayWeight} ${editableExerciseSet.weightUnit.unitString(context)}",
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(width: WorkoutAppThemeData.exerciseSetDataMargin),

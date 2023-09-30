@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 
-import '../core_view/util/date_time_display_helper.dart';
+import '../util/date_time_util.dart';
 import '../core_view/view_model.dart';
-import '../core_view/workout_status.dart';
+import '../model/workout_status.dart';
 import '../model/result.dart';
 import '../model/workout.dart';
 import '../repository/repository_manager.dart';
@@ -58,9 +58,9 @@ class WorkoutListViewModel extends ViewModel {
             (index, workout) => ReadableWorkout(
               workoutId: workout.workoutId,
               number: total - index,
-              day: DateTimeDisplayHelper.day(
+              day: DateTimeUtil.dayString(
                   workout.startDateTime ?? workout.createDateTime),
-              date: DateTimeDisplayHelper.date(
+              date: DateTimeUtil.dateString(
                   workout.startDateTime ?? workout.createDateTime),
               exerciseThumbnails: workout.exercises
                   .map(

@@ -1,15 +1,15 @@
 import 'package:collection/collection.dart';
 
-import '../core_view/util/date_time_display_helper.dart';
-import '../core_view/util/weight_display_helper.dart';
+import '../core_view/util/display_string_util.dart';
 import '../core_view/view_model.dart';
-import '../core_view/workout_status.dart';
+import '../model/workout_status.dart';
 import '../model/result.dart';
 import '../model/workout.dart';
 import '../repository/exercise_repository.dart';
 import '../repository/repository_manager.dart';
 import '../repository/workout_repository.dart';
 import '../use_case/exercise_use_case.dart';
+import '../util/date_time_util.dart';
 import '../util/log_util.dart';
 import 'ui_state/exercise_option_list_ui_state.dart';
 import 'ui_state/workout_ui_state.dart';
@@ -72,7 +72,7 @@ class WorkoutViewModel extends ViewModel {
     _workoutUiState = WorkoutUiState.success(
       EditableWorkout(
         startDateTimeText:
-            DateTimeDisplayHelper.dateTime(workout.startDateTime),
+            DateTimeUtil.dateTimeString(workout.startDateTime),
         duration: _duration(workout),
         editableExercises: workout.exercises
             .map(
@@ -84,7 +84,7 @@ class WorkoutViewModel extends ViewModel {
                       (index, set) => EditableExerciseSet(
                         exerciseId: exercise.exerciseId,
                         number: index + 1,
-                        displayWeight: set.displayTotalWeight(),
+                        displayWeight: set.totalWeightString(),
                         weightUnit: set.unit,
                         repetition: set.repetition,
                         set: set,

@@ -29,4 +29,6 @@ class ExerciseSet extends IntervalEvent {
   final double sideWeight;
   final WeightUnit unit;
   final int repetition;
+
+  double totalWeight() => baseWeight + sideWeight * 2;
 }
