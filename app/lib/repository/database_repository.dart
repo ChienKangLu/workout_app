@@ -1,9 +1,13 @@
 import 'dart:io';
 
+import 'package:meta/meta.dart';
+
 import '../database/workout_database.dart';
 
 class DatabaseRepository {
   final List<DatabaseObserver> _observers = <DatabaseObserver>[];
+  @visibleForTesting
+  List<DatabaseObserver> get observers => _observers;
 
   String get dbPath => WorkoutDatabase.instance.dbPath;
 

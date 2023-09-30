@@ -48,3 +48,6 @@ app.*.map.json
 
 # Draw.io
 *.bkp
+
+# Test coverage
+coverage/

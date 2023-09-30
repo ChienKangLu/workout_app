@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../core_view/util/weight_display_helper.dart';
+import '../../core_view/util/display_string_util.dart';
 import '../../model/unit.dart';
 import '../../util/localization_util.dart';
 import '../../util/weight_unit_convertor.dart';
@@ -321,10 +321,10 @@ class _EditSetSheetState extends State<EditSetSheet> {
         onPressed: onPressed,
         children: [
           Text(
-            _weightUnits[0].displayString(context),
+            _weightUnits[0].unitString(context),
           ),
           Text(
-            _weightUnits[1].displayString(context),
+            _weightUnits[1].unitString(context),
           ),
         ],
       ),

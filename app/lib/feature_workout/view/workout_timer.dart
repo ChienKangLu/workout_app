@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../core_view/util/duration_util.dart';
+import '../../util/date_time_util.dart';
 
 class WorkoutTimer extends StatefulWidget {
   const WorkoutTimer._({
@@ -89,7 +89,7 @@ class _WorkoutTimerState extends State<WorkoutTimer>
 
   Widget _timer(Duration duration) {
     return Text(
-      DurationUtil.displayText(context, duration),
+      DateTimeUtil.durationString(duration),
       style: Theme.of(context).textTheme.displayLarge,
     );
   }

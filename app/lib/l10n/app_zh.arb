@@ -44,8 +44,8 @@
   "repetitionTitle": "次數",
   "baseWeightTitle": "基本重量",
   "sideWeightTitle": "單邊重量",
-  "unitKilogram": "kg",
-  "unitPound": "lb",
+  "unitKilogram": "公斤",
+  "unitPound": "磅",
 
   "settingPageTitle": "設定",
   "settingWorkoutTitle": "運動",

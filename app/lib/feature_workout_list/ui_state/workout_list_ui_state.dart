@@ -1,4 +1,4 @@
-import '../../core_view/workout_status.dart';
+import '../../model/workout_status.dart';
 
 abstract class WorkoutListUiState {
   WorkoutListUiState();
