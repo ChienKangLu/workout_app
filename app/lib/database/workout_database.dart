@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:meta/meta.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../util/log_util.dart';
 import 'dao/composed_workout_dao.dart';
 import 'dao/exercise_dao.dart';
 import 'dao/water_goal_dao.dart';
@@ -10,10 +12,9 @@ import 'dao/exercise_set_dao.dart';
 import 'dao/workout_dao.dart';
 import 'dao/workout_detail_dao.dart';
 import 'database_initializer.dart';
-import 'mockup/mock_data_initializer.dart';
 
 class WorkoutDatabase {
-  static const isMockupEnabled = false;
+  static const _tag = "WorkoutDatabase";
 
   WorkoutDatabase._();
   static final WorkoutDatabase instance = WorkoutDatabase._();
@@ -26,8 +27,7 @@ class WorkoutDatabase {
   final waterGoalDao = WaterGoalDao();
   final waterLogDao = WaterLogDao();
 
-  late final _initializer = DatabaseInitializer();
-  late final _mockDataInitializer = MockDataInitializer();
+  late DatabaseInitializer _initializer = DatabaseInitializer();
 
   static Database? _databaseInstance;
   Future<Database> get _database async {
@@ -46,21 +46,26 @@ class WorkoutDatabase {
     await composedWorkoutDao.init(_database);
     await waterGoalDao.init(_database);
     await waterLogDao.init(_database);
-
-    if (_initializer.isFirstCreation && isMockupEnabled) {
-      await _mockDataInitializer.initTestData();
-    }
   }
 
   Future<void> restoreBackup(File backup) async {
-    await _close();
-    await backup.copy(dbPath);
+    await close();
+    try {
+      await backup.copy(dbPath);
+    } catch (e) {
+      Log.e(_tag, "Cannot copy backup, error = $e");
+    }
     await init();
   }
 
-  Future<void> _close() async {
+  Future<void> close() async {
     final database = await _database;
     await database.close();
     _databaseInstance = null;
+  }
+
+  @visibleForTesting
+  void setUpDatabaseInitializer(DatabaseInitializer databaseInitializer) {
+    _initializer = databaseInitializer;
   }
 }

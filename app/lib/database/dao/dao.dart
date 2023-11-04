@@ -7,8 +7,6 @@ import 'dao_filter.dart';
 import 'dao_result.dart';
 
 abstract class Dao<T extends BaseEntity, F extends DaoFilter> {
-  static int invalidId = -1;
-
   Future<void> init(Future<Database> database);
 
   Future<DaoResult<List<T>>> findAll();

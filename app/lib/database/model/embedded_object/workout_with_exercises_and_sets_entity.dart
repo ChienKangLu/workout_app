@@ -13,5 +13,11 @@ class WorkoutWithExercisesAndSetsEntity extends BaseEntity {
   final Map<ExerciseEntity, ExerciseWithSetsEntity> exerciseWithSetsEntityMap;
 
   @override
-  Map<String, dynamic> toMap() => {};
+  Map<String, dynamic> toMap() => {
+    "workoutEntity": workoutEntity,
+    "exerciseWithSetsEntityMap": exerciseWithSetsEntityMap,
+  };
+
+  @override
+  List<Object?> get props => [workoutEntity, exerciseWithSetsEntityMap];
 }

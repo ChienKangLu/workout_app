@@ -43,12 +43,12 @@ abstract class SimpleDao<T extends BaseEntity, F extends DaoFilter>
   @override
   Future<DaoResult<int>> add(T entity) async {
     try {
-      final id = await database.insert(
+      final rowId = await database.insert(
         tableName,
         entity.toMap(),
       );
 
-      return DaoSuccess(id);
+      return DaoSuccess(rowId);
     } on Exception catch (e) {
       Log.e(tag, "Cannot add entity '$entity'", e);
       return DaoError(e);
@@ -66,7 +66,12 @@ abstract class SimpleDao<T extends BaseEntity, F extends DaoFilter>
         where: createUpdateFilter(entity).toWhereClause(),
         conflictAlgorithm: ConflictAlgorithm.ignore,
       );
-      Log.d(tag, "Update $count rows in '$tableName'");
+
+      if (count > 0) {
+        Log.d(tag, "Update $count rows in '$tableName'");
+      } else {
+        Log.w(tag, "Updated 0 rows");
+      }
 
       return DaoSuccess(true);
     } on Exception catch (e) {
@@ -82,7 +87,12 @@ abstract class SimpleDao<T extends BaseEntity, F extends DaoFilter>
         tableName,
         where: filter.toWhereClause(),
       );
-      Log.d(tag, "Delete $count rows from '$tableName'");
+
+      if (count > 0) {
+        Log.d(tag, "Delete $count rows from '$tableName'");
+      } else {
+        Log.w(tag, "Deleted 0 rows");
+      }
 
       return DaoSuccess(true);
     } on Exception catch (e) {

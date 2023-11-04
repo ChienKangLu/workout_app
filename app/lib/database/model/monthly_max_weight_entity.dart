@@ -1,17 +1,6 @@
 import '../schema.dart';
 import 'base_entity.dart';
 
-class ExerciseStatisticEntity extends BaseEntity {
-  ExerciseStatisticEntity({
-    required this.monthlyMaxWeightEntities,
-  });
-
-  final List<MonthlyMaxWeightEntity> monthlyMaxWeightEntities;
-
-  @override
-  Map<String, dynamic> toMap() => {};
-}
-
 class MonthlyMaxWeightEntity extends BaseEntity {
   static const columnTotalWeight = "total_weight";
   static const columnYear = "year";
@@ -31,11 +20,11 @@ class MonthlyMaxWeightEntity extends BaseEntity {
 
   MonthlyMaxWeightEntity.fromMap(Map<String, dynamic> map)
       : this(
-          totalWeight: map[columnTotalWeight],
-          endDateTime: map[ExerciseSetTable.columnSetEndDateTime],
-          year: map[columnYear],
-          month: map[columnMonth],
-        );
+    totalWeight: map[columnTotalWeight],
+    endDateTime: map[ExerciseSetTable.columnSetEndDateTime],
+    year: map[columnYear],
+    month: map[columnMonth],
+  );
 
   @override
   Map<String, dynamic> toMap() {
@@ -46,4 +35,7 @@ class MonthlyMaxWeightEntity extends BaseEntity {
     map[columnMonth] = month;
     return map;
   }
+
+  @override
+  List<Object?> get props => [totalWeight, endDateTime, year, month];
 }

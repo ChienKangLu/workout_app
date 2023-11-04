@@ -29,15 +29,5 @@ class WorkoutDetailEntity extends BaseEntity {
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is WorkoutDetailEntity &&
-          runtimeType == other.runtimeType &&
-          workoutId == other.workoutId &&
-          exerciseId == other.exerciseId &&
-          createDateTime == other.createDateTime;
-
-  @override
-  int get hashCode =>
-      workoutId.hashCode ^ exerciseId.hashCode ^ createDateTime.hashCode;
+  List<Object?> get props => [workoutId, exerciseId, createDateTime];
 }
