@@ -8,6 +8,7 @@ import '../database/model/water_log_entity.dart';
 import '../model/result.dart';
 import '../model/water_goal.dart';
 import '../model/water_log.dart';
+import 'conversion.dart';
 import 'factory/water_goal_factory.dart';
 
 class WaterRepository with DaoProviderMixin {

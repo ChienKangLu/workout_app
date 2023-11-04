@@ -82,6 +82,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
             _uiModeViewModel.switchTo(UiMode.edit);
             break;
           case WorkoutStatus.finished:
+          case WorkoutStatus.unknown:
             break;
         }
       },
