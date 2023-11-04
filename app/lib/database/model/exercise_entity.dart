@@ -42,13 +42,5 @@ class ExerciseEntity extends BaseEntity {
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ExerciseEntity &&
-          runtimeType == other.runtimeType &&
-          exerciseId == other.exerciseId &&
-          name == other.name;
-
-  @override
-  int get hashCode => exerciseId.hashCode ^ name.hashCode;
+  List<Object?> get props => [exerciseId, name];
 }

@@ -51,14 +51,5 @@ class WaterLogEntity extends BaseEntity {
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is WaterLogEntity &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          volume == other.volume &&
-          dateTime == other.dateTime;
-
-  @override
-  int get hashCode => id.hashCode ^ volume.hashCode ^ dateTime.hashCode;
+  List<Object?> get props => [id, volume, dateTime];
 }

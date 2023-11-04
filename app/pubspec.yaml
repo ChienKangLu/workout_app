@@ -42,11 +42,13 @@ dependencies:
   extension_google_sign_in_as_googleapis_auth: ^2.0.10
   http: ^1.1.0
   path_provider: ^2.1.0
+  equatable: ^2.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^5.4.2
+  sqflite_common_ffi:
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

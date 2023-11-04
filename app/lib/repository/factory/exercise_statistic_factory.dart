@@ -1,4 +1,4 @@
-import '../../database/model/exercise_statistic_entity.dart';
+import '../../database/model/embedded_object/exercise_statistic_entity.dart';
 import '../../model/exercise_statistic.dart';
 
 class ExerciseStatisticFactory {

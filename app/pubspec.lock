@@ -194,7 +194,7 @@ packages:
     source: hosted
     version: "2.3.2"
   equatable:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: equatable
       sha256: c2b87cb7756efdf69892005af546c56c0b5037f54d2a88269b4f347a505e3ca2
@@ -698,6 +698,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.5"
+  sqflite_common_ffi:
+    dependency: "direct dev"
+    description:
+      name: sqflite_common_ffi
+      sha256: f86de82d37403af491b21920a696b19f01465b596f545d1acd4d29a0a72418ad
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.5"
+  sqlite3:
+    dependency: transitive
+    description:
+      name: sqlite3
+      sha256: db65233e6b99e99b2548932f55a987961bc06d82a31a0665451fa0b4fff4c3fb
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   stack_trace:
     dependency: transitive
     description:
