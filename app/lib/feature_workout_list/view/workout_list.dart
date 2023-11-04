@@ -29,11 +29,13 @@ class WorkoutList extends StatelessWidget {
   Widget build(BuildContext context) {
     return _listContainer(
       context,
-      child: _isEmpty ? EmptyView(
-        assetName: Assets.workoutListEmpty,
-        header: LocalizationUtil.localize(context).workoutListEmptyHeader,
-        body: LocalizationUtil.localize(context).workoutListEmptyBody,
-      ) : _listView(context),
+      child: _isEmpty
+          ? EmptyView(
+              assetName: Assets.workoutListEmpty,
+              header: LocalizationUtil.localize(context).workoutListEmptyHeader,
+              body: LocalizationUtil.localize(context).workoutListEmptyBody,
+            )
+          : _listView(context),
     );
   }
 
@@ -163,6 +165,8 @@ class WorkoutListItem extends StatelessWidget {
         return ExerciseThumbnailList(
           exerciseThumbnails: readableWorkout.exerciseThumbnails,
         );
+      case WorkoutStatus.unknown:
+        return Container();
     }
   }
 

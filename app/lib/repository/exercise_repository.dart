@@ -3,13 +3,14 @@ import '../database/dao/dao_result.dart';
 import '../database/dao/exercise_dao.dart';
 import '../database/dao/exercise_set_dao.dart';
 import '../database/dao/workout_detail_dao.dart';
-import '../database/model/exercise_entity.dart';
 import '../database/model/embedded_object/exercise_statistic_entity.dart';
+import '../database/model/exercise_entity.dart';
 import '../database/model/exercise_set_entity.dart';
 import '../database/model/workout_detail_entity.dart';
 import '../model/exercise.dart';
 import '../model/exercise_statistic.dart';
 import '../model/result.dart';
+import 'conversion.dart';
 import 'factory/exercise_factory.dart';
 import 'factory/exercise_statistic_factory.dart';
 

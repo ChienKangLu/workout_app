@@ -73,7 +73,6 @@ class _WaterIndicatorState extends State<WaterIndicator> {
 
 class _CircleIndicator extends StatefulWidget {
   const _CircleIndicator({
-    super.key,
     required this.size,
     required this.trackWidth,
     required this.trackColor,

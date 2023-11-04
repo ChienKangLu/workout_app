@@ -6,7 +6,7 @@ import '../database/dao/workout_dao.dart';
 import '../database/dao/workout_detail_dao.dart';
 import '../database/model/embedded_object/workout_with_exercises_and_sets_entity.dart';
 import '../database/model/workout_entity.dart';
-import '../model/conversion.dart';
+import 'conversion.dart';
 import '../model/result.dart';
 import '../model/workout.dart';
 import 'factory/workout_factory.dart';
