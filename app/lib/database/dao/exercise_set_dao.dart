@@ -122,7 +122,7 @@ class ExerciseSetDao
   }
 }
 
-class ExerciseSetEntityFilter implements DaoFilter {
+class ExerciseSetEntityFilter extends DaoFilter {
   ExerciseSetEntityFilter({
     this.workoutIds = const [],
     this.workoutId,

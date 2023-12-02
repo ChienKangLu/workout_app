@@ -132,7 +132,7 @@ class ComposedWorkoutDao
   bool _hasSet(Map<String, dynamic> map) => map[_columnSetNum] != null;
 }
 
-class ComposedWorkoutFilter implements DaoFilter {
+class ComposedWorkoutFilter extends DaoFilter {
   ComposedWorkoutFilter({
     required this.workoutIds,
   });

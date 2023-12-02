@@ -1,5 +1,6 @@
 import 'dart:io' as io;
 
+import 'package:flutter/foundation.dart';
 import 'package:googleapis/drive/v3.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
@@ -15,12 +16,13 @@ class GoogleDrivePort {
       "application/vnd.google-apps.folder";
   static final _signInPort = GoogleSignInPort();
 
-  static final _instance = GoogleDrivePort._internal();
+  static GoogleDrivePort? _instance;
+  static GoogleDrivePort get instance =>
+      _instance ??= GoogleDrivePort._internal();
+
   GoogleDrivePort._internal();
 
-  factory GoogleDrivePort() {
-    return _instance;
-  }
+  factory GoogleDrivePort() => instance;
 
   Future<bool> upload(String folder, io.File file) async {
     final driveApi = await _createDriveApi();
@@ -153,6 +155,11 @@ class GoogleDrivePort {
       Log.e(_tag, "Cannot get folder ID, error = $e");
     }
     return null;
+  }
+
+  @visibleForTesting
+  static void setUpInstance(GoogleDrivePort instance) {
+    _instance = instance;
   }
 }
 

@@ -48,8 +48,7 @@ class WorkoutViewModel extends ViewModel {
   Future<void> reload({
     bool isLongOperation = false,
   }) async {
-    if (_workoutUiState is! WorkoutLoadingUiState &&
-        isLongOperation) {
+    if (_workoutUiState is! WorkoutLoadingUiState && isLongOperation) {
       _workoutUiState = WorkoutUiState.loading();
     }
     if (_workoutUiState is! ExerciseOptionListLoadingUiState) {
@@ -71,8 +70,7 @@ class WorkoutViewModel extends ViewModel {
 
     _workoutUiState = WorkoutUiState.success(
       EditableWorkout(
-        startDateTimeText:
-            DateTimeUtil.dateTimeString(workout.startDateTime),
+        startDateTimeText: DateTimeUtil.dateTimeString(workout.startDateTime),
         duration: _duration(workout),
         editableExercises: workout.exercises
             .map(
@@ -143,7 +141,7 @@ class WorkoutViewModel extends ViewModel {
   }
 
   Future<void> startWorkout(EditableWorkout editableWorkout) async {
-    final workout = editableWorkout.workout..startDateTime = DateTime.now();
+    final workout = editableWorkout.workout..startEvent();
 
     final result = await _workoutRepository.updateWorkout(workout);
     if (result is Success) {
@@ -153,7 +151,7 @@ class WorkoutViewModel extends ViewModel {
   }
 
   Future<void> finishWorkout(EditableWorkout editableWorkout) async {
-    final workout = editableWorkout.workout..endDateTime = DateTime.now();
+    final workout = editableWorkout.workout..finishEvent();
 
     final result = await _workoutRepository.updateWorkout(workout);
     if (result is Success) {

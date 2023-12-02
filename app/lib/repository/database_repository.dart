@@ -13,14 +13,14 @@ class DatabaseRepository {
 
   Future<void> restoreBackup(File backup) async {
     await WorkoutDatabase.instance.restoreBackup(backup);
-    handleDatabaseBackupRestored();
+    _notifyDatabaseBackupRestored();
   }
 
   void addObserver(DatabaseObserver observer) => _observers.add(observer);
 
   bool removeObserver(DatabaseObserver observer) => _observers.remove(observer);
 
-  void handleDatabaseBackupRestored() {
+  void _notifyDatabaseBackupRestored() {
     for (final observer in _observers) {
       observer.didDatabaseBackupRestored();
     }

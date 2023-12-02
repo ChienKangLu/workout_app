@@ -10,8 +10,13 @@ void main() {
 
   test('Init', () async {
     // THEN
-    expect(tested.startDateTime, null);
-    expect(tested.endDateTime, null);
+    expect(
+      tested,
+      IntervalEvent(
+        startDateTime: null,
+        endDateTime: null,
+      ),
+    );
   });
 
   test('Start event', () async {

@@ -17,7 +17,9 @@ class WorkoutDatabase {
   static const _tag = "WorkoutDatabase";
 
   WorkoutDatabase._();
-  static final WorkoutDatabase instance = WorkoutDatabase._();
+
+  static WorkoutDatabase? _instance;
+  static WorkoutDatabase get instance => _instance ??= WorkoutDatabase._();
 
   final workoutDao = WorkoutDao();
   final exerciseDao = ExerciseDao();
@@ -31,8 +33,7 @@ class WorkoutDatabase {
 
   static Database? _databaseInstance;
   Future<Database> get _database async {
-    _databaseInstance ??= await _initializer.open();
-    return _databaseInstance!;
+    return _databaseInstance ??= await _initializer.open();
   }
 
   String get dbPath => _initializer.dbPath;
@@ -67,5 +68,10 @@ class WorkoutDatabase {
   @visibleForTesting
   void setUpDatabaseInitializer(DatabaseInitializer databaseInitializer) {
     _initializer = databaseInitializer;
+  }
+
+  @visibleForTesting
+  static void setUpInstance(WorkoutDatabase instance) {
+    _instance = instance;
   }
 }

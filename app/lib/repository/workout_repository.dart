@@ -9,11 +9,10 @@ import '../database/model/workout_entity.dart';
 import 'conversion.dart';
 import '../model/result.dart';
 import '../model/workout.dart';
-import 'factory/workout_factory.dart';
 
 class WorkoutRepository with DaoProviderMixin {
   Future<Result<int>> createWorkout() async {
-    final DaoResult<int> daoResult = await workoutDao.add(
+    final daoResult = await workoutDao.add(
       WorkoutEntity.create(
         createDateTime: DateTime.now().millisecondsSinceEpoch,
       ),
@@ -48,8 +47,7 @@ class WorkoutRepository with DaoProviderMixin {
   }
 
   Future<Result<bool>> updateWorkout(Workout workout) async {
-    final DaoResult<bool> daoResult =
-        await workoutDao.update(workout.asEntity());
+    final daoResult = await workoutDao.update(workout.asWorkoutEntity());
     return daoResult.asResult();
   }
 
@@ -60,11 +58,10 @@ class WorkoutRepository with DaoProviderMixin {
       workoutIds: workoutIds,
     );
 
-    final DaoResult<List<WorkoutWithExercisesAndSetsEntity>> daoResult =
-        await composedWorkoutDao.findByFilter(filter);
+    final daoResult = await composedWorkoutDao.findByFilter(filter);
 
     return daoResult.asResult(
-      convert: (data) => WorkoutFactory.createWorkouts(data),
+      convert: (data) => data.map((entity) => entity.asWorkout()).toList(),
     );
   }
 }

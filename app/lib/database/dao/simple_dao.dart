@@ -102,7 +102,7 @@ abstract class SimpleDao<T extends BaseEntity, F extends DaoFilter>
   }
 }
 
-abstract class SimpleEntityFilter implements DaoFilter {
+abstract class SimpleEntityFilter extends DaoFilter {
   SimpleEntityFilter({
     this.ids = const [],
     this.id,

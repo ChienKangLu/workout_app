@@ -67,6 +67,15 @@ class MockDatabaseInitializer extends _i1.Mock
       ) as _i4.Future<_i2.Database>);
 
   @override
+  void setUpDbPath(String? dbPath) => super.noSuchMethod(
+        Invocation.method(
+          #setUpDbPath,
+          [dbPath],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
   _i4.Future<void> onConfigure(_i2.Database? database) => (super.noSuchMethod(
         Invocation.method(
           #onConfigure,

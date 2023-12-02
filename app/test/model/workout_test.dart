@@ -15,9 +15,13 @@ void main() {
 
   test('Init', () async {
     // THEN
-    expect(tested.workoutId, workoutId);
-    expect(tested.createDateTime, createDateTime);
-    expect(tested.exercises, []);
+    expect(
+      tested,
+      Workout(
+        workoutId: workoutId,
+        createDateTime: createDateTime,
+      ),
+    );
   });
 
   test('Add exercise', () async {
