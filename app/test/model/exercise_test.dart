@@ -14,9 +14,13 @@ void main() {
 
   test('Init', () async {
     // THEN
-    expect(tested.exerciseId, exerciseId);
-    expect(tested.name, name);
-    expect(tested.sets.length, 0);
+    expect(
+      tested,
+      Exercise(
+        exerciseId: exerciseId,
+        name: name,
+      ),
+    );
   });
 
   test('Add set to exercise', () async {
@@ -27,6 +31,7 @@ void main() {
       unit: WeightUnit.kilogram,
       repetition: 5,
     );
+    expect(tested.sets.length, 0);
 
     // THEN
     tested.addSet(set);
@@ -34,7 +39,14 @@ void main() {
     // THEN
     final sets = tested.sets;
     expect(sets.length, 1);
-    expect(tested.sets[0], set);
-    expect(tested.sets[0].totalWeight(), 50);
+    expect(
+      sets[0],
+      ExerciseSet(
+        baseWeight: 10,
+        sideWeight: 20,
+        unit: WeightUnit.kilogram,
+        repetition: 5,
+      ),
+    );
   });
 }

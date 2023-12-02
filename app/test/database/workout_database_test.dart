@@ -6,6 +6,7 @@ import 'package:workout_app/database/workout_database.dart';
 
 import '../mock/database.mocks.dart';
 import '../mock/database_initializer.mocks.dart';
+import '../util/mock_db.dart';
 
 void main() {
   const dbPath = "dbPath";
@@ -15,13 +16,11 @@ void main() {
   late WorkoutDatabase tested;
 
   setUp(() async {
-    mockDatabaseInitializer = MockDatabaseInitializer();
-    mockDatabase = MockDatabase();
-    when(mockDatabaseInitializer.open()).thenAnswer((_) async => mockDatabase);
-    when(mockDatabaseInitializer.dbPath).thenReturn(dbPath);
+    final mockDB = MockDB()..setUp(deepMock: true);
+    mockDatabaseInitializer = mockDB.databaseInitializer;
+    mockDatabase = mockDB.database;
 
     tested = WorkoutDatabase.instance;
-    tested.setUpDatabaseInitializer(mockDatabaseInitializer);
 
     await tested.init();
   });

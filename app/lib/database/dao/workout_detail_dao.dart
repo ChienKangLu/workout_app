@@ -23,7 +23,7 @@ class WorkoutDetailDao
   }
 }
 
-class WorkoutDetailEntityFilter implements DaoFilter {
+class WorkoutDetailEntityFilter extends DaoFilter {
   WorkoutDetailEntityFilter({
     this.workoutIds = const [],
     this.workoutId,

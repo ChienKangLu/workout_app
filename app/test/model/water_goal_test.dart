@@ -14,8 +14,13 @@ void main() {
 
   test('Init', () async {
     // THEN
-    expect(tested.id, id);
-    expect(tested.volume, volume);
-    expect(tested.dateTime, dateTime);
+    expect(
+      tested,
+      WaterGoal(
+        id: id,
+        volume: volume,
+        dateTime: dateTime,
+      ),
+    );
   });
 }

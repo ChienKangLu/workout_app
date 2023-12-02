@@ -88,6 +88,7 @@ class DatabaseInitializer {
     Log.d(_tag, tables.toString());
   }
 
+  @visibleForTesting
   void setUpDbPath(String dbPath) {
     _dbPath = dbPath;
   }
