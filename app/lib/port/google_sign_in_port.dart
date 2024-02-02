@@ -23,9 +23,10 @@ class GoogleSignInPort {
 
   factory GoogleSignInPort() => instance;
 
-  final _googleSignIn = GoogleSignIn(
-    scopes: _scopes,
-  );
+  static GoogleSignIn? _googleSignInInstance;
+  GoogleSignIn get _googleSignIn => _googleSignInInstance ??= GoogleSignIn(
+        scopes: _scopes,
+      );
 
   Future<http.Client?> get httpClient => _googleSignIn.authenticatedClient();
 
@@ -50,5 +51,10 @@ class GoogleSignInPort {
   @visibleForTesting
   static void setUpInstance(GoogleSignInPort instance) {
     _instance = instance;
+  }
+
+  @visibleForTesting
+  static void setUpGoogleSignInInstance(GoogleSignIn instance) {
+    _googleSignInInstance = instance;
   }
 }
