@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class PortFile extends Equatable{
+class PortFile extends Equatable {
   const PortFile(this.id, this.name);
 
   final String id;
