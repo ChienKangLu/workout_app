@@ -52,7 +52,7 @@ class WaterViewModel extends ViewModel {
   }
 
   Future<void> _updateWaterUiState() async {
-    final waterGoal = await _waterUseCase.getWaterGoal();
+    final waterGoal = await _waterUseCase.getGoal();
     final waterLogs = await _waterUseCase.getLogsOf(DateTime.now());
 
     _waterUiState = WaterUiState.success(
