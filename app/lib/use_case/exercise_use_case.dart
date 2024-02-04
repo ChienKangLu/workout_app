@@ -12,8 +12,7 @@ class ExerciseUseCase {
       RepositoryManager.instance.exerciseRepository;
 
   Future<Exercise?> getExercise(int exerciseId) async {
-    final Result<Exercise?> result =
-        await _exerciseRepository.getExercise(exerciseId);
+    final result = await _exerciseRepository.getExercise(exerciseId);
     if (result is Error<Exercise?>) {
       Log.e(
         _tag,
@@ -27,8 +26,7 @@ class ExerciseUseCase {
   }
 
   Future<List<Exercise>?> getExercises() async {
-    final Result<List<Exercise>> result =
-        await _exerciseRepository.getExercises();
+    final result = await _exerciseRepository.getExercises();
     if (result is Error<List<Exercise>>) {
       Log.e(_tag, "Error happens while get exercises", result.exception);
       return null;
@@ -71,8 +69,7 @@ class ExerciseUseCase {
   }
 
   Future<ExerciseStatistic?> getStatistic(int exerciseId) async {
-    final Result<ExerciseStatistic> result =
-        await _exerciseRepository.getStatistic(exerciseId);
+    final result = await _exerciseRepository.getStatistic(exerciseId);
     if (result is Error<ExerciseStatistic>) {
       Log.e(
         _tag,

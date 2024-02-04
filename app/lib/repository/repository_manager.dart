@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 import 'database_repository.dart';
 import 'exercise_repository.dart';
 import 'google_repository.dart';
@@ -25,4 +27,14 @@ class RepositoryManager {
       _googleRepository ??= GoogleRepository();
   DatabaseRepository get databaseRepository =>
       _databaseRepository ??= DatabaseRepository();
+
+  @visibleForTesting
+  static void setUpExerciseRepository(ExerciseRepository exerciseRepository) {
+    _exerciseRepository = exerciseRepository;
+  }
+
+  @visibleForTesting
+  static void setUpWaterRepository(WaterRepository waterRepository) {
+    _waterRepository = waterRepository;
+  }
 }
