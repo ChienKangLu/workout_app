@@ -24,8 +24,6 @@ class DatabaseInitializer {
   static const _version = 1;
   static const _workoutDatabaseName = "workout_database.db";
 
-  bool isFirstCreation = false;
-
   final _migrationSteps = [
     MigrationStep(
       scripts: [
@@ -41,6 +39,7 @@ class DatabaseInitializer {
 
   late String _dbPath;
   String get dbPath => _dbPath;
+  int get version => _version;
 
   Future<Database> open() async {
     Log.d(_tag, "open");
@@ -53,7 +52,7 @@ class DatabaseInitializer {
       onConfigure: _onConfigure,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
-      onOpen: (database) async => await _onOpen(database),
+      onOpen: _onOpen,
       version: _version,
     );
   }
@@ -68,7 +67,6 @@ class DatabaseInitializer {
     for (var i = 0; i < version; i++) {
       await _migrationSteps[i].execute(database);
     }
-    isFirstCreation = true;
   }
 
   Future<void> _onUpgrade(
@@ -88,5 +86,30 @@ class DatabaseInitializer {
     final tables = await database
         .rawQuery("SELECT * FROM sqlite_master where type='table'");
     Log.d(_tag, tables.toString());
+  }
+
+  @visibleForTesting
+  void setUpDbPath(String dbPath) {
+    _dbPath = dbPath;
+  }
+
+  @visibleForTesting
+  Future<void> onConfigure(Database database) {
+    return _onConfigure(database);
+  }
+
+  @visibleForTesting
+  Future<void> onCreate(Database database, int version) {
+    return _onCreate(database, version);
+  }
+
+  @visibleForTesting
+  Future<void> onUpgrade(Database database, int oldVersion, int newVersion) {
+    return _onUpgrade(database, oldVersion, newVersion);
+  }
+
+  @visibleForTesting
+  Future<void> onOpen(Database database) {
+    return _onOpen(database);
   }
 }

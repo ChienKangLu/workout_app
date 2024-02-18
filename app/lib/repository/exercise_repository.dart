@@ -3,20 +3,18 @@ import '../database/dao/dao_result.dart';
 import '../database/dao/exercise_dao.dart';
 import '../database/dao/exercise_set_dao.dart';
 import '../database/dao/workout_detail_dao.dart';
+import '../database/model/embedded_object/exercise_statistic_entity.dart';
 import '../database/model/exercise_entity.dart';
-import '../database/model/exercise_statistic_entity.dart';
 import '../database/model/exercise_set_entity.dart';
 import '../database/model/workout_detail_entity.dart';
 import '../model/exercise.dart';
 import '../model/exercise_statistic.dart';
 import '../model/result.dart';
-import 'factory/exercise_factory.dart';
-import 'factory/exercise_statistic_factory.dart';
+import 'conversion.dart';
 
 class ExerciseRepository with DaoProviderMixin {
   Future<Result<Exercise?>> getExercise(int exerciseId) async {
-    final DaoResult<List<ExerciseEntity>> daoResult =
-        await exerciseDao.findByFilter(
+    final daoResult = await exerciseDao.findByFilter(
       ExerciseEntityFilter(id: exerciseId),
     );
 
@@ -25,25 +23,24 @@ class ExerciseRepository with DaoProviderMixin {
         return null;
       }
 
-      return ExerciseFactory.createExercise(data.first);
+      return data.first.asExercise();
     });
   }
 
   Future<Result<List<Exercise>>> getExercises() async {
-    final DaoResult<List<ExerciseEntity>> daoResult =
-        await exerciseDao.findByFilter(null);
+    final daoResult = await exerciseDao.findByFilter(null);
 
     return daoResult.asResult(
       convert: (data) => data
           .map(
-            (entity) => ExerciseFactory.createExercise(entity),
+            (entity) => entity.asExercise(),
           )
           .toList(),
     );
   }
 
   Future<Result<int>> createExercise(String name) async {
-    final DaoResult<int> daoResult = await exerciseDao.add(
+    final daoResult = await exerciseDao.add(
       ExerciseEntity.create(
         name: name,
       ),
@@ -53,12 +50,13 @@ class ExerciseRepository with DaoProviderMixin {
   }
 
   Future<Result<int>> addExercise(int workoutId, int exerciseId) async {
-    final DaoResult<int> daoResult =
-        await workoutDetailDao.add(WorkoutDetailEntity(
-      workoutId: workoutId,
-      exerciseId: exerciseId,
-      createDateTime: DateTime.now().millisecondsSinceEpoch,
-    ));
+    final daoResult = await workoutDetailDao.add(
+      WorkoutDetailEntity(
+        workoutId: workoutId,
+        exerciseId: exerciseId,
+        createDateTime: DateTime.now().millisecondsSinceEpoch,
+      ),
+    );
 
     return daoResult.asResult();
   }
@@ -185,7 +183,7 @@ class ExerciseRepository with DaoProviderMixin {
         await exerciseSetDao.getStatistic(exerciseId);
 
     return daoResult.asResult(
-      convert: (data) => ExerciseStatisticFactory.createExerciseStatistic(data),
+      convert: (data) => data.asExerciseStatistic(),
     );
   }
 }

@@ -55,7 +55,7 @@ class WaterSettingViewModel extends ViewModel {
   }
 
   Future<WaterGoal?> _getWaterGoal() async {
-    final result = await _waterUseCase.getWaterGoal();
+    final result = await _waterUseCase.getGoal();
     return result;
   }
 }

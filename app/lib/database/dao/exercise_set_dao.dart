@@ -1,6 +1,7 @@
 import '../../util/log_util.dart';
-import '../model/exercise_statistic_entity.dart';
+import '../model/embedded_object/exercise_statistic_entity.dart';
 import '../model/exercise_set_entity.dart';
+import '../model/monthly_max_weight_entity.dart';
 import '../schema.dart';
 import 'dao_filter.dart';
 import 'dao_result.dart';
@@ -59,7 +60,7 @@ class ExerciseSetDao
   ) async {
     try {
       final monthlyMaxWeightEntities =
-          await getMonthlyMaxWeightEntities(exerciseId);
+          await _getMonthlyMaxWeightEntities(exerciseId);
       return DaoSuccess(ExerciseStatisticEntity(
         monthlyMaxWeightEntities: monthlyMaxWeightEntities,
       ));
@@ -69,7 +70,7 @@ class ExerciseSetDao
     }
   }
 
-  Future<List<MonthlyMaxWeightEntity>> getMonthlyMaxWeightEntities(
+  Future<List<MonthlyMaxWeightEntity>> _getMonthlyMaxWeightEntities(
     int exerciseId,
   ) async {
     try {
@@ -121,7 +122,7 @@ class ExerciseSetDao
   }
 }
 
-class ExerciseSetEntityFilter implements DaoFilter {
+class ExerciseSetEntityFilter extends DaoFilter {
   ExerciseSetEntityFilter({
     this.workoutIds = const [],
     this.workoutId,

@@ -3,7 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 import '../../core_view/empty_view.dart';
-import '../../core_view/util/date_time_display_helper.dart';
+import '../../util/date_time_util.dart';
 import '../../util/assets.dart';
 import '../../util/localization_util.dart';
 import '../ui_state/exercise_statistic_ui_state.dart';

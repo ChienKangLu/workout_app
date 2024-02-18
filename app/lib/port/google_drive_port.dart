@@ -1,5 +1,6 @@
 import 'dart:io' as io;
 
+import 'package:flutter/foundation.dart';
 import 'package:googleapis/drive/v3.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
@@ -9,30 +10,45 @@ import '../util/log_util.dart';
 import 'google_sign_in_port.dart';
 import 'model/port_file.dart';
 
+class DriveApiFactory {
+  static const _tag = "DriveApiFactory";
+
+  Future<DriveApi?> create(GoogleSignInPort signInPort) async {
+    var httpClient = await signInPort.httpClient;
+    if (httpClient == null) {
+      Log.e(_tag, "Cannot get authenticated Client");
+      return null;
+    }
+
+    return DriveApi(httpClient);
+  }
+}
+
 class GoogleDrivePort {
   static const _tag = "GoogleDrivePort";
   static const _mimeTypeGoogleDriveFolder =
       "application/vnd.google-apps.folder";
   static final _signInPort = GoogleSignInPort();
 
-  static final _instance = GoogleDrivePort._internal();
+  static GoogleDrivePort? _instance;
+  static GoogleDrivePort get instance =>
+      _instance ??= GoogleDrivePort._internal();
+
+  static DriveApiFactory _driveApiFactory = DriveApiFactory();
+  static Future<DriveApi?> get _driveApi =>
+      _driveApiFactory.create(_signInPort);
+
   GoogleDrivePort._internal();
 
-  factory GoogleDrivePort() {
-    return _instance;
-  }
+  factory GoogleDrivePort() => instance;
 
   Future<bool> upload(String folder, io.File file) async {
-    final driveApi = await _createDriveApi();
+    final driveApi = await _driveApi;
     if (driveApi == null) {
       return false;
     }
 
-    final folderId = await _getFolderId(
-      driveApi,
-      folder,
-      createIfNotExisted: true,
-    );
+    final folderId = await _getFolderId(driveApi, folder);
     if (folderId == null) {
       return false;
     }
@@ -62,17 +78,17 @@ class GoogleDrivePort {
   }
 
   Future<List<PortFile>> getFileList(String folder) async {
-    final driveApi = await _createDriveApi();
+    final driveApi = await _driveApi;
     if (driveApi == null) {
       return [];
     }
 
-    try {
-      final folderId = await _getFolderId(driveApi, folder);
-      if (folderId == null) {
-        return [];
-      }
+    final folderId = await _getFolderId(driveApi, folder);
+    if (folderId == null) {
+      return [];
+    }
 
+    try {
       final fileList = await driveApi.files.list(
         q: "'$folderId' in parents and trashed = false",
         $fields: "files(id, name)",
@@ -91,7 +107,7 @@ class GoogleDrivePort {
   }
 
   Future<io.File?> download(PortFile portFile) async {
-    final driveApi = await _createDriveApi();
+    final driveApi = await _driveApi;
     if (driveApi == null) {
       return null;
     }
@@ -114,35 +130,8 @@ class GoogleDrivePort {
     }
   }
 
-  Future<DriveApi?> _createDriveApi() async {
-    var httpClient = await _signInPort.httpClient;
-    if (httpClient == null) {
-      Log.e(_tag, "Cannot get authenticated Client");
-      return null;
-    }
-
-    return DriveApi(httpClient);
-  }
-
-  Future<String?> _getFolderId(
-    DriveApi driveApi,
-    String folderName, {
-    bool createIfNotExisted = false,
-  }) async {
+  Future<String?> _getFolderId(DriveApi driveApi, String folderName) async {
     try {
-      final fileList = await driveApi.files.list(
-        q: "mimeType = '$_mimeTypeGoogleDriveFolder' and name = '$folderName'",
-        $fields: "files(id, name)",
-      );
-      final files = fileList.files;
-      if (files != null && files.isNotEmpty) {
-        return files.first.id;
-      }
-
-      if (!createIfNotExisted) {
-        return null;
-      }
-
       final folder = File()
         ..name = folderName
         ..mimeType = _mimeTypeGoogleDriveFolder;
@@ -153,6 +142,16 @@ class GoogleDrivePort {
       Log.e(_tag, "Cannot get folder ID, error = $e");
     }
     return null;
+  }
+
+  @visibleForTesting
+  static void setUpInstance(GoogleDrivePort instance) {
+    _instance = instance;
+  }
+
+  @visibleForTesting
+  static void setUpDriveApiFactory(DriveApiFactory driveApiFactory) {
+    _driveApiFactory = driveApiFactory;
   }
 }
 

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../core_view/empty_view.dart';
 import '../../core_view/ui_mode.dart';
 import '../../core_view/ui_mode_view_model.dart';
-import '../../core_view/workout_status.dart';
+import '../../model/workout_status.dart';
 import '../../themes/workout_app_theme_data.dart';
 import '../../util/assets.dart';
 import '../../util/localization_util.dart';
@@ -29,11 +29,13 @@ class WorkoutList extends StatelessWidget {
   Widget build(BuildContext context) {
     return _listContainer(
       context,
-      child: _isEmpty ? EmptyView(
-        assetName: Assets.workoutListEmpty,
-        header: LocalizationUtil.localize(context).workoutListEmptyHeader,
-        body: LocalizationUtil.localize(context).workoutListEmptyBody,
-      ) : _listView(context),
+      child: _isEmpty
+          ? EmptyView(
+              assetName: Assets.workoutListEmpty,
+              header: LocalizationUtil.localize(context).workoutListEmptyHeader,
+              body: LocalizationUtil.localize(context).workoutListEmptyBody,
+            )
+          : _listView(context),
     );
   }
 
@@ -163,6 +165,8 @@ class WorkoutListItem extends StatelessWidget {
         return ExerciseThumbnailList(
           exerciseThumbnails: readableWorkout.exerciseThumbnails,
         );
+      case WorkoutStatus.unknown:
+        return Container();
     }
   }
 

@@ -34,7 +34,7 @@ class ExerciseView extends StatelessWidget {
           children: [
             Expanded(
               child: ConstrainedBox(
-                constraints: BoxConstraints.tightFor(
+                constraints: const BoxConstraints.tightFor(
                   height: WorkoutAppThemeData.exerciseTitleHeight,
                 ),
                 child: Row(

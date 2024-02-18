@@ -21,7 +21,7 @@ class WaterUseCase {
     return true;
   }
 
-  Future<WaterGoal?> getWaterGoal() async {
+  Future<WaterGoal?> getGoal() async {
     final result = await _waterRepository.goalOf(DateTime.now());
     if (result is Error) {
       return null;

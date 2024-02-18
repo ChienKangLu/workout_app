@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../core_view/ui_mode.dart';
 import '../../core_view/ui_mode_view_model.dart';
-import '../../core_view/workout_status.dart';
+import '../../model/workout_status.dart';
 import '../workout_view_model.dart';
 import 'app_bar_action_item.dart';
 

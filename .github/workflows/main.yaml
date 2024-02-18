@@ -26,9 +26,21 @@ jobs:
           BUILD_NUMBER=$GITHUB_RUN_NUMBER
 
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> "$GITHUB_OUTPUT"
-  ios-app:
+  unit-test:
     runs-on: macos-latest
     needs: [create-version]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install flutter
+        uses: ./.github/actions/stable-flutter-action
+      - name: Run unit test
+        working-directory: ./app
+        run: |
+          flutter test
+  ios-app:
+    runs-on: macos-latest
+    needs: [create-version, unit-test]
     env:
       BUILD_VERSION: ${{ needs.create-version.outputs.BUILD_VERSION }}
       BUILD_NUMBER: ${{ needs.create-version.outputs.BUILD_NUMBER }}
@@ -127,7 +139,7 @@ jobs:
           rm -rf ./app/private_keys
   android-app:
     runs-on: macos-latest
-    needs: [create-version]
+    needs: [create-version, unit-test]
     env:
       BUILD_VERSION: ${{ needs.create-version.outputs.BUILD_VERSION }}
       BUILD_NUMBER: ${{ needs.create-version.outputs.BUILD_NUMBER }}

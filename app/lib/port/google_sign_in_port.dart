@@ -4,6 +4,7 @@ import 'package:extension_google_sign_in_as_googleapis_auth/extension_google_sig
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/drive/v3.dart';
 import 'package:http/http.dart' as http;
+import 'package:meta/meta.dart';
 
 import '../util/log_util.dart';
 
@@ -13,17 +14,19 @@ class GoogleSignInPort {
     DriveApi.driveFileScope,
     DriveApi.driveAppdataScope,
   ];
-  static final _instance = GoogleSignInPort._internal();
+
+  static GoogleSignInPort? _instance;
+  static GoogleSignInPort get instance =>
+      _instance ??= GoogleSignInPort._internal();
 
   GoogleSignInPort._internal();
 
-  factory GoogleSignInPort() {
-    return _instance;
-  }
+  factory GoogleSignInPort() => instance;
 
-  final _googleSignIn = GoogleSignIn(
-    scopes: _scopes,
-  );
+  static GoogleSignIn? _googleSignInInstance;
+  GoogleSignIn get _googleSignIn => _googleSignInInstance ??= GoogleSignIn(
+        scopes: _scopes,
+      );
 
   Future<http.Client?> get httpClient => _googleSignIn.authenticatedClient();
 
@@ -43,5 +46,15 @@ class GoogleSignInPort {
       Log.e(_tag, "Cannot sign out, error = $e");
     }
     return false;
+  }
+
+  @visibleForTesting
+  static void setUpInstance(GoogleSignInPort instance) {
+    _instance = instance;
+  }
+
+  @visibleForTesting
+  static void setUpGoogleSignInInstance(GoogleSignIn instance) {
+    _googleSignInInstance = instance;
   }
 }

@@ -7,7 +7,7 @@ import '../core_view/empty_view.dart';
 import '../core_view/ui_mode.dart';
 import '../core_view/ui_mode_view_model.dart';
 import '../core_view/util/sheet_util.dart';
-import '../core_view/workout_status.dart';
+import '../model/workout_status.dart';
 import '../feature_exercise_statistic/exercise_statistic_page.dart';
 import '../feature_setting_exercise/view/create_exercise_dialog.dart';
 import '../themes/workout_app_theme_data.dart';
@@ -82,6 +82,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
             _uiModeViewModel.switchTo(UiMode.edit);
             break;
           case WorkoutStatus.finished:
+          case WorkoutStatus.unknown:
             break;
         }
       },

@@ -70,7 +70,9 @@ class ExerciseSetEntity extends BaseEntity {
     var map = <String, dynamic>{};
     map[ExerciseSetTable.columnWorkoutId] = workoutId;
     map[ExerciseSetTable.columnExerciseId] = exerciseId;
-    map[ExerciseSetTable.columnSetNum] = setNum;
+    if (setNum != ignored) {
+      map[ExerciseSetTable.columnSetNum] = setNum;
+    }
     map[ExerciseSetTable.columnBaseWeight] = baseWeight;
     map[ExerciseSetTable.columnSideWeight] = sideWeight;
     map[ExerciseSetTable.columnRepetition] = repetition;
@@ -81,27 +83,6 @@ class ExerciseSetEntity extends BaseEntity {
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      super == other &&
-          other is ExerciseSetEntity &&
-          runtimeType == other.runtimeType &&
-          workoutId == other.workoutId &&
-          exerciseId == other.exerciseId &&
-          setNum == other.setNum &&
-          baseWeight == other.baseWeight &&
-          sideWeight == other.sideWeight &&
-          repetition == other.repetition &&
-          endDateTime == other.endDateTime;
-
-  @override
-  int get hashCode =>
-      super.hashCode ^
-      workoutId.hashCode ^
-      exerciseId.hashCode ^
-      setNum.hashCode ^
-      baseWeight.hashCode ^
-      sideWeight.hashCode ^
-      repetition.hashCode ^
-      endDateTime.hashCode;
+  List<Object?> get props =>
+      [workoutId, exerciseId, baseWeight, sideWeight, repetition, endDateTime];
 }
